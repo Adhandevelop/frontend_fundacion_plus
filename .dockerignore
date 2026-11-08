@@ -1,0 +1,14 @@
+node_modules
+dist
+.angular
+out-tsc
+.npm-cache
+.git
+.vscode
+.agents
+.codex
+.aws
+.env
+.env.*
+*.log
+contexto.md
