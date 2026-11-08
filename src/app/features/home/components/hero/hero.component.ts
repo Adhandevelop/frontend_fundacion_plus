@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
 
-@Component({selector:'plus-hero', standalone:true, templateUrl:'./hero.component.html'})
+import { RouterLink } from '@angular/router';
+@Component({selector:'plus-hero', standalone:true, imports:[RouterLink], templateUrl:'./hero.component.html'})
 export class HeroComponent {  }

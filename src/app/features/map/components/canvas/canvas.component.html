@@ -1,0 +1,117 @@
+
+
+<section class="col-span-12 lg:col-span-8 bg-[#e2e8f0] dark:bg-[#151a1e] border mp-border-outline-variant-60 rounded-xl relative overflow-hidden flex flex-col justify-between shadow-md min-h-[720px]">
+
+<div class="absolute inset-0 z-0 bg-[#f1f5f9] dark:bg-[#141b21] map-grid-pattern overflow-hidden">
+
+<svg [style.transform]="'scale(' + zoom() + ')'" class="origin-center transition-transform w-full h-full object-cover opacity-90" fill="none" viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg">
+
+<path d="M-100,200 Q200,100 450,220 T950,180" fill="none" [attr.stroke]="theme.dark() ? '#2a3844' : '#94a3b8'" stroke-dasharray="4 4" stroke-width="1.5"></path>
+<path d="M-100,320 Q250,280 500,380 T1100,310" fill="none" [attr.stroke]="theme.dark() ? '#2a3844' : '#94a3b8'" stroke-dasharray="4 4" stroke-width="1.5"></path>
+<path d="M-50,520 Q300,450 620,540 T1150,490" fill="none" [attr.stroke]="theme.dark() ? '#2a3844' : '#94a3b8'" stroke-dasharray="4 4" stroke-width="1.5"></path>
+
+<polygon [attr.fill]="theme.dark() ? '#1a232b' : '#e2e8f0'" points="120,80 340,95 430,280 290,440 90,360" [attr.stroke]="theme.dark() ? '#334454' : '#94a3b8'" stroke-dasharray="6 3" stroke-width="1.5"></polygon>
+<polygon [attr.fill]="theme.dark() ? '#1d2730' : '#cbd5e1'" points="340,95 620,130 690,390 430,280" [attr.stroke]="theme.dark() ? '#334454' : '#94a3b8'" stroke-dasharray="6 3" stroke-width="1.5"></polygon>
+<polygon [attr.fill]="theme.dark() ? '#19222a' : '#e2e8f0'" points="290,440 430,280 690,390 580,680 210,610" [attr.stroke]="theme.dark() ? '#334454' : '#94a3b8'" stroke-dasharray="6 3" stroke-width="1.5"></polygon>
+
+<path d="M220,-40 C280,140 210,230 360,340 C490,430 460,560 520,850" fill="none" [attr.stroke]="theme.dark() ? '#26445a' : '#cbd5e1'" stroke-linecap="round" stroke-width="16"></path>
+<path d="M220,-40 C280,140 210,230 360,340 C490,430 460,560 520,850" fill="none" [attr.stroke]="theme.dark() ? '#386b8c' : '#94a3b8'" stroke-linecap="round" stroke-width="8"></path>
+
+<path d="M360,340 Q520,310 740,320" fill="none" [attr.stroke]="theme.dark() ? '#386b8c' : '#94a3b8'" stroke-linecap="round" stroke-width="4"></path>
+<path d="M210,230 Q80,260 10,240" fill="none" [attr.stroke]="theme.dark() ? '#386b8c' : '#94a3b8'" stroke-linecap="round" stroke-width="3"></path>
+<path d="M460,560 Q340,610 120,580" fill="none" [attr.stroke]="theme.dark() ? '#386b8c' : '#94a3b8'" stroke-linecap="round" stroke-width="4"></path>
+
+<path d="M720,80 Q880,140 850,320 T680,480" [attr.fill]="theme.dark() ? '#1b2a24' : '#cbd5e1'" opacity="0.7"></path>
+</svg>
+
+<div class="absolute top-12 left-1/4 mp-text-neutral-400 font-title-sm tracking-wider uppercase opacity-50 pointer-events-none">
+          CUENCA DEL BAJO ATRATO · SUBREGIÓN DARIÉN
+        </div>
+<div class="absolute bottom-28 left-16 mp-text-neutral-400 font-title-sm tracking-widest uppercase opacity-45 pointer-events-none">
+          MUNICIPIO DE RIOSUCIO (CHOCÓ)
+        </div>
+<div class="absolute top-24 right-20 mp-text-neutral-400 font-title-sm tracking-widest uppercase opacity-45 pointer-events-none">
+          LÍMITE URABÁ ANTIOQUEÑO
+        </div>
+
+
+<div class="absolute bottom-16 right-28 flex items-center justify-center cursor-pointer transition-transform hover:scale-110">
+<div class="w-11 h-11 rounded-full mp-bg-neutral-900 mp-text-primary-container font-bold text-label-md flex items-center justify-center border-2 mp-border-primary-container shadow-lg shadow-black/60">
+            +18
+          </div>
+<span class="absolute -bottom-5 text-label-sm font-label-sm font-bold mp-bg-neutral-900-95 border mp-border-neutral-700 px-1.5 rounded mp-text-neutral-100 shadow-sm">Nodo Quibdó</span>
+</div>
+
+<div class="absolute top-36 right-44 flex flex-col items-center cursor-pointer group">
+<div class="w-9 h-9 rounded-full bg-emerald-600 mp-text-white flex items-center justify-center shadow-lg border-2 border-emerald-300 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<span class="mt-1 text-label-sm font-label-sm font-medium mp-bg-neutral-900-95 border mp-border-neutral-700 px-2 py-0.5 rounded shadow-sm mp-text-neutral-200">Puesto de Salud Bellavista</span>
+</div>
+
+<div class="absolute bottom-48 left-36 flex flex-col items-center cursor-pointer group">
+<div class="w-9 h-9 rounded-full mp-bg-neutral-700 mp-text-neutral-100 flex items-center justify-center shadow-lg border-2 mp-border-neutral-400 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[18px]">water_drop</span>
+</div>
+<span class="mt-1 text-label-sm font-label-sm font-medium mp-bg-neutral-900-95 border mp-border-neutral-700 px-2 py-0.5 rounded shadow-sm mp-text-neutral-200">Acueducto Bocas del Atrato</span>
+</div>
+
+<button type="button" aria-label="Ver caso de ejemplo: vía El Porvenir" (click)="popupOpen.set(true)" class="absolute top-[42%] left-[44%] flex flex-col items-center z-20">
+
+<span class="absolute -top-1 w-11 h-11 rounded-full mp-bg-primary-container animate-ping opacity-60"></span>
+<div class="relative w-11 h-11 rounded-full mp-bg-primary-container mp-text-neutral-950 flex items-center justify-center shadow-xl shadow-yellow-500/20 border-2 mp-border-white font-bold cursor-pointer">
+<span class="material-symbols-outlined text-[22px]">alt_route</span>
+</div>
+<div class="w-2.5 h-2.5 mp-bg-primary-container rotate-45 -mt-1 shadow-sm"></div></button>
+
+<div class="absolute top-52 left-20 flex flex-col items-center cursor-pointer group">
+<div class="w-9 h-9 rounded-full mp-bg-primary-container mp-text-neutral-950 flex items-center justify-center shadow-lg border-2 mp-border-neutral-900 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[18px]">school</span>
+</div>
+<span class="mt-1 text-label-sm font-label-sm font-medium mp-bg-neutral-900-95 border mp-border-neutral-700 px-2 py-0.5 rounded shadow-sm mp-text-neutral-200">Escuela Rural Cacarica</span>
+</div>
+</div>
+
+<div class="relative z-10 m-space-md flex justify-between items-start pointer-events-none">
+
+<div class="pointer-events-auto mp-bg-neutral-900-90 backdrop-blur-md border mp-border-neutral-700 rounded-lg px-3 py-1.5 shadow-md text-label-sm font-label-sm mp-text-secondary flex items-center gap-2">
+<span class="w-2 h-2 rounded-full mp-bg-primary-container"></span>
+<span class="mp-text-neutral-100 font-medium">Datum MAGNA-SIRGAS</span> · 7°03'12" N, 77°01'45" O
+        </div>
+
+<div class="pointer-events-auto flex flex-col gap-1.5 mp-bg-neutral-900-90 backdrop-blur-md border mp-border-neutral-700 p-1.5 rounded-lg shadow-md">
+<button class="w-8 h-8 rounded mp-hover-bg-neutral-800 mp-text-neutral-200 flex items-center justify-center transition-colors" title="Acercar ilustración" (click)="changeZoom(0.2)">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+<button class="w-8 h-8 rounded mp-hover-bg-neutral-800 mp-text-neutral-200 flex items-center justify-center transition-colors" title="Alejar ilustración" (click)="changeZoom(-0.2)">
+<span class="material-symbols-outlined text-[20px]">remove</span>
+</button>
+<div class="w-full h-px mp-bg-neutral-700 my-0.5"></div>
+<button class="w-8 h-8 rounded mp-hover-bg-neutral-800 mp-text-neutral-200 flex items-center justify-center transition-colors" title="Restablecer ilustración" (click)="zoom.set(1); popupOpen.set(true)">
+<span class="material-symbols-outlined text-[20px]">my_location</span>
+</button>
+<button class="w-8 h-8 rounded mp-hover-bg-neutral-800 mp-text-neutral-200 flex items-center justify-center transition-colors" disabled title="Capas disponibles al integrar cartografía">
+<span class="material-symbols-outlined text-[20px]">layers</span>
+</button>
+</div>
+</div>
+
+@if (popupOpen()) {<plus-map-case-preview (dismiss)="popupOpen.set(false)"/>}
+<div class="relative z-10 m-space-md self-center lg:self-start pointer-events-auto">
+<div class="mp-bg-neutral-900-90 backdrop-blur-md border mp-border-neutral-700-80 rounded-xl px-4 py-2 shadow-md flex flex-wrap items-center gap-4 text-label-sm font-label-sm">
+<span class="mp-text-neutral-200 font-bold text-label-md">Convenciones:</span>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-full mp-bg-primary-container border mp-border-neutral-900"></span>
+<span class="mp-text-neutral-300 font-medium">En Gestión Activa (54)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-full mp-bg-neutral-400"></span>
+<span class="mp-text-neutral-300 font-medium">En Evaluación / Radicado (28)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+<span class="mp-text-neutral-300 font-medium">Resuelto / Concluido (60)</span>
+</div>
+</div>
+</div>
+</section>

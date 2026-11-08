@@ -1,6 +1,6 @@
 <header class="bg-surface dark:bg-inverse-surface border-b border-outline-variant/30 dark:border-outline/30 docked full-width top-0 sticky z-50 shadow-sm dark:shadow-none">
 <div class="w-full max-w-7xl mx-auto px-margin md:px-margin-desktop flex items-center justify-between h-16">
-<a class="flex items-center gap-space-sm group" href="#">
+<a class="flex items-center gap-space-sm group" routerLink="/">
 <div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center p-1.5 shadow-sm overflow-hidden flex-shrink-0">
 <img alt="Logotipo Oficial Corporación Pluralismo Social (PLUS)" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Wz7S_kqSBugcvarnLXJqw7Khx_VzYS2sFtPIiAE5tHUmdK1i89URfoAvsDoSng9XhyQlKk36bwbBwSdOhEGUpJUfrEEspOnWK63wFhi_4S7n0K-qvIzf31zshbLWAN3_gp6FVImollJ-1QhlVIcYL1rYKoY_unDRcEXdxUXfhwHzzCDHbYdlUZMxB2psWGXaHzN0KyeKip9ujkEuqWgWvlZgQzz3g2XeRDPojP7qOONDaIX1K9TUSlQqtQ"/>
 </div>
@@ -13,20 +13,20 @@
           </span>
 </div>
 </a>
-<nav aria-label="Navegaci?n principal" class="hidden xl:flex items-center gap-space-md">
-<a class="border-b-2 border-primary-container text-on-surface dark:text-inverse-on-surface font-semibold py-1 text-label-md font-label-md" href="#inicio">
+<nav aria-label="Navegación principal" class="hidden xl:flex items-center gap-space-md">
+<a class="text-on-surface dark:text-inverse-on-surface font-semibold py-1 text-label-md font-label-md" routerLink="/" fragment="inicio" routerLinkActive="border-b-2 border-primary-container" [routerLinkActiveOptions]="{exact:true}">
           Inicio
         </a>
-<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 transition-colors text-label-md font-label-md" href="#mapa-casos">
+<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 transition-colors text-label-md font-label-md" routerLink="/mapa" routerLinkActive="border-b-2 border-primary-container">
           Mapa de casos
         </a>
-<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 transition-colors text-label-md font-label-md" href="#dulcemania-comunidad">Iniciativas</a><a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 text-label-md font-label-md" href="#noticias">
+<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 transition-colors text-label-md font-label-md" routerLink="/" fragment="dulcemania-comunidad">Iniciativas</a><a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 text-label-md font-label-md" routerLink="/" fragment="noticias">
           Noticias
         </a>
-<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 transition-colors text-label-md font-label-md" href="#nosotros">
+<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 transition-colors text-label-md font-label-md" routerLink="/" fragment="nosotros">
           Nosotros
         </a>
-<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 transition-colors text-label-md font-label-md" href="#contacto">
+<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 transition-colors text-label-md font-label-md" routerLink="/" fragment="contacto">
           Contacto
         </a>
 </nav>
@@ -47,5 +47,5 @@
         </a>
 </div>
 </div>
-<div class="xl:hidden border-t border-outline-variant/30 px-4 py-2"><button type="button" (click)="menuOpen.set(!menuOpen())" [attr.aria-expanded]="menuOpen()" aria-controls="mobile-nav" class="flex items-center gap-2 text-title-sm"><span class="material-symbols-outlined">menu</span> Men?</button>
-@if(menuOpen()) {<nav id="mobile-nav" aria-label="Navegaci?n m?vil" class="grid gap-3 py-4" (click)="menuOpen.set(false)"><a href="#inicio">Inicio</a><a href="#mapa-casos">Mapa de casos</a><a href="#dulcemania-comunidad">Iniciativas</a><a href="#noticias">Noticias</a><a href="#nosotros">Nosotros</a><a href="#contacto">Contacto</a><a href="#">Iniciar sesi?n</a></nav>}</div></header>
+<div class="xl:hidden border-t border-outline-variant/30 px-4 py-2"><button type="button" (click)="menuOpen.set(!menuOpen())" [attr.aria-expanded]="menuOpen()" aria-controls="mobile-nav" class="flex items-center gap-2 text-title-sm"><span class="material-symbols-outlined">menu</span> Menú</button>
+@if(menuOpen()) {<nav id="mobile-nav" aria-label="Navegación móvil" class="grid gap-3 py-4" (click)="menuOpen.set(false)"><a routerLink="/" fragment="inicio" routerLinkActive="border-b-2 border-primary-container" [routerLinkActiveOptions]="{exact:true}">Inicio</a><a routerLink="/mapa" routerLinkActive="border-b-2 border-primary-container">Mapa de casos</a><a routerLink="/" fragment="dulcemania-comunidad">Iniciativas</a><a routerLink="/" fragment="noticias">Noticias</a><a routerLink="/" fragment="nosotros">Nosotros</a><a routerLink="/" fragment="contacto">Contacto</a><a href="#">Iniciar sesión</a></nav>}</div></header>
