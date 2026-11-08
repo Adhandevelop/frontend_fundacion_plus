@@ -1,4 +1,7 @@
-FROM node:22-alpine AS build
+FROM node:22-alpine3.22 AS build
+
+# Apply available Alpine package patches to the build environment.
+RUN apk upgrade --no-cache
 
 WORKDIR /app
 ENV NG_CLI_ANALYTICS=false
@@ -12,6 +15,9 @@ COPY public ./public
 RUN npm run build -- --configuration production
 
 FROM nginx:stable-alpine AS runtime
+
+# Apply available Alpine package patches to the production environment.
+RUN apk upgrade --no-cache
 
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist/plus/browser /usr/share/nginx/html
