@@ -1,0 +1,51 @@
+<header class="bg-surface dark:bg-inverse-surface border-b border-outline-variant/30 dark:border-outline/30 docked full-width top-0 sticky z-50 shadow-sm dark:shadow-none">
+<div class="w-full max-w-7xl mx-auto px-margin md:px-margin-desktop flex items-center justify-between h-16">
+<a class="flex items-center gap-space-sm group" href="#">
+<div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center p-1.5 shadow-sm overflow-hidden flex-shrink-0">
+<img alt="Logotipo Oficial Corporación Pluralismo Social (PLUS)" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Wz7S_kqSBugcvarnLXJqw7Khx_VzYS2sFtPIiAE5tHUmdK1i89URfoAvsDoSng9XhyQlKk36bwbBwSdOhEGUpJUfrEEspOnWK63wFhi_4S7n0K-qvIzf31zshbLWAN3_gp6FVImollJ-1QhlVIcYL1rYKoY_unDRcEXdxUXfhwHzzCDHbYdlUZMxB2psWGXaHzN0KyeKip9ujkEuqWgWvlZgQzz3g2XeRDPojP7qOONDaIX1K9TUSlQqtQ"/>
+</div>
+<div class="flex flex-col">
+<span class="text-title-md font-title-md font-bold tracking-tight text-on-surface dark:text-inverse-on-surface leading-none">
+            PLUS
+          </span>
+<span class="hidden sm:block text-label-sm font-label-sm text-secondary dark:text-secondary-fixed tracking-tight mt-0.5">
+            Corporación Pluralismo Social
+          </span>
+</div>
+</a>
+<nav aria-label="Navegaci?n principal" class="hidden xl:flex items-center gap-space-md">
+<a class="border-b-2 border-primary-container text-on-surface dark:text-inverse-on-surface font-semibold py-1 text-label-md font-label-md" href="#inicio">
+          Inicio
+        </a>
+<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 transition-colors text-label-md font-label-md" href="#mapa-casos">
+          Mapa de casos
+        </a>
+<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 transition-colors text-label-md font-label-md" href="#dulcemania-comunidad">Iniciativas</a><a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 text-label-md font-label-md" href="#noticias">
+          Noticias
+        </a>
+<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 transition-colors text-label-md font-label-md" href="#nosotros">
+          Nosotros
+        </a>
+<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 transition-colors text-label-md font-label-md" href="#contacto">
+          Contacto
+        </a>
+</nav>
+<div class="flex items-center gap-2 sm:gap-space-md">
+<button aria-label="Cambiar tema de color" class="flex items-center p-1 rounded-full border border-outline-variant/30 dark:border-outline/30 bg-surface-container-low dark:bg-inverse-surface transition-all duration-150" id="theme-toggle" (click)="theme.toggle()" [attr.aria-pressed]="theme.dark()" type="button">
+<span class="p-1 rounded-full bg-primary-container text-on-primary-fixed flex items-center justify-center transition-all duration-150" id="sun-icon-wrap" [class.bg-primary-container]="!theme.dark()">
+<span class="material-symbols-outlined text-[16px]">light_mode</span>
+</span>
+<span class="p-1 rounded-full text-secondary dark:text-secondary-fixed flex items-center justify-center transition-all duration-150" id="moon-icon-wrap" [class.bg-primary-container]="theme.dark()">
+<span class="material-symbols-outlined text-[16px]">dark_mode</span>
+</span>
+</button>
+<a class="hidden lg:inline-flex items-center justify-center px-4 py-2 border border-outline-variant/50 dark:border-outline/50 rounded-lg text-title-sm font-title-sm text-on-surface dark:text-inverse-on-surface hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors duration-150" href="#">
+          Iniciar sesión
+        </a>
+<a class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-primary-container hover:brightness-95 text-on-primary-fixed font-title-sm text-title-sm shadow-sm transition-all duration-150 active:scale-95" href="#">
+          Registrarse
+        </a>
+</div>
+</div>
+<div class="xl:hidden border-t border-outline-variant/30 px-4 py-2"><button type="button" (click)="menuOpen.set(!menuOpen())" [attr.aria-expanded]="menuOpen()" aria-controls="mobile-nav" class="flex items-center gap-2 text-title-sm"><span class="material-symbols-outlined">menu</span> Men?</button>
+@if(menuOpen()) {<nav id="mobile-nav" aria-label="Navegaci?n m?vil" class="grid gap-3 py-4" (click)="menuOpen.set(false)"><a href="#inicio">Inicio</a><a href="#mapa-casos">Mapa de casos</a><a href="#dulcemania-comunidad">Iniciativas</a><a href="#noticias">Noticias</a><a href="#nosotros">Nosotros</a><a href="#contacto">Contacto</a><a href="#">Iniciar sesi?n</a></nav>}</div></header>

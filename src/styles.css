@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root {font-family: Inter, sans-serif; color-scheme: light;}
+:root.dark {color-scheme: dark;}
+body {@apply bg-background text-on-surface antialiased dark:bg-inverse-surface dark:text-inverse-on-surface; margin:0;}
+plus-root,plus-public-layout,plus-home {display:block;}
+section {scroll-margin-top: 6rem;}
+.material-symbols-outlined {font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;line-height:1;display:inline-block;}
+.material-symbols-outlined.fill-icon {font-variation-settings:'FILL' 1;}
+:focus-visible {outline:3px solid #735c00;outline-offset:4px;}
+.dark .bg-surface-container,.dark .bg-surface-dim {background-color:#242626;}
+.dark .dark\:bg-surface-container {background-color:#242626;}
+.dark .dark\:bg-surface-container-high {background-color:#343636;}
+.dark .dark\:bg-surface-container-highest {background-color:#404242;}
+.carousel-tab-btn[aria-selected="true"] {@apply bg-primary-container text-on-primary-fixed border-transparent shadow-sm;}
+.carousel-dot-btn[aria-pressed="true"] {@apply w-8 bg-primary-container;}
+@media (max-width:640px) {h1 {font-size:30px!important;line-height:38px!important;} #mapa-casos [data-location] > .absolute.z-30 {left:1rem;right:1rem;width:auto;}}
+@media (prefers-reduced-motion:reduce) {*,*::before,*::after {scroll-behavior:auto!important;animation:none!important;transition:none!important;}}
+
+button:disabled, select:disabled, input:disabled {cursor:not-allowed;}
