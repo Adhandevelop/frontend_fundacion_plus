@@ -1,0 +1,18 @@
+<div class="p-4 sm:p-6 space-y-6 max-w-5xl mx-auto">
+  <a routerLink="/admin/usuarios" class="inline-flex underline underline-offset-4 text-body-sm">Volver a usuarios</a>
+  @if(user();as record){
+    <header class="admin-panel border rounded-xl p-6 space-y-4">
+      <p class="text-label-sm uppercase tracking-wider">Perfil ficticio · {{record.id}}</p><h1 class="text-headline-md break-words">{{record.name}}</h1><p class="break-all">{{record.email}}</p>
+      <dl class="grid sm:grid-cols-3 gap-4 text-body-sm"><div><dt class="font-semibold">Estado simulado</dt><dd class="mt-2">{{record.active ? 'Activo' : 'Inactivo'}}</dd></div><div><dt class="font-semibold">Origen</dt><dd class="mt-2">{{record.origin === 'local' ? 'Creado en esta pestaña' : 'Perfil ficticio inicial'}}</dd></div><div><dt class="font-semibold">Cambios temporales</dt><dd class="mt-2">{{record.modified ? 'Sí' : 'Sin cambios'}}</dd></div></dl>
+      <div class="flex flex-wrap gap-3"><a [routerLink]="['/admin/usuarios',record.id,'editar']" class="admin-primary">Editar ejemplo</a><button type="button" class="admin-button" (click)="confirming.set(true)">{{record.active ? 'Simular desactivación' : 'Simular activación'}}</button></div>
+    </header>
+    @if(confirming()){
+      <section class="admin-panel border rounded-xl p-5 space-y-4" aria-labelledby="demo-user-state-title"><h2 id="demo-user-state-title" class="text-title-md">{{record.active ? '¿Marcar este ejemplo como inactivo?' : '¿Marcar este ejemplo como activo?'}}</h2><p class="text-body-sm">Solo cambiará el estado de esta fila. No afecta el perfil ciudadano, las asignaciones, las rutas ni los permisos reales.</p><div class="flex flex-wrap gap-3"><button type="button" class="admin-primary" (click)="changeState()">Confirmar simulación</button><button type="button" class="admin-button" (click)="confirming.set(false)">Cancelar</button></div></section>
+    }
+    <p role="status" class="text-body-sm">{{status()}}</p>
+    <section class="admin-panel border rounded-xl p-6 space-y-4"><h2 class="text-headline-sm">Roles de referencia asignados</h2><ul class="space-y-3">@for(role of roles();track role.id){<li class="border border-slate-400/40 rounded-lg p-4"><h3 class="text-title-sm">{{role.name}}</h3><p class="text-body-sm mt-2">{{role.description}}</p></li>}</ul><a routerLink="/admin/roles" class="inline-flex underline underline-offset-4 text-body-sm">Ver todos los roles de referencia</a></section>
+    <aside class="border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/30 rounded-xl p-5 text-body-sm">Este directorio es independiente del perfil ciudadano y de los responsables de los casos. No hay contraseña, sesión, invitación ni autorización asociada a estos registros. Los cambios se pierden al recargar.</aside>
+  }@else{
+    <section class="admin-panel border rounded-xl p-8 space-y-4"><h1 class="text-headline-md">Usuario de ejemplo no disponible</h1><p>El registro no existe en esta pestaña o era un ejemplo temporal que se perdió al recargar.</p><a routerLink="/admin/usuarios" class="admin-primary inline-flex">Consultar directorio</a></section>
+  }
+</div>

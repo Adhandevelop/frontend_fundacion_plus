@@ -20,10 +20,10 @@
 <a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 transition-colors text-label-md font-label-md" routerLink="/mapa" routerLinkActive="border-b-2 border-primary-container">
           Mapa de casos
         </a>
-<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 transition-colors text-label-md font-label-md" routerLink="/" fragment="dulcemania-comunidad">Iniciativas</a><a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 text-label-md font-label-md" routerLink="/" fragment="noticias">
+<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 transition-colors text-label-md font-label-md" routerLink="/iniciativas" routerLinkActive="border-b-2 border-primary-container">Iniciativas</a><a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 text-label-md font-label-md" routerLink="/noticias" routerLinkActive="border-b-2 border-primary-container">
           Noticias
         </a>
-<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 transition-colors text-label-md font-label-md" routerLink="/" fragment="nosotros">
+<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 transition-colors text-label-md font-label-md" routerLink="/nosotros" routerLinkActive="border-b-2 border-primary-container">
           Nosotros
         </a>
 <a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface py-1 transition-colors text-label-md font-label-md" routerLink="/" fragment="contacto">
@@ -39,13 +39,13 @@
 <span class="material-symbols-outlined text-[16px]">dark_mode</span>
 </span>
 </button>
-<a class="hidden lg:inline-flex items-center justify-center px-4 py-2 border border-outline-variant/50 dark:border-outline/50 rounded-lg text-title-sm font-title-sm text-on-surface dark:text-inverse-on-surface hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors duration-150" href="#">
+<a class="hidden lg:inline-flex items-center justify-center px-4 py-2 border border-outline-variant/50 dark:border-outline/50 rounded-lg text-title-sm font-title-sm text-on-surface dark:text-inverse-on-surface hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors duration-150" routerLink="/login">
           Iniciar sesión
         </a>
-<a class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-primary-container hover:brightness-95 text-on-primary-fixed font-title-sm text-title-sm shadow-sm transition-all duration-150 active:scale-95" href="#">
+<a class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-primary-container hover:brightness-95 text-on-primary-fixed font-title-sm text-title-sm shadow-sm transition-all duration-150 active:scale-95" routerLink="/registro">
           Registrarse
         </a>
 </div>
 </div>
 <div class="xl:hidden border-t border-outline-variant/30 px-4 py-2"><button type="button" (click)="menuOpen.set(!menuOpen())" [attr.aria-expanded]="menuOpen()" aria-controls="mobile-nav" class="flex items-center gap-2 text-title-sm"><span class="material-symbols-outlined">menu</span> Menú</button>
-@if(menuOpen()) {<nav id="mobile-nav" aria-label="Navegación móvil" class="grid gap-3 py-4" (click)="menuOpen.set(false)"><a routerLink="/" fragment="inicio" routerLinkActive="border-b-2 border-primary-container" [routerLinkActiveOptions]="{exact:true}">Inicio</a><a routerLink="/mapa" routerLinkActive="border-b-2 border-primary-container">Mapa de casos</a><a routerLink="/" fragment="dulcemania-comunidad">Iniciativas</a><a routerLink="/" fragment="noticias">Noticias</a><a routerLink="/" fragment="nosotros">Nosotros</a><a routerLink="/" fragment="contacto">Contacto</a><a href="#">Iniciar sesión</a></nav>}</div></header>
+@if(menuOpen()) {<nav id="mobile-nav" aria-label="Navegación móvil" class="grid gap-3 py-4" (click)="menuOpen.set(false)"><a routerLink="/" fragment="inicio" routerLinkActive="border-b-2 border-primary-container" [routerLinkActiveOptions]="{exact:true}">Inicio</a><a routerLink="/mapa" routerLinkActive="border-b-2 border-primary-container">Mapa de casos</a><a routerLink="/iniciativas" routerLinkActive="border-b-2 border-primary-container">Iniciativas</a><a routerLink="/noticias" routerLinkActive="border-b-2 border-primary-container">Noticias</a><a routerLink="/nosotros" routerLinkActive="border-b-2 border-primary-container">Nosotros</a><a routerLink="/" fragment="contacto">Contacto</a><a routerLink="/login">Iniciar sesión</a></nav>}</div></header>

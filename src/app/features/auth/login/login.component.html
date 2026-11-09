@@ -1,0 +1,132 @@
+<div class="flex-1 flex flex-col lg:flex-row w-full max-w-7xl mx-auto">
+<div class="w-full lg:w-7/12 flex flex-col justify-between p-margin md:p-margin-desktop auth-bg-18181b">
+<div class="max-w-xl mx-auto w-full py-space-md">
+<div class="flex items-center gap-space-md mb-space-xl">
+<div class="w-11 h-11 auth-bg-27272a border auth-border-3f3f46 rounded-lg flex items-center justify-center text-primary-container font-headline-md font-bold tracking-tight shadow-sm ring-1 ring-white/10">
+<span>P+</span>
+</div>
+<div>
+<span class="block font-title-md text-title-md font-bold auth-text-fafafa tracking-tight leading-snug">
+              PLUS Corporación Pluralismo Social
+            </span>
+<span class="block font-label-sm text-label-sm auth-text-a1a1aa font-medium tracking-wide">
+              Veeduría Ciudadana Territorial • Personería Jurídica
+            </span>
+</div>
+</div>
+<div class="mb-space-lg">
+<h1 class="font-headline-lg text-headline-lg auth-text-ffffff mb-space-xs font-bold tracking-tight">
+            Bienvenido a PLUS
+          </h1>
+<p class="font-body-md text-body-md auth-text-a1a1aa leading-relaxed">
+            Accede al sistema de seguimiento de casos comunitarios, veedurías ciudadanas y radicación de alertas territoriales.
+          </p>
+</div>
+<form class="space-y-space-md" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+<div>
+<label class="block font-title-sm text-title-sm auth-text-fafafa mb-space-xs" for="email">
+              Correo electrónico institucional o personal
+            </label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none auth-text-a1a1aa">
+<span class="material-symbols-outlined text-[20px]" data-icon="mail">mail</span>
+</div>
+<input autocomplete="email" formControlName="email" [attr.aria-invalid]="form.controls.email.touched && form.controls.email.invalid" class="w-full pl-11 pr-4 py-2.5 h-11 auth-bg-27272a border auth-border-3f3f46 rounded-lg auth-text-f4f4f5 auth-placeholdertext-71717a font-body-md text-body-md focus:border-primary-container focus:ring-2 focus:ring-primary-container/40 focus:outline-none transition-all" id="email" name="email" placeholder="ejemplo&#64;correo.com" required="" type="email">
+</div><plus-auth-field-error [control]="form.controls.email"/>
+</div>
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<label class="block font-title-sm text-title-sm auth-text-fafafa" for="password">
+                Contraseña
+              </label>
+</div>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none auth-text-a1a1aa">
+<span class="material-symbols-outlined text-[20px]" data-icon="lock">lock</span>
+</div>
+<input #passwordInput autocomplete="current-password" formControlName="password" [attr.aria-invalid]="form.controls.password.touched && form.controls.password.invalid" class="w-full pl-11 pr-11 py-2.5 h-11 auth-bg-27272a border auth-border-3f3f46 rounded-lg auth-text-f4f4f5 auth-placeholdertext-71717a font-body-md text-body-md focus:border-primary-container focus:ring-2 focus:ring-primary-container/40 focus:outline-none transition-all" id="password" name="password" placeholder="••••••••••••" required="" type="password">
+<plus-password-toggle [target]="passwordInput"/>
+</div><plus-auth-field-error [control]="form.controls.password"/>
+</div>
+<div class="flex items-center justify-between pt-space-xs">
+<label class="flex items-center gap-space-sm cursor-pointer select-none">
+<input formControlName="remember" [attr.aria-invalid]="form.controls.remember.touched && form.controls.remember.invalid" class="w-4 h-4 rounded auth-border-3f3f46 auth-bg-27272a text-primary-container focus:ring-primary-container focus:ring-offset-0 focus:ring-2 transition-colors cursor-pointer" type="checkbox">
+<span class="font-body-sm text-body-sm auth-text-a1a1aa">Recordar sesión en este equipo</span>
+</label>
+<a class="font-title-sm text-title-sm auth-text-a1a1aa auth-hovertext-fafafa underline underline-offset-4 auth-decoration-3f3f46 transition-colors" routerLink="/recuperar-contrasena">
+              ¿Olvidaste tu contraseña?
+            </a>
+</div>
+<div class="pt-space-sm">
+<button class="w-full h-12 bg-primary-container auth-hoverbg-eab308 text-slate-950 font-title-md text-title-md font-semibold rounded-lg flex items-center justify-center gap-space-sm shadow-md transition-all duration-150 active:scale-[0.99] focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2 focus:ring-offset-[#18181b]" type="submit">
+<span>Iniciar sesión</span>
+<span class="material-symbols-outlined text-title-md" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="mt-space-md p-space-md auth-bg-27272a-70 border auth-border-3f3f46-70 rounded-lg flex items-start gap-space-sm">
+<span class="material-symbols-outlined auth-text-a1a1aa text-[20px] shrink-0 mt-0.5" data-icon="verified_user">verified_user</span>
+<p class="font-body-sm text-body-sm auth-text-d4d4d8 leading-snug">
+              PLUS promueve la participación ciudadana y el seguimiento comunitario dentro del marco de la <strong class="auth-text-ffffff font-semibold">Ley 850 de 2003</strong> de Veedurías Ciudadanas.
+            </p>
+</div>
+<p class="mt-3 text-body-sm" role="status">{{ message() }}</p></form>
+<div class="mt-space-lg pt-space-lg border-t auth-border-27272a text-center">
+<p class="font-body-md text-body-md auth-text-a1a1aa">
+            ¿No tienes una cuenta aún? 
+            <a class="font-title-sm text-title-sm auth-text-ffffff font-semibold hover:underline decoration-primary-container decoration-2 underline-offset-4 transition-all" routerLink="/registro">
+              Crear una cuenta
+            </a>
+</p>
+</div>
+</div>
+<div class="pt-space-md max-w-xl mx-auto w-full">
+<p class="font-label-sm text-label-sm auth-text-71717a">
+          Vista de demostración · No se envían ni almacenan credenciales.
+        </p>
+</div>
+</div>
+<div class="w-full lg:w-5/12 auth-bg-121214 border-t lg:border-t-0 lg:border-l auth-border-27272a flex flex-col justify-between p-margin md:p-margin-desktop relative overflow-hidden">
+<div class="relative w-full rounded-xl overflow-hidden border auth-border-3f3f46-60 shadow-lg flex-1 min-h-[420px] flex flex-col justify-end p-space-lg ring-1 ring-white/5">
+<img class="absolute inset-0 w-full h-full object-cover z-0" alt="Encuentro comunitario de referencia de PLUS" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtPIa14sDBkIU7_a4BwhVUlvliRndt-vYHZgtaEo0pLm6aqexpRw5zkK-jmiR5P3fTRyMjUu4reIYjektK0dGMar8xIJonOEFq01eKXM5xRFue8jEofjsZt1x7F1GvwPq0OHle3n_H8OWcimdGOCvdK-G6Q4d9DNgaXLK0WtRmh0kjNYryl3q96y66CBJVEUcwICfbagT4FG2Yfa1X8tJdbZ4QujDA3DqzwZnrnV9lXvUDFXNgGlX7fQ">
+<div class="absolute inset-0 bg-gradient-to-t from-[#121214] via-[#121214]/80 to-black/40 z-10"></div>
+<div class="relative z-20 space-y-space-md">
+<div class="flex flex-wrap gap-space-xs">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container text-slate-950 font-label-md text-label-md shadow-xs font-semibold">
+<span class="material-symbols-outlined text-[14px]" data-icon="gavel">gavel</span>
+              Marco Legal Ley 850 de 2003
+            </span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full auth-bg-18181b-80 backdrop-blur-md auth-text-fafafa font-label-md text-label-md border border-white/10">
+<span class="material-symbols-outlined text-[14px]" data-icon="lock_open">lock_open</span>
+              Datos Abiertos y Cifrados
+            </span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full auth-bg-18181b-80 backdrop-blur-md auth-text-fafafa font-label-md text-label-md border border-white/10">
+<span class="material-symbols-outlined text-[14px]" data-icon="hub">hub</span>
+              Veeduría Comunitaria Activa
+            </span>
+</div>
+<div class="p-space-md rounded-lg auth-bg-18181b-90 backdrop-blur-md border border-white/10 shadow-xl auth-text-fafafa">
+<div class="flex items-start gap-space-sm mb-space-xs">
+<span class="material-symbols-outlined text-primary-container text-[24px] shrink-0" data-icon="format_quote">format_quote</span>
+<p class="font-title-sm text-title-sm auth-text-fafafa italic leading-snug">
+                "El control social democrático garantiza que los recursos públicos lleguen verdaderamente a nuestras veredas."
+              </p>
+</div>
+<div class="flex items-center justify-between pt-space-xs border-t auth-border-27272a auth-text-a1a1aa">
+<span class="font-label-sm text-label-sm font-semibold auth-text-fafafa">Mesa Ciudadana Subregional</span>
+<span class="font-label-sm text-label-sm auth-text-a1a1aa">Antioquia &amp; Chocó, Colombia</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-space-sm pt-space-xs">
+<div class="auth-bg-1f1f23-90 backdrop-blur-md p-3 rounded-lg border-l-4 border-l-primary-container border border-white/10 shadow-sm">
+<div class="font-headline-sm text-headline-sm font-bold auth-text-fafafa leading-none mb-1">1,280+</div>
+<div class="font-label-sm text-label-sm auth-text-a1a1aa font-medium">Alertas resueltas</div>
+</div>
+<div class="auth-bg-1f1f23-90 backdrop-blur-md p-3 rounded-lg border-l-4 border-l-primary-container border border-white/10 shadow-sm">
+<div class="font-headline-sm text-headline-sm font-bold auth-text-fafafa leading-none mb-1">32</div>
+<div class="font-label-sm text-label-sm auth-text-a1a1aa font-medium">Municipios vigilados</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

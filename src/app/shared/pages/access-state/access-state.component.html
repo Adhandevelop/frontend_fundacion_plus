@@ -1,0 +1,7 @@
+<section class="min-h-[55vh] flex items-center justify-center px-4 py-12 text-slate-950 dark:text-neutral-100">
+  <div class="max-w-xl w-full rounded-2xl border border-slate-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 p-6 sm:p-10 text-center space-y-5">
+    <span class="material-symbols-outlined text-[44px] rounded-2xl bg-yellow-400 text-black p-4" aria-hidden="true">{{state.icon}}</span>
+    <p class="text-label-md uppercase tracking-wider">{{state.label}}</p><h1 class="text-headline-lg">{{state.title}}</h1><p class="text-body-md">{{state.text}}</p>
+    <div class="flex flex-wrap justify-center gap-3"><a [routerLink]="state.route" class="rounded-lg bg-yellow-400 text-black px-5 py-3 font-semibold text-title-sm">{{state.action}}</a><a routerLink="/mapa" class="rounded-lg border border-slate-400/50 px-5 py-3 text-title-sm">Explorar mapa público</a></div>
+  </div>
+</section>

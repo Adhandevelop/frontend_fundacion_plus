@@ -1,0 +1,34 @@
+<div class="initiatives-page"><plus-initiative-hero/><section class="sticky top-16 z-30 ini-bg-surface-container-lowest-95 backdrop-blur-md border-b ini-border-outline-variant py-space-sm">
+<div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-xs overflow-x-auto pb-1 lg:pb-0 scrollbar-none">
+<button type="button" (click)="changeCategory('')" [attr.aria-pressed]="category() === ''" class="px-3 py-1.5 rounded-full ini-bg-primary-container ini-text-on-primary-fixed text-label-md font-label-md whitespace-nowrap shadow-xs">
+          Todas las Dinámicas
+        </button>
+<button type="button" (click)="changeCategory('Infancia y Niñez (Dulcemanía)')" [attr.aria-pressed]="category() === 'Infancia y Niñez (Dulcemanía)'" class="px-3 py-1.5 rounded-full ini-bg-surface-container-low ini-hover-bg-surface-container ini-text-secondary ini-hover-text-on-surface text-label-md font-label-md border ini-border-outline-variant whitespace-nowrap transition-colors">
+          Infancia y Niñez (Dulcemanía)
+        </button>
+<button type="button" (click)="changeCategory('Navidad y Novenas Comunitarias')" [attr.aria-pressed]="category() === 'Navidad y Novenas Comunitarias'" class="px-3 py-1.5 rounded-full ini-bg-surface-container-low ini-hover-bg-surface-container ini-text-secondary ini-hover-text-on-surface text-label-md font-label-md border ini-border-outline-variant whitespace-nowrap transition-colors">
+          Navidad y Novenas Comunitarias
+        </button>
+<button type="button" (click)="changeCategory('Educación y Regreso a Clases')" [attr.aria-pressed]="category() === 'Educación y Regreso a Clases'" class="px-3 py-1.5 rounded-full ini-bg-surface-container-low ini-hover-bg-surface-container ini-text-secondary ini-hover-text-on-surface text-label-md font-label-md border ini-border-outline-variant whitespace-nowrap transition-colors">
+          Educación y Regreso a Clases
+        </button>
+<button type="button" (click)="changeCategory('Deporte y Convivencia Juvenil')" [attr.aria-pressed]="category() === 'Deporte y Convivencia Juvenil'" class="px-3 py-1.5 rounded-full ini-bg-surface-container-low ini-hover-bg-surface-container ini-text-secondary ini-hover-text-on-surface text-label-md font-label-md border ini-border-outline-variant whitespace-nowrap transition-colors">
+          Deporte y Convivencia Juvenil
+        </button>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="relative min-w-[130px]">
+<select aria-label="Edición de las iniciativas" [value]="year()" (change)="year.set($any($event.target).value)" class="w-full h-10 pl-3 pr-8 rounded-md ini-bg-surface-container-lowest border ini-border-outline-variant text-body-sm font-body-sm ini-text-on-surface focus:border-on-surface focus:ring-2 focus:ring-primary-container cursor-pointer">
+<option value="2025">Edición 2025</option>
+<option value="2024">Edición 2024</option>
+<option value="">Histórico Territorial</option>
+</select>
+</div>
+<div class="relative flex-1 sm:w-72">
+<span class="material-symbols-outlined absolute left-3 top-2.5 ini-text-secondary text-title-md">search</span>
+<input aria-label="Buscar iniciativas" [value]="query()" (input)="query.set($any($event.target).value)" class="w-full h-10 pl-9 pr-3 rounded-md ini-bg-surface-container-lowest border ini-border-outline-variant text-body-sm font-body-sm ini-text-on-surface placeholder-secondary focus:border-on-surface focus:ring-2 focus:ring-primary-container outline-none" placeholder="Buscar iniciativa o actividad..." type="text"/>
+</div>
+</div>
+</div>
+</section><div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-space-xl space-y-space-xl"><p role="status" class="text-body-sm">{{filtered().length}} iniciativas de ejemplo. Los indicadores, fotografías y convocatorias están pendientes de validación institucional.</p>@if(featuredVisible()){<plus-initiative-featured (gallery)="openGallery(featured)"/>}@if(selected();as initiative){<section id="initiative-gallery" class="initiative-panel border rounded-xl p-5 space-y-4" aria-label="Imagen de la iniciativa"><div class="flex flex-wrap justify-between gap-3"><h2 id="initiative-gallery-title" tabindex="-1" class="text-headline-sm">{{initiative.title}}</h2><button type="button" class="initiative-button" (click)="selected.set(null)">Cerrar imagen</button></div><img [src]="initiative.image" [alt]="initiative.title" class="w-full max-h-[560px] object-contain rounded-lg"><p class="text-body-sm">Imagen de ejemplo incluida en el diseño. No hay fotografías adicionales disponibles.</p></section>}<section class="space-y-5"><div class="border-b border-slate-400/40 pb-4"><p class="text-label-md uppercase tracking-wider">Ciclo anual de acompañamiento</p><h2 class="text-headline-md mt-1">Otras dinámicas en territorio</h2></div><div class="grid md:grid-cols-3 gap-space-lg">@for(initiative of others();track initiative.id){<plus-initiative-card [initiative]="initiative" (gallery)="openGallery($event)"/>}</div>@if(filtered().length===0){<p class="text-center py-8" role="status">No hay iniciativas de ejemplo para los filtros seleccionados.</p>}</section><plus-initiative-participation/></div></div>

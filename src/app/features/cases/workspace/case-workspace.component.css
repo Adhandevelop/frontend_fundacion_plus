@@ -1,0 +1,17 @@
+.case-workspace{color:#0f172a;overflow-wrap:anywhere;}
+.dark .case-workspace{color:#f8fafc;}
+.case-workspace .dossier-panel{padding:1.5rem;border:1px solid #cbd5e1;border-radius:.8rem;background:#fff;box-shadow:0 1px 3px #00000008;}
+.dark .case-workspace .dossier-panel{background:#1a1e29;border-color:#3f4756;}
+.case-workspace .dossier-button{display:inline-flex;align-items:center;justify-content:center;padding:.6rem .9rem;border:1px solid #94a3b8;border-radius:.5rem;font-size:14px;}
+.case-workspace .dossier-button:hover{background:#94a3b815;}
+.case-workspace .dossier-primary,.case-workspace button[aria-pressed=true]{background:#facc15;color:#231b00;border-color:#facc15;}
+.case-workspace .dossier-primary{display:inline-flex;justify-content:center;padding:.65rem 1rem;border-radius:.5rem;font-size:14px;font-weight:600;}
+.case-workspace .dossier-chip{padding:.4rem .7rem;border-radius:.5rem;background:#94a3b815;border:1px solid #94a3b840;}
+.case-workspace .dossier-own-message{background:rgb(250 204 21 / .1);}
+.case-workspace .dossier-field{display:flex;flex-direction:column;gap:.4rem;font-size:14px;}
+.case-workspace .dossier-field input,.case-workspace .dossier-field select,.case-workspace .dossier-field textarea{padding:.7rem;border:1px solid #94a3b8;border-radius:.5rem;background:#f8fafc;color:#0f172a;min-width:0;width:100%;}
+.dark .case-workspace .dossier-field input,.dark .case-workspace .dossier-field select,.dark .case-workspace .dossier-field textarea{background:#121418;color:#f8fafc;border-color:#64748b;}
+.case-workspace .dossier-field .ng-invalid.ng-touched{border-color:#dc2626;outline:1px solid #dc2626;}
+.case-workspace button:disabled{opacity:.5;cursor:not-allowed;}
+.case-workspace plus-case-demo-history,.case-workspace plus-case-demo-evidence,.case-workspace plus-case-demo-messages,.case-workspace plus-case-demo-management,.case-workspace plus-case-demo-contribution{display:block;}
+@media(max-width:640px){.case-workspace .dossier-panel{padding:1rem;}.case-workspace h1{font-size:24px!important;line-height:32px!important;}}

@@ -1,0 +1,14 @@
+<section class="dossier-panel space-y-4">
+  <h2 class="text-headline-sm">Agregar información o responder una corrección</h2>
+  @if(request()){<div class="rounded-lg border border-amber-400/60 p-4"><h3 class="font-semibold">Solicitud de información de ejemplo</h3><p class="text-body-sm mt-2 whitespace-pre-wrap">{{request()}}</p></div>}
+  <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+    <label class="dossier-field">Información complementaria<textarea formControlName="description" rows="6" minlength="20" maxlength="2000" aria-describedby="contribution-demo-help"></textarea></label>
+    <p id="contribution-demo-help" class="text-body-sm">Entre 20 y 2000 caracteres. No reemplaza la información original del caso.</p>
+    <label class="dossier-field">Anexos de ejemplo<input type="file" multiple accept=".jpg,.jpeg,.png,.pdf" (change)="select($event)" [disabled]="disabled()"></label>
+    <p class="text-body-sm">Máximo 15 MB por archivo, según el diseño previo. Los archivos no salen de esta pestaña y no se analizan con antivirus.</p>
+    <ul>@for(file of files();track $index){<li class="flex flex-wrap justify-between items-center gap-2 py-2"><span class="text-body-sm break-all">{{file.name}}</span><button type="button" class="dossier-button" (click)="remove($index)" [attr.aria-label]="'Quitar '+file.name">Quitar</button></li>}</ul>
+    <button type="submit" class="dossier-primary" [disabled]="disabled()">Añadir aporte a la demostración</button>
+    @if(disabled()){<p class="text-body-sm">El caso de ejemplo está cerrado.</p>}
+    <p role="status" class="text-body-sm">{{status()}}</p>
+  </form>
+</section>

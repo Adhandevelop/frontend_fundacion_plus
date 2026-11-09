@@ -1,0 +1,42 @@
+<div class="case-workspace p-4 lg:p-6 space-y-5">
+  @if(identity(); as record) {
+    @for(key of [record.code]; track key) {
+      <a [routerLink]="list" class="inline-flex items-center gap-2 text-title-sm"><span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>Volver a {{audience === 'admin' ? 'gestión de casos' : 'mis casos'}}</a>
+      <header class="dossier-panel space-y-4 border-l-4 border-l-yellow-400">
+        <div class="flex flex-wrap items-center justify-between gap-3"><span class="font-mono text-title-sm font-bold">{{record.code}}</span><span class="rounded-full bg-yellow-400/20 px-3 py-1 text-label-sm">{{audience === 'admin' ? 'Expediente administrativo de ejemplo' : 'Expediente ciudadano de ejemplo'}}</span></div>
+        <h1 class="text-headline-md lg:text-headline-lg">{{record.title}}</h1>
+        <p class="text-body-sm">{{record.territory}} · {{record.category}}</p>
+        <div class="flex flex-wrap gap-3 text-body-sm"><span class="dossier-chip">Gestión: <strong>{{workflow().management}}</strong></span><span class="dossier-chip">Publicación: <strong>{{workflow().moderation}}</strong></span><span class="dossier-chip">Responsable: {{workflow().assignee}}</span></div>
+        <p class="text-body-sm opacity-80">Simulación compartida entre las vistas de este caso. Se pierde al recargar y no modifica la ficha pública, usuarios ni expedientes reales.</p>
+        <div class="flex flex-wrap gap-3">
+          @if(audience === 'citizen'){<a [routerLink]="['/admin/casos',record.code]" class="dossier-button">Ver simulación administrativa</a>}
+          @if(audience === 'admin' && citizenAvailable()){<a [routerLink]="['/ciudadano/casos',record.code]" class="dossier-button">Ver simulación ciudadana</a>}
+          @if(audience === 'admin'){<a routerLink="/admin/auditoria" [queryParams]="{caso:record.code}" class="dossier-button">Consultar auditoría local</a>}
+          @if(audience === 'admin'){<a routerLink="/admin/comentarios" [queryParams]="{caso:record.code}" class="dossier-button">Moderar comentarios de ejemplo</a>}
+          @if(record.code === 'PLUS-2025-084'){<a routerLink="/casos/PLUS-2025-084" class="dossier-button">Ficha pública de ejemplo</a>}
+          <button type="button" class="dossier-button" (click)="resetting.set(true)">Restablecer simulación</button>
+        </div>
+      </header>
+      @if(resetting()){<section class="dossier-panel space-y-3" aria-label="Confirmación de restablecimiento"><p>Se quitarán los cambios y mensajes locales de demostración de este caso en ambas vistas.</p><div class="flex gap-3"><button type="button" class="dossier-primary" (click)="reset()">Restablecer ejemplo</button><button type="button" class="dossier-button" (click)="resetting.set(false)">Cancelar</button></div></section>}
+      <nav aria-label="Secciones del expediente" class="flex gap-2 overflow-x-auto py-2">@for(item of tabs;track item.id){<button type="button" class="dossier-button whitespace-nowrap" [attr.aria-pressed]="tab() === item.id" (click)="select(item.id)">{{item.label}}</button>}</nav>
+      @switch(tab()) {
+        @case('overview') {
+          <div class="grid lg:grid-cols-3 gap-5">
+            <section class="dossier-panel lg:col-span-2 space-y-4"><h2 class="text-headline-sm">Información del caso</h2><p>Expediente de demostración basado en el registro «{{record.title}}» del diseño.</p><p class="text-body-sm">Este espacio reúne la descripción ampliada, ubicación y datos autorizados del caso. La información detallada disponible en esta demostración es limitada.</p><dl class="grid sm:grid-cols-2 gap-4 text-body-sm"><div><dt class="opacity-70">Territorio</dt><dd class="font-semibold mt-1">{{record.territory}}</dd></div><div><dt class="opacity-70">Clasificación del diseño</dt><dd class="font-semibold mt-1">{{record.category}}</dd></div><div><dt class="opacity-70">Etiqueta original del mockup</dt><dd class="mt-1">{{record.originalStatus}}</dd></div><div><dt class="opacity-70">Datos del solicitante</dt><dd class="mt-1">Perfil ciudadano de ejemplo · Sin datos personales reales</dd></div></dl></section>
+            <aside class="dossier-panel space-y-4"><h2 class="text-title-md">Acciones del expediente</h2><button type="button" class="dossier-button w-full" (click)="select('history')">Consultar seguimiento</button><button type="button" class="dossier-button w-full" (click)="select('messages')">Abrir conversación</button><button type="button" class="dossier-primary w-full" (click)="select(audience === 'admin' ? 'management' : 'contribution')">{{audience === 'admin' ? 'Gestionar ejemplo' : 'Agregar información'}}</button><p class="text-label-sm">Las etiquetas operativas del mockup se conservan como referencia; los estados de esta simulación son independientes del contrato REST pendiente.</p></aside>
+          </div>
+          @if(workflow().correction){<section class="dossier-panel border-l-4 border-l-amber-400"><h2 class="text-title-md">Información solicitada</h2><p class="mt-2 whitespace-pre-wrap">{{workflow().correction}}</p></section>}
+          @if(workflow().result){<section class="dossier-panel"><h2 class="text-title-md">Resultado de ejemplo</h2><p class="mt-2 whitespace-pre-wrap">{{workflow().result}}</p></section>}
+        }
+        @case('history'){<plus-case-demo-history [items]="workflow().history" [audience]="audience"/>}
+        @case('evidence'){<plus-case-demo-evidence [items]="workflow().evidence" [audience]="audience" (toggle)="store.evidenceVisibility(code(),$event)"/>}
+        @case('messages'){<plus-case-demo-messages [items]="workflow().messages" [audience]="audience" (add)="store.message(code(),audience,$event)"/>}
+        @case('management'){@if(audience === 'admin'){<plus-case-demo-management [code]="code()" [workflow]="workflow()"/>}}
+        @case('contribution'){@if(audience === 'citizen'){<plus-case-demo-contribution [request]="workflow().correction" [disabled]="workflow().management === 'Cerrado'" (add)="contribute($event)"/>}}
+      }
+      <p role="status" class="text-body-sm">{{status()}}</p>
+    }
+  } @else {
+    <section class="dossier-panel min-h-[40vh] space-y-4"><h1 class="text-headline-md">Caso no disponible en esta demostración</h1><p>El radicado no corresponde a los registros de ejemplo de esta vista. No se ha consultado ningún expediente real.</p><a [routerLink]="list" class="dossier-primary inline-flex">Volver al listado</a></section>
+  }
+</div>

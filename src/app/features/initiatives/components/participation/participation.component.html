@@ -1,0 +1,86 @@
+<section class="ini-bg-inverse-surface ini-text-inverse-on-surface rounded-2xl border ini-border-outline p-space-lg md:p-space-xl relative overflow-hidden shadow-lg" id="postulacion-comunitaria">
+<div class="absolute -bottom-16 -right-16 w-80 h-80 ini-bg-primary-container-10 rounded-full blur-2xl pointer-events-none"></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center relative z-10">
+<div class="lg:col-span-5 space-y-space-md">
+<div class="inline-flex items-center gap-space-xs px-3 py-1 rounded-full ini-bg-primary-container ini-text-on-primary-fixed text-label-md font-label-md">
+<span class="material-symbols-outlined text-label-md" data-weight="fill">volunteer_activism</span>
+<span>Convocatoria Abierta 2025</span>
+</div>
+<h2 class="text-headline-md md:text-headline-lg font-headline-lg tracking-tight text-white">
+            ¿Quieres que PLUS lleve estas dinámicas a tu barrio o vereda?
+          </h2>
+<p class="text-body-md font-body-md ini-text-tertiary-fixed-dim leading-relaxed">
+            Si eres presidente de Junta de Acción Comunal (JAC), líder barrial, madre comunitaria o integrante de un colectivo juvenil, postula tu sector para las próximas jornadas de niñez, novenas o brigadas comunitarias.
+          </p>
+<div class="space-y-space-sm pt-space-xs">
+<div class="flex items-center gap-space-sm text-body-sm font-body-sm ini-text-tertiary-fixed-dim">
+<span class="material-symbols-outlined ini-text-primary-container" data-weight="fill">check_circle</span>
+<span>100% gratuito sin intermediación política</span>
+</div>
+<div class="flex items-center gap-space-sm text-body-sm font-body-sm ini-text-tertiary-fixed-dim">
+<span class="material-symbols-outlined ini-text-primary-container" data-weight="fill">check_circle</span>
+<span>Acompañamiento legal y veeduría en el territorio</span>
+</div>
+<div class="flex items-center gap-space-sm text-body-sm font-body-sm ini-text-tertiary-fixed-dim">
+<span class="material-symbols-outlined ini-text-primary-container" data-weight="fill">check_circle</span>
+<span>Articulación institucional bajo Ley 850 de 2003</span>
+</div>
+</div>
+</div>
+<div class="lg:col-span-7 ini-bg-surface-container-lowest ini-text-on-surface rounded-xl p-space-md md:p-space-lg shadow-md border ini-border-outline-variant">
+<form class="space-y-space-md" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+<div class="border-b ini-border-outline-variant pb-space-xs">
+<h3 class="text-title-md font-title-md ini-text-on-surface">Formulario Rápido de Postulación Barrial</h3>
+<p class="text-body-sm font-body-sm ini-text-secondary">Diligencia los datos del enlace comunitario para coordinar visita previa.</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+<div>
+<label for="proposal-name" class="block text-title-sm font-title-sm ini-text-on-surface mb-1">Nombre completo del líder o enlace *</label>
+<input id="proposal-name" maxlength="150" [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid" formControlName="name" class="w-full h-11 px-3 rounded-md ini-bg-surface-container-lowest border ini-border-outline-variant text-body-md font-body-md focus:border-on-surface focus:ring-2 focus:ring-primary-container outline-none" placeholder="Ej. Maria Elena Ospina" required="" type="text"/>
+</div>
+<div>
+<label for="proposal-phone" class="block text-title-sm font-title-sm ini-text-on-surface mb-1">Teléfono o WhatsApp de contacto *</label>
+<input id="proposal-phone" maxlength="25" [attr.aria-invalid]="form.controls.phone.touched && form.controls.phone.invalid" formControlName="phone" class="w-full h-11 px-3 rounded-md ini-bg-surface-container-lowest border ini-border-outline-variant text-body-md font-body-md focus:border-on-surface focus:ring-2 focus:ring-primary-container outline-none" placeholder="Ej. 312 000 0000" required="" type="tel"/>
+</div>
+<div>
+<label for="proposal-territory" class="block text-title-sm font-title-sm ini-text-on-surface mb-1">Municipio, Comuna y Barrio/Vereda *</label>
+<input id="proposal-territory" maxlength="200" [attr.aria-invalid]="form.controls.territory.touched && form.controls.territory.invalid" formControlName="territory" class="w-full h-11 px-3 rounded-md ini-bg-surface-container-lowest border ini-border-outline-variant text-body-md font-body-md focus:border-on-surface focus:ring-2 focus:ring-primary-container outline-none" placeholder="Ej. Medellín, Comuna 13 - El Salado" required="" type="text"/>
+</div>
+<div>
+<label for="proposal-initiative" class="block text-title-sm font-title-sm ini-text-on-surface mb-1">Dinámica que deseas priorizar *</label>
+<select id="proposal-initiative" formControlName="initiative" class="w-full h-11 px-3 rounded-md ini-bg-surface-container-lowest border ini-border-outline-variant text-body-md font-body-md focus:border-on-surface focus:ring-2 focus:ring-primary-container outline-none">
+<option>Dulcemanía (Niñez y Veeduría en Halloween)</option>
+<option>Novenas Navideñas Comunitarias</option>
+<option>Jornada de Útiles y Regreso a Clases</option>
+<option>Torneo Relámpago y Juventudes</option>
+<option>Brigada Integral de Diagnóstico Cívico</option>
+</select>
+</div>
+</div>
+<div>
+<label for="proposal-title" class="block text-title-sm font-title-sm ini-text-on-surface mb-1">Título de la postulación *</label>
+<input id="proposal-title" formControlName="title" maxlength="200" class="w-full h-11 px-3 rounded-md ini-bg-surface-container-lowest border ini-border-outline-variant text-body-md font-body-md focus:border-on-surface focus:ring-2 focus:ring-primary-container outline-none" placeholder="Título de ejemplo para tu solicitud" [attr.aria-invalid]="form.controls.title.touched && form.controls.title.invalid" required type="text" aria-describedby="proposal-title-help"/>
+<p id="proposal-title-help" class="text-body-sm ini-text-secondary mt-2">Hasta 200 caracteres. Usa datos ficticios para explorar este formulario.</p>
+</div>
+<div>
+<label for="proposal-description" class="block text-title-sm font-title-sm ini-text-on-surface mb-1">Breve descripción de la necesidad del sector *</label>
+<textarea id="proposal-description" formControlName="description" maxlength="2000" class="w-full p-3 rounded-md ini-bg-surface-container-lowest border ini-border-outline-variant text-body-md font-body-md focus:border-on-surface focus:ring-2 focus:ring-primary-container outline-none" placeholder="Cuéntanos sobre la situación de los niños, estado de canchas, parques o problemas con servicios públicos que requieren veeduría..." required="" rows="3"></textarea>
+</div>
+<div class="rounded-lg border ini-border-outline-variant p-4 space-y-3">
+<p id="proposal-consent-help" class="text-body-sm ini-text-secondary">Aceptación de demostración. El aviso de privacidad y su versión deben confirmarse antes de activar postulaciones reales.</p>
+<label class="flex items-start gap-3 text-body-sm"><input type="checkbox" formControlName="consent" class="mt-1 shrink-0 accent-yellow-400" aria-describedby="proposal-consent-help" [attr.aria-invalid]="form.controls.consent.touched && form.controls.consent.invalid"><span>Usaré datos ficticios y confirmo la aceptación de este ejemplo. Esta casilla no registra un consentimiento real.</span></label>
+</div>
+<div class="flex items-center justify-between flex-wrap gap-space-sm pt-space-xs">
+<span class="text-label-sm font-label-sm ini-text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-label-sm">lock</span>
+                Demostración: los datos no se envían ni guardan.
+              </span>
+<button class="px-space-lg py-2.5 rounded-md ini-bg-primary-container ini-text-on-primary-fixed font-title-sm text-title-sm ini-hover-bg-primary-fixed-dim transition-all shadow-sm active:scale-95 inline-flex items-center gap-space-xs font-semibold" type="submit">
+<span class="material-symbols-outlined text-title-sm" data-weight="fill">send</span>
+<span>Validar postulación de ejemplo</span>
+</button>
+</div>
+<p class="mt-3 text-body-sm" role="status">{{message()}}</p></form>
+</div>
+</div>
+</section>

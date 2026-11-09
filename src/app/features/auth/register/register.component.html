@@ -1,0 +1,194 @@
+<div class="flex-grow w-full max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-lg lg:py-space-xl">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+<section class="lg:col-span-7 auth-bg-1a1d24 rounded-xl p-space-lg md:p-space-xl border auth-border-2e3440 shadow-xl">
+<div class="flex items-start gap-space-md mb-space-lg pb-space-md border-b auth-border-2e3440">
+<div class="w-12 h-12 rounded-lg auth-bg-0f1115 flex items-center justify-center shrink-0 border-t-2 border-primary-container border-b border-l border-r auth-border-2e3440 shadow-xs">
+<span class="text-primary-container font-headline-md text-headline-md tracking-tighter">P+</span>
+</div>
+<div>
+<span class="text-label-sm font-label-sm uppercase tracking-wider auth-text-94a3b8 block">Veeduría Ciudadana Territorial</span>
+<h2 class="text-title-md font-title-md font-bold auth-text-f8fafc tracking-tight">PLUS Corporación Pluralismo Social</h2>
+</div>
+</div>
+<div class="mb-space-lg">
+<h1 class="text-headline-lg font-headline-lg auth-text-f8fafc tracking-tight mb-space-xs">Crear cuenta en PLUS</h1>
+<p class="text-body-md font-body-md auth-text-94a3b8">Súmate a la red de veeduría ciudadana y participa activamente en el seguimiento de proyectos en tu comunidad.</p>
+</div>
+<form class="space-y-space-md" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+<div>
+<label class="block text-title-sm font-title-sm auth-text-f8fafc mb-space-xs" for="full-name">
+              Nombre completo <span class="text-error">*</span>
+</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none auth-text-94a3b8">
+<span class="material-symbols-outlined text-lg" data-icon="person">person</span>
+</div>
+<input autocomplete="name" maxlength="150" formControlName="name" [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid" class="block w-full h-11 pl-10 pr-3 rounded-lg border auth-border-2e3440 auth-bg-121418 auth-text-f8fafc text-body-md font-body-md placeholder-[#64748b] focus:border-primary-container focus:ring-2 focus:ring-primary-container/40 focus:outline-none transition-all" id="full-name" name="full-name" placeholder="Ej. María Elena Córdoba Palacios" required="" type="text">
+</div><plus-auth-field-error [control]="form.controls.name"/>
+</div>
+<div>
+<label class="block text-title-sm font-title-sm auth-text-f8fafc mb-space-xs" for="email">
+              Correo electrónico institucional o personal <span class="text-error">*</span>
+</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none auth-text-94a3b8">
+<span class="material-symbols-outlined text-lg" data-icon="mail">mail</span>
+</div>
+<input autocomplete="email" formControlName="email" [attr.aria-invalid]="form.controls.email.touched && form.controls.email.invalid" class="block w-full h-11 pl-10 pr-3 rounded-lg border auth-border-2e3440 auth-bg-121418 auth-text-f8fafc text-body-md font-body-md placeholder-[#64748b] focus:border-primary-container focus:ring-2 focus:ring-primary-container/40 focus:outline-none transition-all" id="email" name="email" placeholder="ejemplo&#64;correo.com" required="" type="email">
+</div><plus-auth-field-error [control]="form.controls.email"/>
+<p class="mt-space-xs text-body-sm font-body-sm auth-text-94a3b8 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs auth-text-64748b" data-icon="info">info</span>
+              Utiliza un correo al que tengas acceso. No se enviarán mensajes en esta demostración.
+            </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<label class="text-title-sm font-title-sm auth-text-f8fafc" for="password">
+                  Contraseña <span class="text-error">*</span>
+</label>
+</div>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none auth-text-94a3b8">
+<span class="material-symbols-outlined text-lg" data-icon="lock">lock</span>
+</div>
+<input #passwordInput autocomplete="new-password" formControlName="password" [attr.aria-invalid]="form.controls.password.touched && form.controls.password.invalid" class="block w-full h-11 pl-10 pr-10 rounded-lg border auth-border-2e3440 auth-bg-121418 auth-text-f8fafc text-body-md font-body-md focus:border-primary-container focus:ring-2 focus:ring-primary-container/40 focus:outline-none transition-all" id="password" name="password" placeholder="••••••••" required="" type="password">
+<plus-password-toggle [target]="passwordInput"/>
+</div><plus-auth-field-error [control]="form.controls.password"/>
+<div class="mt-2">
+<div class="w-full auth-bg-262b36 h-1.5 rounded-full overflow-hidden flex">
+<div [style.width.%]="passwordProgress()" class="bg-primary-container h-full rounded-full"></div>
+</div>
+<div class="flex items-center justify-between mt-1 text-label-sm font-label-sm auth-text-94a3b8">
+<span>Mínimo 8 caracteres</span>
+<span class="font-medium auth-text-f8fafc">{{ passwordHint() }}</span>
+</div>
+</div>
+</div>
+<div>
+<label class="block text-title-sm font-title-sm auth-text-f8fafc mb-space-xs" for="confirm-password">
+                Confirmar contraseña <span class="text-error">*</span>
+</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none auth-text-94a3b8">
+<span class="material-symbols-outlined text-lg" data-icon="lock_clock">lock_clock</span>
+</div>
+<input #confirmationInput autocomplete="new-password" formControlName="confirmation" [attr.aria-invalid]="form.controls.confirmation.touched && form.controls.confirmation.invalid" class="block w-full h-11 pl-10 pr-10 rounded-lg border auth-border-2e3440 auth-bg-121418 auth-text-f8fafc text-body-md font-body-md focus:border-primary-container focus:ring-2 focus:ring-primary-container/40 focus:outline-none transition-all" id="confirm-password" name="confirm-password" placeholder="••••••••" required="" type="password">
+<plus-password-toggle [target]="confirmationInput"/>
+</div><plus-auth-field-error [control]="form.controls.confirmation"/>
+<p class="mt-2 text-label-sm font-label-sm auth-text-94a3b8">Las contraseñas deben coincidir.</p>
+</div>
+</div>
+<div>
+<label class="block text-title-sm font-title-sm auth-text-f8fafc mb-space-xs" for="role">
+              Rol o vinculación en veeduría <span class="auth-text-94a3b8 font-normal">(Opcional)</span>
+</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none auth-text-94a3b8">
+<span class="material-symbols-outlined text-lg" data-icon="badge">badge</span>
+</div>
+<select formControlName="affiliation" [attr.aria-invalid]="form.controls.affiliation.touched && form.controls.affiliation.invalid" class="block w-full h-11 pl-10 pr-10 rounded-lg border auth-border-2e3440 auth-bg-121418 auth-text-f8fafc text-body-md font-body-md focus:border-primary-container focus:ring-2 focus:ring-primary-container/40 focus:outline-none transition-all appearance-none" id="role" name="role">
+<option class="auth-bg-1a1d24 auth-text-f8fafc"  value="ciudadano">Ciudadano interesado</option>
+<option class="auth-bg-1a1d24 auth-text-f8fafc" value="lider">Líder comunitario / JAC</option>
+<option class="auth-bg-1a1d24 auth-text-f8fafc" value="veedor">Veedor territorial acreditado</option>
+<option class="auth-bg-1a1d24 auth-text-f8fafc" value="organizacion">Organización social / Colectivo</option>
+</select>
+<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none auth-text-94a3b8">
+<span class="material-symbols-outlined text-base" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+<div class="space-y-space-sm pt-space-xs">
+<label class="flex items-start gap-space-sm cursor-pointer select-none">
+<input formControlName="consent" [attr.aria-invalid]="form.controls.consent.touched && form.controls.consent.invalid" class="mt-0.5 w-4 h-4 rounded auth-border-374151 auth-bg-121418 text-primary-container focus:ring-primary-container accent-primary-container" required="" type="checkbox">
+<span class="text-body-sm font-body-sm auth-text-94a3b8">
+                Acepto los <a class="underline font-medium auth-text-f8fafc hover:text-primary-container transition-colors" href="#">Términos de Servicio</a> y autorizo el tratamiento de mis datos personales según la <span class="auth-text-f8fafc font-medium">Ley Estatutaria 1581 de 2012</span> y el marco institucional de PLUS.
+              </span>
+</label>
+<label class="flex items-start gap-space-sm cursor-pointer select-none">
+<input formControlName="notifications" [attr.aria-invalid]="form.controls.notifications.touched && form.controls.notifications.invalid" class="mt-0.5 w-4 h-4 rounded auth-border-374151 auth-bg-121418 text-primary-container focus:ring-primary-container accent-primary-container" type="checkbox">
+<span class="text-body-sm font-body-sm auth-text-94a3b8">
+                Deseo recibir alertas tempranas sobre proyectos, auditorías y audiencias en mi municipio o departamento.
+              </span>
+</label>
+</div>
+<div class="pt-space-sm">
+<button class="w-full h-12 bg-primary-container auth-hoverbg-eab308 text-slate-950 text-title-md font-title-md font-semibold rounded-lg shadow-md transition-all duration-150 ease-out active:scale-[0.99] flex items-center justify-center gap-space-xs focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#1a1d24] focus:ring-primary-container" type="submit">
+<span>Crear cuenta</span>
+<span class="material-symbols-outlined text-lg" data-icon="how_to_reg">how_to_reg</span>
+</button>
+</div>
+<div class="text-center pt-space-xs pb-space-xs border-t auth-border-2e3440 mt-space-md">
+<p class="text-body-sm font-body-sm auth-text-94a3b8">
+              ¿Ya tienes una cuenta registrada? 
+              <a class="font-semibold text-primary-container hover:underline ml-1 inline-flex items-center gap-0.5" routerLink="/login">
+                Iniciar sesión
+                <span class="material-symbols-outlined text-xs" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</p>
+</div>
+<plus-auth-field-error [control]="form.controls.consent"/>
+<p class="auth-error" role="status">{{ confirmationError() }}</p>
+<p class="mt-3 text-body-sm" role="status">{{ message() }}</p></form>
+</section>
+<section class="lg:col-span-5 space-y-space-md">
+<div class="auth-bg-1a1d24 rounded-xl border auth-border-2e3440 overflow-hidden shadow-xl">
+<div class="relative h-64 md:h-72 w-full auth-bg-161920">
+<img class="w-full h-full object-cover" alt="Encuentro comunitario de referencia de PLUS" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjOBr_bsEX-uQUvzO9iX-JAfmdaj4znrFrUKkSWy9JSbksOO5kF12zApygJih_VvxXJrDuHcvYqkTi11XkjcJ-be0X6XGvJK0PQdS6zteXVBpwtMbO7rhqKISKV5g8DNT3G75aUG0jCqpSYQlv3veAIdVM8QzbKYvrNbyAQeu6tC0fN8KJeEU3PXFI5hzBksA8zHt_eCkv_N3aMIxX6hwTGCDb4OL7w3_XCfXtMdcYx2HoHEFIYWwAvg">
+<div class="absolute inset-0 bg-gradient-to-t from-[#0f1115] via-[#0f1115]/50 to-transparent flex items-end p-space-md">
+<div class="text-white">
+<span class="inline-flex items-center gap-1 bg-primary-container text-slate-950 font-medium text-label-sm font-label-sm px-2 py-0.5 rounded-full mb-1">
+<span class="material-symbols-outlined text-xs" data-icon="verified">verified</span>
+                  Veeduría Activa 2025
+                </span>
+<p class="text-title-sm font-title-sm font-semibold text-white">Asambleas Territoriales y Control Social</p>
+</div>
+</div>
+</div>
+<div class="p-space-md md:p-space-lg">
+<h3 class="text-title-md font-title-md font-bold auth-text-f8fafc mb-space-xs">Poder ciudadano en cada territorio</h3>
+<p class="text-body-sm font-body-sm auth-text-94a3b8">
+              La plataforma de PLUS facilita el acompañamiento técnico, jurídico y documental para que comunidades organizadas ejerzan veeduría efectiva sobre la inversión de recursos públicos.
+            </p>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm">
+<div class="auth-bg-1a1d24 p-space-md rounded-xl border auth-border-2e3440 relative overflow-hidden flex flex-col justify-between shadow-md">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary-container"></div>
+<div>
+<span class="text-label-sm font-label-sm auth-text-94a3b8 block mb-1">Impacto</span>
+<span class="text-headline-md font-headline-md font-bold auth-text-f8fafc block">+140</span>
+</div>
+<p class="text-label-sm font-label-sm auth-text-94a3b8 mt-space-xs">Casos atendidos y fiscalizados</p>
+</div>
+<div class="auth-bg-1a1d24 p-space-md rounded-xl border auth-border-2e3440 relative overflow-hidden flex flex-col justify-between shadow-md">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary-container"></div>
+<div>
+<span class="text-label-sm font-label-sm auth-text-94a3b8 block mb-1">Cobertura</span>
+<span class="text-headline-md font-headline-md font-bold auth-text-f8fafc block">48</span>
+</div>
+<p class="text-label-sm font-label-sm auth-text-94a3b8 mt-space-xs">Veredas articuladas en red</p>
+</div>
+<div class="auth-bg-1a1d24 p-space-md rounded-xl border auth-border-2e3440 relative overflow-hidden flex flex-col justify-between shadow-md">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary-container"></div>
+<div>
+<span class="text-label-sm font-label-sm auth-text-94a3b8 block mb-1">Acceso</span>
+<span class="text-headline-md font-headline-md font-bold auth-text-f8fafc block">100%</span>
+</div>
+<p class="text-label-sm font-label-sm auth-text-94a3b8 mt-space-xs">Gratuito y libre acceso civil</p>
+</div>
+</div>
+<div class="auth-bg-161d2b rounded-xl p-space-md border auth-border-2e3440 flex items-start gap-space-md shadow-md">
+<div class="w-10 h-10 rounded-lg auth-bg-1a1d24 border auth-border-2e3440 flex items-center justify-center shrink-0 text-primary-container">
+<span class="material-symbols-outlined text-xl" data-icon="shield">shield</span>
+</div>
+<div>
+<h4 class="text-title-sm font-title-sm font-semibold auth-text-f8fafc mb-0.5">Seguridad y Reserva Institucional</h4>
+<p class="text-body-sm font-body-sm auth-text-94a3b8 leading-relaxed">
+              Tus datos personales están protegidos. Las veedurías ciudadanas garantizan reserva y confidencialidad en denuncias y aportes según la normatividad colombiana y la Ley 850 de 2003.
+            </p>
+</div>
+</div>
+</section>
+</div>
+</div>

@@ -1,0 +1,59 @@
+<div class="editorial-page">
+<section class="ed-news-bg-surface-container-lowest border-b ed-news-border-surface-container-high pt-10 pb-8">
+<div class="max-w-7xl mx-auto px-margin md:px-margin-desktop">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full ed-news-bg-surface-container border ed-news-border-surface-container-highest ed-news-text-secondary font-label-md text-label-md mb-4">
+<span class="w-2 h-2 rounded-full ed-news-bg-primary-container"></span>
+<span>Boletín de Prensa &amp; Registro Territorial Oficial</span>
+<span class="ed-news-text-outline-variant">•</span>
+<span class="font-medium ed-news-text-on-surface">Veeduría Ciudadana Ley 850 de 2003</span>
+</div>
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+<div class="max-w-3xl">
+<h1 class="font-display-lg text-display-lg ed-news-text-on-surface tracking-tight mb-3">
+              Noticias y actividades de PLUS
+            </h1>
+<p class="font-body-lg text-body-lg ed-news-text-secondary leading-relaxed">
+              Monitoreo de transparencia en contratación estatal, acompañamiento directo en territorio y reportes periódicos de la gestión liderada por el Representante Legal <span class="font-semibold ed-news-text-on-surface">Luis Alberto Muñoz Granada</span> en las subregiones de Colombia.
+            </p>
+</div>
+<div class="flex items-center gap-4 border-l-2 ed-news-border-primary-container pl-4 py-1 ed-news-bg-surface-container-low-40 rounded-r-lg">
+<div>
+<span class="block font-headline-md text-headline-md ed-news-text-on-surface font-bold">142</span>
+<span class="block font-label-sm text-label-sm ed-news-text-secondary">Alertas Emitidas (2025)</span>
+</div>
+<div class="h-8 w-px ed-news-bg-surface-container-high"></div>
+<div>
+<span class="block font-headline-md text-headline-md ed-news-text-on-surface font-bold">34</span>
+<span class="block font-label-sm text-label-sm ed-news-text-secondary">Mesas de Trabajo Activas</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="ed-news-bg-surface border-b ed-news-border-surface-container-high py-4 sticky top-16 z-40 backdrop-blur-md ed-news-bg-surface-95">
+<div class="max-w-7xl mx-auto px-margin md:px-margin-desktop">
+<div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+<div class="relative flex-1 max-w-md">
+<label class="sr-only" for="search-articles">Buscar publicaciones</label>
+<span aria-hidden="true" class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 ed-news-text-secondary text-[20px]">
+              search
+            </span>
+<input [value]="query()" (input)="changeQuery($any($event.target).value)" class="w-full h-11 pl-11 pr-4 rounded-lg ed-news-bg-surface-container-lowest border ed-news-border-surface-container-highest ed-news-text-on-surface font-body-md text-body-md ed-news-placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-on-surface transition-all" id="search-articles" placeholder="Buscar publicaciones por título o palabra clave..." type="search">
+</div>
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">@for(value of categories;track value){<button type="button" class="inline-flex items-center px-3.5 py-1.5 rounded-full border border-slate-400/40 text-label-md whitespace-nowrap" (click)="changeCategory(value)" [attr.aria-pressed]="category() === value">{{value || 'Todos'}}</button>}</div>
+<div class="flex items-center gap-2 self-end lg:self-center shrink-0">
+<span class="font-label-sm text-label-sm ed-news-text-secondary">Ordenar:</span>
+<select aria-label="Ordenar publicaciones" [value]="order()" (change)="order.set($any($event.target).value)" class="h-10 px-3 py-1.5 rounded-lg ed-news-bg-surface-container-lowest border ed-news-border-surface-container-highest text-title-sm font-title-sm ed-news-text-on-surface focus:outline-none focus:ring-1 focus:ring-primary-container cursor-pointer">
+<option value="recent">Más recientes</option>
+<option value="old">Más antiguas</option>
+</select>
+</div>
+</div>
+</div>
+</section>
+<div class="max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-xl space-y-space-xl">
+@if(showFeatured()){<plus-news-featured (open)="openArticle($event)"/>}
+<div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-400/30 pb-4"><div><h2 class="text-headline-md">Crónicas, Reportes y Avances Territoriales</h2><p class="text-body-sm mt-1">Publicaciones de ejemplo del diseño.</p></div><span class="text-body-sm" role="status">{{filtered().length}} publicaciones en la cuadrícula</span></div>
+@if(selected();as article){<section id="news-preview" class="editorial-panel p-5 rounded-xl border space-y-3" aria-label="Resumen de la publicación"><div class="flex flex-wrap justify-between gap-3"><h2 id="news-preview-title" tabindex="-1" class="text-headline-sm">{{article.title}}</h2><button type="button" class="editorial-button" (click)="selected.set(null)">Cerrar resumen</button></div><p class="text-body-sm">{{article.category}} · {{article.date}}</p><p>{{article.summary}}</p><p class="text-body-sm">Resumen de demostración. La noticia completa todavía no está disponible.</p></section>}
+<section aria-label="Cuadrícula de noticias" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg">@for(article of visible();track article.id){<plus-news-card [article]="article" (open)="openArticle($event)"/>}@empty{<p class="col-span-full py-8 text-center" role="status">No hay publicaciones de ejemplo que coincidan con los filtros.</p>}</section>
+<div class="flex flex-wrap justify-between items-center gap-3 text-body-sm"><span>Página {{page()}} de {{pages()}} · {{filtered().length}} publicaciones de ejemplo</span><div class="flex gap-2"><button type="button" class="editorial-button" (click)="navigate(-1)" [disabled]="page() === 1">Anterior</button><button type="button" class="editorial-button" (click)="navigate(1)" [disabled]="page() === pages()">Siguiente</button></div></div><plus-news-community/></div></div>

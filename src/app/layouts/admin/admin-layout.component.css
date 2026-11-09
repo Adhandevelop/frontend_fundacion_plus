@@ -1,0 +1,58 @@
+.admin-shell .adm-bg---0F1117-{background-color:rgb(15 17 23 / 1)}
+.dark .admin-shell .adm-bg---0F1117-{background-color:rgb(15 17 23 / 1)}
+.admin-shell .adm-bg---1A1E29-{background-color:rgb(255 255 255 / 1)}
+.dark .admin-shell .adm-bg---1A1E29-{background-color:rgb(26 30 41 / 1)}
+.admin-shell .adm-border---2A2F3D-{border-color:rgb(203 213 225 / 1)}
+.dark .admin-shell .adm-border---2A2F3D-{border-color:rgb(42 47 61 / 1)}
+.admin-shell .adm-bg-primary-container{background-color:rgb(250 204 21 / 1)}
+.dark .admin-shell .adm-bg-primary-container{background-color:rgb(250 204 21 / 1)}
+.admin-shell .adm-text-on-primary-fixed{color:rgb(15 23 42 / 1)}
+.dark .admin-shell .adm-text-on-primary-fixed{color:rgb(15 23 42 / 1)}
+.admin-shell .adm-text-secondary{color:rgb(51 65 85 / 1)}
+.dark .admin-shell .adm-text-secondary{color:rgb(148 163 184 / 1)}
+.admin-shell .adm-text-on-surface{color:rgb(2 6 23 / 1)}
+.dark .admin-shell .adm-text-on-surface{color:rgb(248 250 252 / 1)}
+.admin-shell .adm-bg---161922-{background-color:rgb(248 250 252 / 1)}
+.dark .admin-shell .adm-bg---161922-{background-color:rgb(22 25 34 / 1)}
+.admin-shell .adm-hover-bg---242938-:hover{background-color:rgb(241 245 249 / 1)}
+.dark .admin-shell .adm-hover-bg---242938-:hover{background-color:rgb(36 41 56 / 1)}
+.admin-shell .adm-border---262A36-{border-color:rgb(203 213 225 / 1)}
+.dark .admin-shell .adm-border---262A36-{border-color:rgb(38 42 54 / 1)}
+.admin-shell .adm-text-primary{color:rgb(133 77 14 / 1)}
+.dark .admin-shell .adm-text-primary{color:rgb(250 204 21 / 1)}
+.admin-shell .adm-hover-bg---161922-:hover{background-color:rgb(248 250 252 / 1)}
+.dark .admin-shell .adm-hover-bg---161922-:hover{background-color:rgb(22 25 34 / 1)}
+.admin-shell .adm-hover-text-on-surface:hover{color:rgb(2 6 23 / 1)}
+.dark .admin-shell .adm-hover-text-on-surface:hover{color:rgb(248 250 252 / 1)}
+.admin-shell .adm-border-outline-variant-40{border-color:rgb(148 163 184 / 0.4)}
+.dark .admin-shell .adm-border-outline-variant-40{border-color:rgb(51 65 85 / 0.4)}
+.admin-shell .adm-border-primary-20{border-color:rgb(133 77 14 / 0.2)}
+.dark .admin-shell .adm-border-primary-20{border-color:rgb(250 204 21 / 0.2)}
+.admin-shell .adm-bg-surface-container{background-color:rgb(241 245 249 / 1)}
+.dark .admin-shell .adm-bg-surface-container{background-color:rgb(30 34 48 / 1)}
+.admin-shell .adm-border-outline-variant{border-color:rgb(148 163 184 / 1)}
+.dark .admin-shell .adm-border-outline-variant{border-color:rgb(51 65 85 / 1)}
+.admin-shell .adm-bg-surface-container-lowest{background-color:rgb(255 255 255 / 1)}
+.dark .admin-shell .adm-bg-surface-container-lowest{background-color:rgb(26 30 41 / 1)}
+.admin-shell .adm-border-outline-variant-80{border-color:rgb(148 163 184 / 0.8)}
+.dark .admin-shell .adm-border-outline-variant-80{border-color:rgb(51 65 85 / 0.8)}
+.admin-shell{min-height:100vh;background:#f1f5f9;color:#0f172a;}
+.dark .admin-shell{background:#0f1117;color:#f8fafc;}
+.admin-shell plus-admin-dashboard,.admin-shell plus-admin-cases,.admin-shell plus-admin-case-table,.admin-shell plus-admin-reports,.admin-shell plus-admin-audit{display:block;min-width:0;}
+.admin-shell .admin-panel{background:#fff;border-color:#cbd5e1;}.dark .admin-shell .admin-panel{background:#1a1e29;border-color:#2a2f3d;}
+.admin-shell .admin-field{display:flex;flex-direction:column;gap:.35rem;font-size:13px;}
+.admin-shell .admin-field input,.admin-shell .admin-field select,.admin-shell .admin-field textarea{border:1px solid #94a3b8;background:#fff;color:#0f172a;padding:.6rem;border-radius:.4rem;min-width:0;width:100%;}
+.dark .admin-shell .admin-field input,.dark .admin-shell .admin-field select,.dark .admin-shell .admin-field textarea{background:#161922;color:#f8fafc;border-color:#475569;}
+.admin-shell .admin-button{padding:.5rem .8rem;border:1px solid #94a3b8;border-radius:.4rem;font-size:13px;}
+.admin-shell .admin-primary{background:#facc15;color:#0f172a;padding:.5rem .8rem;border-radius:.4rem;font-weight:600;font-size:13px;}
+.admin-shell button:disabled{opacity:.5;cursor:not-allowed;}
+.admin-shell input[type=checkbox]{accent-color:#eab308;}
+.admin-shell .audit-selected{background:#fef9c3;}.dark .admin-shell .audit-selected{background:#422006;}
+.admin-shell plus-admin-users,.admin-shell plus-demo-user-editor,.admin-shell plus-demo-user-detail,.admin-shell plus-demo-roles-reference,.admin-shell plus-demo-role-picker{display:block;min-width:0;}
+.admin-shell plus-admin-communities,.admin-shell plus-community-editor,.admin-shell plus-community-detail{display:block;min-width:0;}
+.admin-shell plus-admin-news,.admin-shell plus-news-editor,.admin-shell plus-news-review,.admin-shell plus-editorial-preview{display:block;min-width:0;}
+.admin-shell plus-admin-programs,.admin-shell plus-program-editor,.admin-shell plus-program-detail,.admin-shell plus-edition-editor,.admin-shell plus-edition-detail{display:block;min-width:0;}
+.admin-shell plus-activity-list,.admin-shell plus-activity-editor,.admin-shell plus-activity-detail,.admin-shell plus-initiative-media{display:block;min-width:0;}
+.admin-shell plus-proposals-list,.admin-shell plus-proposal-detail{display:block;min-width:0;}
+.admin-shell plus-comments-list,.admin-shell plus-comment-detail{display:block;min-width:0;}
+@media(max-width:640px){.admin-shell h1{font-size:24px!important;line-height:32px!important;}.admin-shell .admin-data-table{min-width:1000px;}}

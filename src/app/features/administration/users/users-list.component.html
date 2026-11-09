@@ -1,0 +1,31 @@
+<div class="p-4 sm:p-6 space-y-6 min-w-0">
+  <header class="flex flex-wrap items-start justify-between gap-4">
+    <div class="max-w-3xl space-y-2"><p class="text-label-sm uppercase tracking-wider">Administración · Demostración</p><h1 class="text-headline-md">Usuarios y permisos</h1><p class="text-body-sm">Explora perfiles ficticios y sus roles de referencia. Los cambios de esta sección no crean cuentas, no inician sesión ni alteran el acceso a las pantallas.</p></div>
+    <div class="flex flex-wrap gap-3"><a routerLink="/admin/roles" class="admin-button">Consultar roles</a><a routerLink="/admin/usuarios/nuevo" class="admin-primary">Crear usuario de ejemplo</a></div>
+  </header>
+  <section class="admin-panel border rounded-xl p-5 space-y-4" aria-labelledby="users-filters-title">
+    <div class="flex justify-between items-center gap-3"><h2 id="users-filters-title" class="text-title-md">Buscar usuarios de ejemplo</h2><button type="button" class="admin-button" (click)="reset()">Restablecer filtros</button></div>
+    <div class="grid md:grid-cols-3 gap-4">
+      <label class="admin-field">Nombre, correo o identificador<input type="search" [value]="filters().query" (input)="change('query', $any($event.target).value)" placeholder="Buscar en los perfiles ficticios"></label>
+      <label class="admin-field">Rol<select [value]="filters().role" (change)="change('role', $any($event.target).value)"><option value="">Todos los roles</option>@for(role of roles;track role.id){<option [value]="role.id">{{role.name}}</option>}</select></label>
+      <label class="admin-field">Estado simulado<select [value]="filters().state" (change)="change('state', $any($event.target).value)"><option value="">Todos los estados</option><option value="active">Activo</option><option value="inactive">Inactivo</option></select></label>
+    </div><p role="status" class="text-body-sm">{{filtered().length}} de {{store.users().length}} usuarios de ejemplo.</p>
+  </section>
+  <section class="grid sm:grid-cols-3 gap-4" aria-label="Indicadores de la selección">@for(metric of metrics();track metric.label){<div class="admin-panel border rounded-xl border-t-4 border-t-yellow-400 p-5"><h2 class="text-body-sm">{{metric.label}}</h2><p class="text-display-sm font-bold mt-3">{{metric.value}}</p></div>}</section>
+  <section class="admin-panel border rounded-xl overflow-hidden" aria-labelledby="users-list-title">
+    <h2 id="users-list-title" class="text-title-md p-5">Directorio de demostración</h2>
+    <div class="overflow-x-auto"><table class="w-full min-w-[700px] text-left text-body-sm">
+      <caption class="sr-only">Usuarios ficticios incluidos en los filtros actuales</caption>
+      <thead class="bg-slate-100 dark:bg-slate-800"><tr>@for(label of ['Usuario de ejemplo','Roles de referencia','Estado simulado','Acciones'];track label){<th scope="col" class="p-4 font-semibold">{{label}}</th>}</tr></thead>
+      <tbody>@for(user of visible();track user.id){
+        <tr class="border-t border-slate-300/60 dark:border-slate-700">
+          <td class="p-4"><strong class="block">{{user.name}}</strong><span class="block mt-2 break-all">{{user.email}}</span><span class="block text-label-sm mt-2">{{user.id}} · {{user.origin === 'local' ? 'Creado en esta pestaña' : 'Perfil ficticio inicial'}}</span>@if(user.modified){<span class="block text-label-sm text-amber-800 dark:text-yellow-300 mt-1">Con cambios temporales</span>}</td>
+          <td class="p-4"><ul class="flex flex-wrap gap-2">@for(role of user.roles;track role){<li class="rounded-full bg-yellow-400/15 border border-yellow-600/40 px-2 py-1 text-label-sm">{{roleName(role)}}</li>}</ul></td>
+          <td class="p-4">{{user.active ? 'Activo' : 'Inactivo'}}</td>
+          <td class="p-4"><a [routerLink]="['/admin/usuarios',user.id]" class="admin-button inline-flex" [attr.aria-label]="'Ver detalle de ' + user.name">Ver detalle</a></td>
+        </tr>
+      }@empty{<tr><td colspan="4" class="p-10 text-center"><p class="text-title-md">No hay usuarios con estos filtros</p><button type="button" class="admin-button mt-4" (click)="reset()">Mostrar todos los ejemplos</button></td></tr>}</tbody>
+    </table></div>
+    <nav aria-label="Paginación de usuarios" class="p-4 border-t border-slate-400/30 flex flex-wrap justify-between items-center gap-3"><p class="text-body-sm">Página {{page()}} de {{pages()}}</p><div class="flex gap-2"><button type="button" class="admin-button" [disabled]="page() <= 1" (click)="navigate(-1)">Anterior</button><button type="button" class="admin-button" [disabled]="page() >= pages()" (click)="navigate(1)">Siguiente</button></div></nav>
+  </section>
+</div>

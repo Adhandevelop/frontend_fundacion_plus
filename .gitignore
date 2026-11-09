@@ -3,3 +3,6 @@ dist/
 .angular/
 out-tsc/
 .npm-cache/
+base de datos.md
+endpoints-integracion-backend.md
+contexto.md

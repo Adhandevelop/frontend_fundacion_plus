@@ -1,0 +1,26 @@
+<section class="cit-panel rounded-xl border overflow-hidden">
+  <div class="p-4 border-b border-slate-400/30 space-y-4">
+    <div class="flex flex-wrap justify-between gap-2"><h2 class="text-headline-sm">Mis Radicados Comunitarios</h2><span class="text-body-sm">{{ filtered().length }} de 5 casos de ejemplo</span></div>
+    <p class="text-body-sm">Consulta de demostración. Los registros no pertenecen a una cuenta autenticada.</p>
+    <div class="grid md:grid-cols-12 gap-3">
+      <label class="cit-field md:col-span-6"><span class="sr-only">Buscar casos</span><input [value]="query()" (input)="filter('query',$any($event.target).value)" placeholder="Buscar por radicado, título o municipio..."></label>
+      <label class="cit-field md:col-span-3"><span class="sr-only">Estado</span><select [value]="status()" (change)="filter('status',$any($event.target).value)"><option value="">Todos los estados</option>@for(state of statuses; track state){<option [value]="state">{{ state }}</option>}</select></label>
+      <label class="cit-field md:col-span-3"><span class="sr-only">Tipo de caso</span><select [value]="kind()" (change)="filter('kind',$any($event.target).value)"><option value="">Todos los tipos</option><option>Problemática</option><option>Proyecto / Iniciativa</option></select></label>
+    </div>
+  </div>
+  <div class="overflow-x-auto" tabindex="0" role="region" aria-label="Tabla de casos de ejemplo">
+    <table class="cit-table w-full text-left text-body-sm"><caption class="sr-only">Radicados de demostración y su estado</caption>
+      <thead class="bg-slate-100 dark:bg-neutral-900"><tr>@for(title of ['Código / Radicado','Título del caso','Tipo','Municipio / Territorio','Estado','Última actualización','Acciones']; track title){<th scope="col" class="p-3 font-semibold">{{ title }}</th>}</tr></thead>
+      <tbody>@for(item of rows(); track item.code) {
+        <tr class="border-t border-slate-400/20 hover:bg-slate-400/10">
+          <th scope="row" class="p-3 whitespace-nowrap">{{ item.code }}</th><td class="p-3 min-w-[220px]">{{ item.title }}</td><td class="p-3">{{ item.kind }}</td><td class="p-3">{{ item.territory }}</td>
+          <td class="p-3"><span class="inline-flex rounded-full px-2 py-1 text-label-md" [class]="statusClass(item.status)">{{ item.status }}</span>@if(demos.modified(item.code)){<p class="text-label-sm mt-2">Simulación: {{demos.workflow(item.code).management}} · Publicación {{demos.workflow(item.code).moderation}}</p>}</td><td class="p-3">{{ item.updated }}</td>
+          <td class="p-3"><div class="flex gap-1"><a [routerLink]="['/ciudadano/casos',item.code]" class="p-2 rounded hover:bg-slate-400/20" [attr.aria-label]="'Ver detalle de '+item.code"><span class="material-symbols-outlined" aria-hidden="true">visibility</span></a><a [routerLink]="['/ciudadano/casos',item.code]" [queryParams]="{seccion:'contribution'}" class="p-2 rounded hover:bg-slate-400/20" [attr.aria-label]="'Agregar información a '+item.code"><span class="material-symbols-outlined" aria-hidden="true">add_circle_outline</span></a>@if(item.code === 'PLUS-2025-084'){<a [routerLink]="['/ciudadano/casos',item.code]" [queryParams]="{seccion:'history'}" class="p-2" aria-label="Ver seguimiento del caso de ejemplo"><span class="material-symbols-outlined" aria-hidden="true">timeline</span></a>}</div></td>
+        </tr>
+      } @empty {<tr><td colspan="7" class="p-8 text-center" role="status">No hay casos de ejemplo que coincidan con los filtros.</td></tr>}</tbody>
+    </table>
+  </div>
+  <div class="p-4 border-t border-slate-400/30 flex flex-wrap justify-between items-center gap-3 text-body-sm"><span>Página {{ page() }} de {{ pages() }} · {{ filtered().length }} resultados</span><div class="flex gap-2"><button type="button" class="cit-button" [disabled]="page() === 1" (click)="navigate(-1)">Anterior</button><button type="button" class="cit-button" [disabled]="page() === pages()" (click)="navigate(1)">Siguiente</button></div></div>
+  <p role="status" class="px-4 text-body-sm">{{ message() }}</p>
+  @if(selected(); as item){<section class="m-4 p-4 rounded-xl border border-slate-400/40 space-y-3" aria-label="Resumen del caso seleccionado"><div class="flex justify-between gap-3"><h3 class="text-title-md">{{ item.code }}</h3><button type="button" class="cit-button" (click)="selected.set(null)">Cerrar resumen</button></div><p>{{ item.title }}</p><p class="text-body-sm">{{ item.territory }} · {{ item.status }}</p>@if(item.code === 'PLUS-2025-084'){<a routerLink="/casos/PLUS-2025-084" class="cit-primary inline-flex">Abrir expediente de ejemplo</a>} @else {<p class="text-body-sm">Este registro solo dispone del resumen del diseño.</p>}</section>}
+</section>

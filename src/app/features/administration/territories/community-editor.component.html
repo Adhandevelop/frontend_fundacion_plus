@@ -1,0 +1,17 @@
+<div class="p-4 sm:p-6 max-w-4xl mx-auto space-y-6">
+  <a routerLink="/admin/comunidades" class="text-body-sm underline underline-offset-4">Volver al directorio territorial</a>
+  @if(missing()){<section class="admin-panel border rounded-xl p-8 space-y-4"><h1 class="text-headline-md">Comunidad de ejemplo no disponible</h1><p>El registro no existe o se perdió al recargar. Consulta el directorio para continuar.</p></section>}@else{
+    <header class="space-y-2"><p class="text-label-sm uppercase tracking-wider">Catálogo territorial · Demostración</p><h1 class="text-headline-md">{{id() ? 'Editar comunidad de ejemplo' : 'Crear comunidad de ejemplo'}}</h1><p class="text-body-sm">El registro permanece en memoria. No crea territorios oficiales, códigos DANE ni geometrías.</p></header>
+    <form [formGroup]="form" (ngSubmit)="save()" novalidate class="admin-panel border rounded-xl p-5 sm:p-6 space-y-5">
+      <div class="grid sm:grid-cols-2 gap-4">
+        <label class="admin-field">Departamento<select [value]="departmentId()" (change)="changeDepartment($any($event.target).value)"><option value="">Selecciona un departamento</option>@for(item of departments;track item.id){<option [value]="item.id">{{item.name}}</option>}</select></label>
+        <div><label class="admin-field">Municipio<select formControlName="municipalityId" [attr.aria-invalid]="form.controls.municipalityId.touched && form.controls.municipalityId.invalid"><option value="">Selecciona un municipio</option>@for(item of municipalities();track item.id){<option [value]="item.id">{{item.name}}</option>}</select></label>@if(form.controls.municipalityId.touched && form.controls.municipalityId.invalid){<p class="text-body-sm text-red-700 dark:text-red-300 mt-2">Selecciona un municipio del departamento elegido.</p>}</div>
+        <div><label class="admin-field">Nombre de la comunidad<input formControlName="name" maxlength="150" [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid"></label>@if(form.controls.name.touched && form.controls.name.invalid){<p class="text-body-sm text-red-700 dark:text-red-300 mt-2">Escribe un nombre con contenido, de hasta 150 caracteres.</p>}</div>
+        <label class="admin-field">Tipo<select formControlName="type">@for(type of types;track type){<option [value]="type">{{type}}</option>}</select></label>
+      </div>
+      <label class="admin-field">Descripción opcional<textarea rows="5" formControlName="description"></textarea></label>
+      <aside class="rounded-lg border border-slate-400/40 p-4 text-body-sm">No hay un perímetro disponible. La geometría MultiPolygon y su edición cartográfica se incorporarán con una fuente y un contrato definidos; este formulario no genera coordenadas.</aside>
+      <p role="status" class="text-body-sm">{{status()}}</p><div class="flex flex-wrap gap-3 border-t border-slate-400/30 pt-4"><button type="submit" class="admin-primary">Guardar ejemplo temporal</button><a [routerLink]="id() ? ['/admin/comunidades',id()] : ['/admin/comunidades']" class="admin-button">Cancelar</a></div>
+    </form>
+  }
+</div>

@@ -1,0 +1,19 @@
+<div class="case-workspace space-y-5">
+  <header><p class="text-label-md uppercase tracking-wider mb-2">Comunicación del caso</p><h1 class="text-headline-lg">Mis mensajes</h1><p class="text-body-sm mt-2">Conversaciones de demostración vinculadas a tus casos de ejemplo. Nada se envía a personas reales.</p></header>
+  <div class="grid xl:grid-cols-[340px_minmax(0,1fr)] gap-5 items-start">
+    <aside class="dossier-panel space-y-4">
+      <div class="flex items-center justify-between gap-2"><h2 class="text-title-md">Conversaciones</h2><span class="rounded-full bg-yellow-400 text-black px-2 py-1 text-label-sm">{{area.unreadMessages()}} sin leer</span></div>
+      <label class="dossier-field">Buscar conversación<input type="search" [value]="query()" (input)="query.set($any($event.target).value)" placeholder="Radicado, título o municipio"></label>
+      <label class="flex items-center gap-2 text-body-sm"><input type="checkbox" [checked]="unreadOnly()" (change)="unreadOnly.set($any($event.target).checked)">Solo mensajes sin leer</label>
+      <nav aria-label="Conversaciones de casos" class="space-y-2 max-h-[650px] overflow-y-auto">
+        @for(item of visible();track item.code){<a routerLink="/ciudadano/mensajes" [queryParams]="{caso:item.code}" [attr.aria-current]="code() === item.code ? 'page' : null" class="block rounded-xl border border-slate-400/30 p-3" [class.dossier-own-message]="code() === item.code"><div class="flex justify-between gap-2"><strong class="text-label-md font-mono">{{item.code}}</strong>@if(item.unread){<span class="bg-yellow-400 text-black rounded-full px-2 text-label-sm">{{item.unread}}</span>}</div><p class="text-body-sm font-semibold mt-2 line-clamp-2">{{item.title}}</p><p class="text-label-sm mt-2 opacity-75 line-clamp-2">{{item.latest?.text}}</p><p class="text-label-sm mt-1 opacity-70">{{item.latest?.date | date:'dd/MM/yyyy HH:mm':'-0500'}}</p></a>}
+        @empty{<p class="text-body-sm py-4" role="status">No hay conversaciones que coincidan con los filtros.</p>}
+      </nav>
+    </aside>
+    <div class="min-w-0 space-y-4">
+      @if(selected();as item){
+        @for(key of [item.code];track key){<header class="dossier-panel space-y-3"><h2 class="text-title-md">{{item.title}}</h2><p class="text-body-sm">{{item.code}} · {{item.territory}}</p><a [routerLink]="['/ciudadano/casos',item.code]" class="dossier-button">Abrir expediente</a></header><plus-case-demo-messages [items]="item.messages" audience="citizen" (add)="cases.message(item.code,'citizen',$event)"/>}
+      } @else {<section class="dossier-panel space-y-3"><h2 class="text-headline-sm">Conversación no disponible</h2><p>El caso solicitado no pertenece a los registros de demostración de esta vista.</p><a routerLink="/ciudadano/mensajes" class="dossier-button">Ver conversaciones disponibles</a></section>}
+    </div>
+  </div>
+</div>

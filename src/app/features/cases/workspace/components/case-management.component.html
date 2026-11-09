@@ -1,0 +1,43 @@
+<section class="dossier-panel space-y-5">
+  <h2 class="text-headline-sm">Gestión del expediente</h2>
+  <p class="text-body-sm">Las acciones se reflejan únicamente en la demostración de esta pestaña.</p>
+  <nav aria-label="Acciones de gestión" class="flex flex-wrap gap-2">@for(item of [['review','Revisión de publicación'],['assign','Responsable'],['advance','Registrar avance'],['finish','Resolución y cierre']];track item[0]){<button type="button" class="dossier-button" [attr.aria-pressed]="action() === item[0]" (click)="action.set($any(item[0]));status.set('')">{{item[1]}}</button>}</nav>
+  @switch(action()) {
+    @case('review') {
+      <form [formGroup]="review" (ngSubmit)="moderate()" class="space-y-4">
+        <p class="text-body-sm">La aprobación para publicación es independiente del seguimiento operativo.</p>
+        <label class="dossier-field">Decisión<select formControlName="decision"><option value="approve">Aprobar publicación de ejemplo</option><option value="reject">Rechazar publicación</option><option value="correct">Solicitar corrección</option></select></label>
+        <label class="dossier-field">Motivo o instrucciones<textarea formControlName="reason" rows="4" maxlength="2000"></textarea></label>
+        <p class="text-body-sm">Los rechazos y correcciones requieren un motivo. Las instrucciones se mostrarán en el seguimiento ciudadano de ejemplo.</p>
+        <button type="submit" class="dossier-primary">Aplicar revisión de ejemplo</button>
+      </form>
+    }
+    @case('assign') {
+      <form [formGroup]="assignment" (ngSubmit)="assign()" class="space-y-4">
+        <p class="text-body-sm">Responsable actual: {{workflow().assignee}}</p>
+        <label class="dossier-field">Nuevo responsable<select formControlName="person"><option value="">Selecciona un responsable</option>@for(person of assignees;track person){<option>{{person}}</option>}</select></label>
+        <label class="dossier-field">Motivo de asignación o reasignación<textarea formControlName="reason" rows="3" maxlength="2000"></textarea></label>
+        <button type="submit" class="dossier-primary" [disabled]="finalized()">Asignar en la demostración</button>
+        @if(finalized()){<p class="text-body-sm">El caso de ejemplo está finalizado.</p>}
+      </form>
+    }
+    @case('advance') {
+      <form [formGroup]="advance" (ngSubmit)="addAdvance()" class="space-y-4">
+        <label class="dossier-field">Título del avance<input formControlName="title" maxlength="150"></label>
+        <label class="dossier-field">Descripción<textarea formControlName="description" rows="5" maxlength="2000"></textarea></label>
+        <div class="grid sm:grid-cols-2 gap-4"><label class="dossier-field">Visibilidad<select formControlName="visibility"><option value="citizen">Ciudadano y equipo</option><option value="internal">Solo equipo: nota interna</option><option value="public">Avance público de ejemplo</option></select></label><label class="dossier-field">Estado de gestión<select formControlName="state"><option>Recibido</option><option>Asignado</option><option>En gestión</option></select></label></div>
+        <button type="submit" class="dossier-primary" [disabled]="finalized()">Añadir avance de ejemplo</button>
+        @if(finalized()){<p class="text-body-sm">El caso de ejemplo está finalizado.</p>}
+      </form>
+    }
+    @case('finish') {
+      <form [formGroup]="finish" (ngSubmit)="close()" class="space-y-4">
+        <label class="dossier-field">Resultado del trámite<select formControlName="state"><option>Resuelto</option><option>Cerrado</option></select></label>
+        <label class="dossier-field">Descripción del resultado<textarea formControlName="result" rows="5" minlength="20" maxlength="2000"></textarea></label>
+        <p class="text-body-sm">Entre 20 y 2000 caracteres. El resultado quedará visible para el ciudadano de ejemplo.</p>
+        <button type="submit" class="dossier-primary" [disabled]="workflow().management === 'Cerrado'">Registrar resultado de ejemplo</button>
+      </form>
+    }
+  }
+  <p role="status" class="text-body-sm">{{status()}}</p>
+</section>

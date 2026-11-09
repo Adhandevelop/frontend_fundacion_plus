@@ -1,0 +1,276 @@
+<section class="lg:col-span-8 space-y-space-md">
+<div class="cit-bg-1c1e24 border cit-border-2e323b rounded-xl p-space-md flex items-center justify-between shadow-sm">
+<div>
+<h2 class="text-headline-sm font-headline-sm text-white">Paso 5 de 5: Resumen y confirmación del radicado</h2>
+<p class="text-body-sm font-body-sm cit-text-94a3b8 mt-0.5">Por favor revisa cuidadosamente cada uno de los bloques antes de remitir la veeduría.</p>
+</div>
+<div class="hidden sm:flex items-center gap-2 cit-bg-252830 px-3 py-1.5 rounded-lg border cit-border-333842 text-label-md font-label-md cit-text-f4f4f5">
+<span class="material-symbols-outlined text-primary-container" style="font-size: 18px;">verified_user</span>
+<span>Veeduría en regla</span>
+</div>
+</div>
+<div class="cit-bg-1c1e24 border cit-border-2e323b rounded-xl overflow-hidden shadow-sm">
+<div class="px-space-md py-space-sm cit-bg-16181d border-b cit-border-2e323b flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full cit-bg-facc15 text-black font-label-sm font-bold flex items-center justify-center">1</span>
+<h3 class="text-title-sm font-title-sm font-semibold text-white">Tipo de Caso</h3>
+</div>
+<button (click)="edit.emit(1)" class="inline-flex items-center gap-1 text-label-md font-label-md cit-text-a1a1aa hover:text-white py-1 px-2 rounded cit-hoverbg-252830 transition-colors" type="button">
+<span class="material-symbols-outlined" style="font-size: 16px;">edit</span>
+              Modificar
+            </button>
+</div>
+<div class="p-space-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-primary-container/20 border border-primary-container/40 text-primary-container flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-primary-container" style="font-size: 24px;">warning</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-0.5 rounded-full text-label-sm font-label-sm font-bold bg-primary-container text-black">{{ data().kind }}</span>
+<span class="text-label-sm font-label-sm cit-text-94a3b8">Riesgo en vías y salud pública</span>
+</div>
+<p class="text-body-sm font-body-sm cit-text-94a3b8 mt-1">
+                  Afectación directa a derechos colectivos, servicios públicos esenciales y libre movilidad veredal.
+                </p>
+</div>
+</div>
+<div class="text-label-sm font-label-sm cit-text-94a3b8 sm:text-right border-t cit-border-2e323b sm:border-t-0 pt-2 sm:pt-0 w-full sm:w-auto">
+<span>Prioridad:</span> <strong class="text-red-400 font-semibold">{{ data().priority }}</strong>
+</div>
+</div>
+</div>
+<div class="cit-bg-1c1e24 border cit-border-2e323b rounded-xl overflow-hidden shadow-sm">
+<div class="px-space-md py-space-sm cit-bg-16181d border-b cit-border-2e323b flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full cit-bg-facc15 text-black font-label-sm font-bold flex items-center justify-center">2</span>
+<h3 class="text-title-sm font-title-sm font-semibold text-white">Información Básica del Caso</h3>
+</div>
+<button (click)="edit.emit(2)" class="inline-flex items-center gap-1 text-label-md font-label-md cit-text-a1a1aa hover:text-white py-1 px-2 rounded cit-hoverbg-252830 transition-colors" type="button">
+<span class="material-symbols-outlined" style="font-size: 16px;">edit</span>
+              Modificar
+            </button>
+</div>
+<div class="p-space-md space-y-space-md">
+<div>
+<span class="text-label-sm font-label-sm uppercase tracking-wider cit-text-a1a1aa">Título del radicado</span>
+<h4 class="text-headline-sm font-headline-sm text-white mt-0.5">
+                {{ data().title }}
+              </h4>
+<div class="flex flex-wrap items-center gap-2 mt-2">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-label-sm font-label-sm cit-bg-252830 cit-text-f4f4f5 border cit-border-333842">
+<span class="material-symbols-outlined cit-text-a1a1aa" style="font-size: 14px;">construction</span>
+                  {{ data().category }}
+                </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-label-sm font-label-sm cit-bg-252830 cit-text-a1a1aa border cit-border-333842">
+<span class="material-symbols-outlined" style="font-size: 14px;">schedule</span>
+                  {{ data().months }} meses de afectación
+                </span>
+</div>
+</div>
+<div class="border-t cit-border-2e323b pt-space-sm">
+<span class="text-label-sm font-label-sm uppercase tracking-wider cit-text-a1a1aa">Descripción fáctica y técnica</span>
+<div class="text-body-md font-body-md cit-text-cbd5e1 space-y-2 mt-1 cit-bg-16181d p-space-sm rounded-lg border cit-border-2e323b"><p class="whitespace-pre-line">{{ data().description }}</p></div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm pt-2">
+<div class="cit-bg-252830 border cit-border-333842 rounded-lg p-3 relative pl-4 border-l-4 border-l-primary-container shadow-xs">
+<span class="text-label-sm font-label-sm cit-text-94a3b8 block">Familias afectadas</span>
+<span class="text-headline-md font-headline-md text-white font-bold">{{ data().families }}</span>
+<span class="text-label-sm font-label-sm cit-text-a1a1aa">Censo veredal verificado</span>
+</div>
+<div class="cit-bg-252830 border cit-border-333842 rounded-lg p-3 relative pl-4 border-l-4 border-l-primary-container shadow-xs">
+<span class="text-label-sm font-label-sm cit-text-94a3b8 block">Tiempo de parálisis</span>
+<span class="text-headline-md font-headline-md text-white font-bold">{{ data().months }} meses</span>
+<span class="text-label-sm font-label-sm cit-text-a1a1aa">Sin mantenimiento oficial</span>
+</div>
+<div class="cit-bg-252830 border cit-border-333842 rounded-lg p-3 relative pl-4 border-l-4 border-l-primary-container shadow-xs">
+<span class="text-label-sm font-label-sm cit-text-94a3b8 block">Nivel de Impacto</span>
+<span class="text-headline-md font-headline-md text-red-400 font-bold">Crítico</span>
+<span class="text-label-sm font-label-sm cit-text-a1a1aa">Escolar y alimentario</span>
+</div>
+</div>
+</div>
+</div>
+<div class="cit-bg-1c1e24 border cit-border-2e323b rounded-xl overflow-hidden shadow-sm">
+<div class="px-space-md py-space-sm cit-bg-16181d border-b cit-border-2e323b flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full cit-bg-facc15 text-black font-label-sm font-bold flex items-center justify-center">3</span>
+<h3 class="text-title-sm font-title-sm font-semibold text-white">Ubicación Territorial y Georreferenciación</h3>
+</div>
+<button (click)="edit.emit(3)" class="inline-flex items-center gap-1 text-label-md font-label-md cit-text-a1a1aa hover:text-white py-1 px-2 rounded cit-hoverbg-252830 transition-colors" type="button">
+<span class="material-symbols-outlined" style="font-size: 16px;">edit</span>
+              Modificar
+            </button>
+</div>
+<div class="p-space-md space-y-space-md">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-sm">
+<div class="p-2.5 rounded-lg cit-bg-16181d border cit-border-2e323b">
+<span class="text-label-sm font-label-sm cit-text-94a3b8 block">Departamento</span>
+<span class="text-title-sm font-title-sm text-white font-semibold flex items-center gap-1.5 mt-0.5">
+<span class="material-symbols-outlined cit-text-a1a1aa" style="font-size: 16px;">flag</span>
+                  {{ data().department }}
+                </span>
+</div>
+<div class="p-2.5 rounded-lg cit-bg-16181d border cit-border-2e323b">
+<span class="text-label-sm font-label-sm cit-text-94a3b8 block">Municipio</span>
+<span class="text-title-sm font-title-sm text-white font-semibold flex items-center gap-1.5 mt-0.5">
+<span class="material-symbols-outlined cit-text-a1a1aa" style="font-size: 16px;">location_city</span>
+                  {{ data().municipality }}
+                </span>
+</div>
+<div class="p-2.5 rounded-lg cit-bg-16181d border cit-border-2e323b">
+<span class="text-label-sm font-label-sm cit-text-94a3b8 block">Comunidad / Cuenca</span>
+<span class="text-title-sm font-title-sm text-white font-semibold flex items-center gap-1.5 mt-0.5">
+<span class="material-symbols-outlined cit-text-a1a1aa" style="font-size: 16px;">home_pin</span>
+                  Vereda {{ data().community }} (Cacarica)
+                </span>
+</div>
+</div>
+<div class="rounded-xl overflow-hidden border cit-border-2e323b relative">
+<div class="relative w-full h-64 bg-surface-container-high overflow-hidden" data-location="Riosucio, Choco, Colombia">
+<div class="absolute inset-0 cit-bg-e5e3df flex items-center justify-center">
+<svg class="absolute inset-0 w-full h-full opacity-40" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<pattern height="40" id="grid-map" patternUnits="userSpaceOnUse" width="40">
+<path d="M 40 0 L 0 0 0 40" fill="none" stroke="#d5d0c8" stroke-width="1"></path>
+</pattern>
+</defs>
+<rect fill="url(#grid-map)" height="100%" width="100%"></rect>
+<path d="M -20,120 Q 150,80 300,160 T 600,140 T 900,200" fill="none" stroke="#a5bfd8" stroke-linecap="round" stroke-width="8"></path>
+<path d="M 50,-10 L 220,100 L 450,130 L 700,240" fill="none" stroke="#f6ecc4" stroke-linecap="round" stroke-width="6"></path>
+<path d="M 50,-10 L 220,100 L 450,130 L 700,240" fill="none" stroke="#cfc39a" stroke-dasharray="4,4" stroke-width="2"></path>
+</svg>
+<div class="absolute w-44 h-44 rounded-full bg-primary-container/25 border-2 border-primary-container flex items-center justify-center animate-pulse">
+<span class="text-label-sm font-label-sm text-black font-semibold bg-primary-container/90 px-2 py-0.5 rounded shadow-xs">
+                      Radio estimado 1 km
+                    </span>
+</div>
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-black text-primary-container flex items-center justify-center shadow-lg ring-4 ring-primary-container">
+<span class="material-symbols-outlined" style="font-size: 24px;">pin_drop</span>
+</div>
+<span class="bg-black text-white text-label-sm font-label-sm font-bold px-2.5 py-1 rounded-md mt-1 shadow-md">
+                      Punto crítico: Km 4.2
+                    </span>
+</div>
+</div>
+<div class="absolute top-3 right-3 flex flex-col gap-1 z-20">
+<button disabled title="Mapa ilustrativo de demostración" aria-label="Acercar mapa" class="w-8 h-8 rounded-md cit-bg-1c1e24 border cit-border-2e323b shadow-xs flex items-center justify-center text-white cit-hoverbg-252830" type="button">
+<span class="material-symbols-outlined" style="font-size: 18px;">add</span>
+</button>
+<button disabled title="Mapa ilustrativo de demostración" aria-label="Alejar mapa" class="w-8 h-8 rounded-md cit-bg-1c1e24 border cit-border-2e323b shadow-xs flex items-center justify-center text-white cit-hoverbg-252830" type="button">
+<span class="material-symbols-outlined" style="font-size: 18px;">remove</span>
+</button>
+<button disabled title="Mapa ilustrativo de demostración" aria-label="Pantalla completa" class="w-8 h-8 rounded-md cit-bg-1c1e24 border cit-border-2e323b shadow-xs flex items-center justify-center text-white cit-hoverbg-252830" type="button">
+<span class="material-symbols-outlined" style="font-size: 18px;">fullscreen</span>
+</button>
+</div>
+<div class="absolute bottom-3 left-3 z-20 cit-bg-16181d-95 backdrop-blur-sm border cit-border-2e323b px-3 py-1.5 rounded-lg shadow-xs text-label-sm font-label-sm cit-text-cbd5e1">
+                  Coordenadas de ejemplo: {{ data().latitude }}, {{ data().longitude }}
+                </div>
+</div>
+<div class="cit-bg-16181d p-space-sm flex items-start gap-2.5 border-t cit-border-2e323b">
+<span class="material-symbols-outlined text-primary-container flex-shrink-0 mt-0.5" style="font-size: 20px;">privacy_tip</span>
+<p class="text-body-sm font-body-sm cit-text-94a3b8">
+<strong class="text-white font-semibold">Garantía de confidencialidad territorial (Ley 850 de 2003):</strong> Por protocolo de seguridad comunitaria y protección de líderes territoriales, la visualización pública en el mapa mostrará un radio estimado de 1 km sin exponer coordenadas exactas de viviendas particulares ni predios familiares.
+                </p>
+</div>
+</div>
+</div>
+</div>
+<div class="cit-bg-1c1e24 border cit-border-2e323b rounded-xl overflow-hidden shadow-sm">
+<div class="px-space-md py-space-sm cit-bg-16181d border-b cit-border-2e323b flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full cit-bg-facc15 text-black font-label-sm font-bold flex items-center justify-center">4</span>
+<h3 class="text-title-sm font-title-sm font-semibold text-white">Evidencias del ejemplo y archivos seleccionados</h3>
+</div>
+<button (click)="edit.emit(4)" class="inline-flex items-center gap-1 text-label-md font-label-md cit-text-a1a1aa hover:text-white py-1 px-2 rounded cit-hoverbg-252830 transition-colors" type="button">
+<span class="material-symbols-outlined" style="font-size: 16px;">add_circle</span>
+              Agregar más evidencias
+            </button>
+</div>
+<div class="p-space-md">
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm">
+<div class="border cit-border-2e323b rounded-lg overflow-hidden group cit-hoverborder-facc15-60 transition-all cit-bg-23262f">
+<div class="h-28 w-full cit-bg-16181d relative overflow-hidden">
+<img class="w-full h-full object-cover" alt="Ilustración del diseño de referencia" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaKcYuqrMeYD-I9h6sHkU16v3REhf4y9NkCwrbX0ShN6zfbwhj1YPUvYEKFxU3XOMlh-Zb0aDC3ZYTUhDE7k3XU-9JjnGZn0VqEQLeav6FjtP0-qjqjGRG_ilKCGMYqPtvTGbrLZe1XVeCBEjqAH_ZUJd2fIrqyWoYnmLoKLnct5_8NzR2LOmIFgFVg6GvrDeiZt0u6ewepp1XRuWEngrTHsaRiT5DeI4ailEmZo3_oiEIli_Y-_HiJQ">
+<div class="absolute top-1.5 right-1.5 bg-black/80 text-white text-label-sm px-1.5 py-0.5 rounded font-mono">
+                    2.4 MB
+                  </div>
+</div>
+<div class="p-2.5 cit-bg-23262f">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined cit-text-a1a1aa" style="font-size: 16px;">image</span>
+<span class="text-title-sm font-title-sm text-white truncate font-medium">Fotometría_socavacion_km4.jpg</span>
+</div>
+<span class="text-label-sm font-label-sm cit-text-94a3b8 block mt-0.5">Imagen de ejemplo</span>
+</div>
+</div>
+<div class="border cit-border-2e323b rounded-lg overflow-hidden group cit-hoverborder-facc15-60 transition-all cit-bg-23262f">
+<div class="h-28 w-full cit-bg-16181d relative overflow-hidden">
+<img class="w-full h-full object-cover" alt="Ilustración del diseño de referencia" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfDG0H77xVOWl82Ygi67QP3LbVTOnOPHvnEMjOUE_kuPc1Q2lrhEnzkGa6SVuPkix6QwqFwTW-Ghf084pPuzX4SF3TK4GC2WCS-6haW7Wqi3_fT23YaOc_GTCHTAIg9_f82VIzaoKcWe5JBwXJTa0mDBVDrBZ9ZqAk5VDaj9-DUO61I7Ddanb4mdxBMe61tf8qhx8Ievv9S27qdFGD18qPqSoinC45WZwCe39fXeiJTjrdtc864KSt9w">
+<div class="absolute top-1.5 right-1.5 bg-black/80 text-white text-label-sm px-1.5 py-0.5 rounded font-mono">
+                    3.1 MB
+                  </div>
+</div>
+<div class="p-2.5 cit-bg-23262f">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined cit-text-a1a1aa" style="font-size: 16px;">image</span>
+<span class="text-title-sm font-title-sm text-white truncate font-medium">Alcantarilla_colapsada_02.jpg</span>
+</div>
+<span class="text-label-sm font-label-sm cit-text-94a3b8 block mt-0.5">Captura en terreno • Verificada</span>
+</div>
+</div>
+<div class="border cit-border-2e323b rounded-lg overflow-hidden group cit-hoverborder-facc15-60 transition-all flex flex-col justify-between cit-bg-23262f">
+<div class="h-28 w-full cit-bg-16181d flex flex-col items-center justify-center p-3 text-center border-b cit-border-2e323b">
+<div class="w-10 h-10 rounded-lg bg-red-950/60 text-red-400 flex items-center justify-center mb-1 border border-red-800/40">
+<span class="material-symbols-outlined" style="font-size: 24px;">picture_as_pdf</span>
+</div>
+<span class="text-label-sm font-label-sm font-bold text-white">DOCUMENTO OFICIAL</span>
+<span class="text-label-sm font-label-sm cit-text-94a3b8 font-mono">1.8 MB</span>
+</div>
+<div class="p-2.5 cit-bg-23262f">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-red-400" style="font-size: 16px;">description</span>
+<span class="text-title-sm font-title-sm text-white truncate font-medium">Acta_Asamblea_Comunal.pdf</span>
+</div>
+<span class="text-label-sm font-label-sm cit-text-94a3b8 block mt-0.5">Firmas de 82 veedores</span>
+</div>
+</div>
+</div>
+<div class="mt-space-sm pt-space-xs flex items-center justify-between text-label-sm font-label-sm cit-text-94a3b8">
+<span>Formatos previstos por el diseño: JPG, PNG, PDF (Máx. 15MB por archivo).</span>
+<span class="flex items-center gap-1 text-green-400 font-medium">
+<span class="material-symbols-outlined" style="font-size: 14px;">check_circle</span> Archivos de ejemplo · Sin análisis antivirus
+              </span>
+</div>
+</div>
+</div>
+<div class="bg-[rgba(250,204,21,0.1)] border-2 cit-border-ca8a04 rounded-xl p-space-md shadow-xs">
+<div class="flex items-start gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-primary-container text-black flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined font-bold" style="font-size: 24px;">balance</span>
+</div>
+<div>
+<h4 class="text-title-md font-title-md font-bold cit-text-facc15">Proceso de revisión y control previo</h4>
+<p class="text-body-md font-body-md cit-text-cbd5e1 mt-1 leading-relaxed">
+                Al enviar este caso, el equipo interdisciplinario de la <strong>Corporación Pluralismo Social (PLUS)</strong> verificará la verosimilitud de la información según los plazos de atención que se definan conforme al marco de la <strong>Ley 850 de 2003 de Veedurías Ciudadanas</strong>. Una vez admitido, se generará una cédula única de radicación y se habilitará su seguimiento en tiempo real.
+              </p>
+</div>
+</div>
+</div>
+<div class="cit-bg-1c1e24 border cit-border-2e323b rounded-xl p-space-md space-y-3 shadow-sm">
+<label class="flex items-start gap-3 cursor-pointer select-none group">
+<input [checked]="truth()" (change)="truthChanged.emit($any($event.target).checked)" class="mt-1 w-5 h-5 rounded cit-border-333842 cit-bg-16181d text-primary-container focus:ring-primary-container focus:ring-offset-0 focus:ring-2 cursor-pointer" type="checkbox">
+<span class="text-body-sm font-body-sm cit-text-cbd5e1 leading-normal">
+              Declaro bajo gravedad de juramento y compromiso cívico comunitario que los datos suministrados en esta ficha corresponden a la realidad observada en territorio y que actúo de buena fe como veedor ciudadano.
+            </span>
+</label>
+<label class="flex items-start gap-3 cursor-pointer select-none group border-t cit-border-2e323b pt-3">
+<input [checked]="consent()" (change)="consentChanged.emit($any($event.target).checked)" class="mt-1 w-5 h-5 rounded cit-border-333842 cit-bg-16181d text-primary-container focus:ring-primary-container focus:ring-offset-0 focus:ring-2 cursor-pointer" type="checkbox">
+<span class="text-body-sm font-body-sm cit-text-cbd5e1 leading-normal">
+              Acepto los términos de la política de protección y reserva de identidad de PLUS y autorizo la articulación institucional de esta veeduría ante las entidades competentes del orden nacional y municipal.
+            </span>
+</label>
+</div>
+<div class="rounded-xl p-space-md border cit-border-2e323b cit-bg-1c1e24"><h3 class="text-title-sm font-semibold">Tus archivos seleccionados ({{ files().length }})</h3><ul>@for(file of files(); track $index) {<li class="py-2 break-all">{{ file.name }} · {{ file.size / 1024 | number:'1.0-0' }} KB</li>} @empty {<li class="text-body-sm mt-2">No has seleccionado archivos propios.</li>}</ul></div></section>

@@ -1,0 +1,17 @@
+<div class="p-4 sm:p-6 space-y-6 max-w-5xl mx-auto">
+  <a routerLink="/admin/usuarios" class="inline-flex underline underline-offset-4 text-body-sm">Volver a usuarios</a>
+  @if(missing()){
+    <section class="admin-panel border rounded-xl p-8 space-y-4"><h1 class="text-headline-md">Usuario de ejemplo no disponible</h1><p>El identificador no está en el directorio de esta pestaña. Los registros creados localmente se pierden al recargar.</p><a routerLink="/admin/usuarios" class="admin-primary inline-flex">Consultar directorio</a></section>
+  }@else{
+    <header class="space-y-2"><p class="text-label-sm uppercase tracking-wider">Formulario local · Demostración</p><h1 class="text-headline-md">{{id() ? 'Editar usuario de ejemplo' : 'Crear usuario de ejemplo'}}</h1><p class="text-body-sm">No se crean cuentas ni se envían invitaciones o contraseñas. Los roles seleccionados solo actualizan este directorio temporal.</p></header>
+    <form [formGroup]="form" (ngSubmit)="save()" novalidate class="admin-panel border rounded-xl p-5 sm:p-6 space-y-6">
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div><label class="admin-field" for="demo-user-name">Nombre de ejemplo<input id="demo-user-name" formControlName="name" maxlength="150" autocomplete="off" [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid" aria-describedby="demo-user-name-error"></label>@if(form.controls.name.touched && form.controls.name.invalid){<p id="demo-user-name-error" role="status" class="text-body-sm text-red-700 dark:text-red-300 mt-2">Escribe un nombre con contenido, de hasta 150 caracteres.</p>}</div>
+        <div><label class="admin-field" for="demo-user-email">Correo de ejemplo<input id="demo-user-email" type="email" formControlName="email" maxlength="254" autocomplete="off" placeholder="nuevo@example.invalid" [attr.aria-invalid]="form.controls.email.touched && form.controls.email.invalid" aria-describedby="demo-user-email-help"></label><p id="demo-user-email-help" class="text-body-sm mt-2">Usa un correo ficticio; no se verificará ni recibirá mensajes.</p>@if(form.controls.email.touched && form.controls.email.invalid){<p role="status" class="text-body-sm text-red-700 dark:text-red-300 mt-2">Escribe un correo con formato válido.</p>}</div>
+      </div>
+      <plus-demo-role-picker [selected]="form.controls.roles.value" [invalid]="form.controls.roles.touched && form.controls.roles.invalid" (toggle)="toggleRole($event)"/>
+      <p role="status" class="text-body-sm">{{message()}}</p>
+      <div class="flex flex-wrap gap-3 pt-4 border-t border-slate-400/30"><button type="submit" class="admin-primary">Guardar ejemplo temporal</button><a [routerLink]="id() ? ['/admin/usuarios', id()] : ['/admin/usuarios']" class="admin-button">Cancelar</a></div>
+    </form>
+  }
+</div>
