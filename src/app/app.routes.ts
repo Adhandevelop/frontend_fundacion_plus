@@ -58,6 +58,19 @@ export const routes: Routes = [
       {path: '', pathMatch: 'full', redirectTo: 'casos'},
     ],
   },
+  // La raiz publica debe resolverse antes del layout vacio de acceso.
+  {
+    path: '',
+    component: PublicLayoutComponent,
+    children: [
+      {path: '', pathMatch: 'full', title: 'PLUS · Corporación Pluralismo Social', loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent)},
+      {path: 'mapa', title: 'Mapa de casos comunitarios · PLUS', loadComponent: () => import('./features/map/public-map.component').then(m => m.PublicMapComponent)},
+      {path: 'noticias', title: 'Noticias y actividades · PLUS', loadComponent: () => import('./features/news/news-page.component').then(m => m.NewsPageComponent)},
+      {path: 'iniciativas', title: 'Iniciativas comunitarias · PLUS', loadComponent: () => import('./features/initiatives/initiatives-page.component').then(m => m.InitiativesPageComponent)},
+      {path: 'nosotros', title: 'Nosotros · PLUS', loadComponent: () => import('./features/institutional/about/about.component').then(m => m.AboutComponent)},
+      {path: 'casos/:radicado', title: 'Información del caso · PLUS', loadComponent: () => import('./features/cases/public-case.component').then(m => m.PublicCaseComponent)},
+    ],
+  },
   {
     path: '',
     component: AuthLayoutComponent,
@@ -69,18 +82,6 @@ export const routes: Routes = [
       {path: 'sesion-vencida', data: {kind: 'expired'}, title: 'Sesión vencida · PLUS', loadComponent: () => import('./shared/pages/access-state/access-state.component').then(m => m.AccessStateComponent)},
       {path: 'acceso-denegado', data: {kind: 'forbidden'}, title: 'Acceso no permitido · PLUS', loadComponent: () => import('./shared/pages/access-state/access-state.component').then(m => m.AccessStateComponent)},
       {path: 'pagina-no-encontrada', data: {kind: 'notfound'}, title: 'Página no encontrada · PLUS', loadComponent: () => import('./shared/pages/access-state/access-state.component').then(m => m.AccessStateComponent)},
-    ],
-  },
-  {
-    path: '',
-    component: PublicLayoutComponent,
-    children: [
-      {path: '', title: 'PLUS · Corporación Pluralismo Social', loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent)},
-      {path: 'mapa', title: 'Mapa de casos comunitarios · PLUS', loadComponent: () => import('./features/map/public-map.component').then(m => m.PublicMapComponent)},
-      {path: 'noticias', title: 'Noticias y actividades · PLUS', loadComponent: () => import('./features/news/news-page.component').then(m => m.NewsPageComponent)},
-      {path: 'iniciativas', title: 'Iniciativas comunitarias · PLUS', loadComponent: () => import('./features/initiatives/initiatives-page.component').then(m => m.InitiativesPageComponent)},
-      {path: 'nosotros', title: 'Nosotros · PLUS', loadComponent: () => import('./features/institutional/about/about.component').then(m => m.AboutComponent)},
-      {path: 'casos/:radicado', title: 'Información del caso · PLUS', loadComponent: () => import('./features/cases/public-case.component').then(m => m.PublicCaseComponent)},
     ],
   },
   {path: '**', redirectTo: 'pagina-no-encontrada'},
