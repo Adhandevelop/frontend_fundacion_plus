@@ -15,6 +15,10 @@ Fecha: 9 de noviembre de 2026. Primera entrega de integración REST. Contratos s
 - Preferencias con `notificar_novedades_casos`, `notificar_mensajes`, `suscrito_boletin`. Se guardan mediante una acción separada de los datos personales para no presentar una operación parcialmente guardada como éxito completo.
 - Estados de carga, errores, reintento y bloqueo de envíos duplicados.
 
+El perfil de cuenta se reutiliza desde `shared/account-profile`: `/admin/perfil` permanece dentro del layout y navegación administrativos, mientras `/ciudadano/perfil` conserva los del portal ciudadano. El enlace administrativo apunta a su propia ruta, protegida por el guard de administración. El componente tiene estilos encapsulados para funcionar en ambos layouts y temas, sin depender de haber abierto antes el panel ciudadano. No cambia el contrato de `/me/`.
+
+Los portales son excluyentes: `/ciudadano/**` exige rol ciudadano sin permisos administrativos y `/admin/**` exige rol interno reconocido más permisos administrativos. El acceso cruzado devuelve la vista de acceso denegado, sin redirigir al perfil del otro portal. Los guards se ejecutan al entrar y al navegar entre rutas hijas, comprobando los requisitos de los ancestros incluso cuando una hija tiene sus propios datos de ruta. El retorno después del login solo admite destinos del portal autorizado.
+
 ## Configuración
 
 Producción usa el mismo origen del sitio: `/api/v1`, definido en `src/app/core/api/api.config.ts`. El interceptor solo adjunta credenciales al origen y prefijo configurados; no a imágenes ni a terceros. La entrega de imágenes públicas pasa por `/api/v1/public/media/...`, por lo que no hace falta exponer todo `/media/` en Nginx.

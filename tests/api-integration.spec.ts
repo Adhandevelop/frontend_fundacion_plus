@@ -12,6 +12,7 @@ import { AccountApiService } from '../src/app/core/api/account-api.service';
 import { API_BASE_URL } from '../src/app/core/api/api.config';
 import { apiErrorMessage } from '../src/app/core/api/api-error';
 import { canAccessAdministration } from '../src/app/core/auth/account-permissions';
+import { routes } from '../src/app/app.routes';
 
 function memoryStorage() {
   const values=new Map<string,string>();
@@ -27,6 +28,15 @@ function environment() {
   ],undefined as never);
 }
 const env=environment();
+// A shared form must remain nested in each portal so editing a profile keeps its navigation.
+const adminRoute=routes.find(route=>route.path==='admin')!;
+const citizenRoute=routes.find(route=>route.path==='ciudadano')!;
+const adminProfile=adminRoute.children!.find(route=>route.path==='perfil')!;
+const citizenProfile=citizenRoute.children!.find(route=>route.path==='perfil')!;
+assert.ok(adminProfile);assert.ok(citizenProfile);
+assert.equal(adminRoute.data?.['requiresAdmin'],true);
+assert.ok(adminRoute.canActivate?.includes(accountGuard));
+assert.equal(await adminProfile.loadComponent!(),await citizenProfile.loadComponent!());
 const auth=env.get(AuthService), http=env.get(HttpClient), backend=env.get(HttpTestingController), account=env.get(AccountApiService);
 const user={id_usuario:'550e8400-e29b-41d4-a716-446655440000',nombres:'Persona',apellidos:'Prueba',full_name:'Persona Prueba',correo:'persona@example.invalid',telefono:null,estado:'activo' as const,primary_role:'ciudadano',rol_nombre:'ciudadano',permissions:{can_create_cases:true,can_manage_own_cases:true,can_moderate_cases:false},perfil:null,preferencias:null};
 function login(remember=false) {
@@ -69,12 +79,12 @@ const forbidden=firstValueFrom(http.get('/api/v1/admin/users/')).catch(error=>er
 backend.expectOne('/api/v1/admin/users/').flush({}, {status:403,statusText:'Forbidden'});
 assert.equal((await forbidden).status,403);backend.expectNone('/api/v1/auth/refresh/');assert.ok(auth.hasSession());
 
-// Guards use backend capabilities, not role spelling.
+// A role alone never grants access without backend capabilities.
 const denied=await firstValueFrom(runInInjectionContext(env,()=>accountGuard({data:{requiresAdmin:true}} as never,{url:'/admin'} as never)) as any);
 assert.deepEqual(denied.commands,['/acceso-denegado']);
 auth.updateUser({...user,primary_role:'administrador',permissions:{can_moderate_cases:false}});
 assert.equal(auth.canAdmin(),false);
-auth.updateUser({...user,permissions:{can_moderate_cases:true}});assert.equal(auth.canAdmin(),true);
+auth.updateUser({...user,primary_role:'administrador',permissions:{can_moderate_cases:true}});assert.equal(auth.canAdmin(),true);
 // Production /me/ returns module/action lists, despite the documented boolean example.
 const citizenPermissions={casos:['crear','ver_propios','subir_evidencia','comentar','mensajes_privados'],propuestas:['crear','ver_propias'],notificaciones:['ver_propias']};
 const adminPermissions={all:['*'],usuarios:['crear','editar','cambiar_rol','asignar_ambito'],territorios:['crear','editar','eliminar'],casos:['*'],iniciativas:['*'],auditoria:['consultar'],configuracion:['*']};
@@ -85,9 +95,37 @@ assert.equal(canAccessAdministration({casos:['ver_asignados','seguimiento','camb
 assert.equal(canAccessAdministration({unknown:['*']}),false);
 assert.equal(canAccessAdministration({casos:['unknown']}),false);
 assert.equal(canAccessAdministration({all:true}),false);
-auth.updateUser({...user,permissions:adminPermissions});assert.equal(auth.defaultRoute(),'/admin');
+auth.updateUser({...user,primary_role:'administrador',permissions:adminPermissions});assert.equal(auth.defaultRoute(),'/admin');
 assert.equal(await firstValueFrom(runInInjectionContext(env,()=>accountGuard({data:{requiresAdmin:true}} as never,{url:'/admin'} as never)) as any),true);
+assert.ok(adminRoute.canActivateChild?.includes(accountGuard));
+assert.ok(citizenRoute.canActivateChild?.includes(accountGuard));
+assert.equal(citizenRoute.data?.['requiresCitizen'],true);
+
+async function verifyPortal(portal:typeof adminRoute, allowed:boolean) {
+  for(const child of portal.children!) {
+    // Child metadata must not erase the enclosing portal's access requirement.
+    const snapshot={data:child.data ?? {},pathFromRoot:[{data:{}},{data:portal.data ?? {}},{data:child.data ?? {}}]};
+    const result=await firstValueFrom(runInInjectionContext(env,()=>accountGuard(snapshot as never,{url:`/${portal.path}/${child.path}`} as never)) as any);
+    if(allowed)assert.equal(result,true,`${portal.path}/${child.path} should be allowed`);
+    else assert.deepEqual(result.commands,['/acceso-denegado'],`${portal.path}/${child.path} should be denied`);
+  }
+}
+await verifyPortal(adminRoute,true);await verifyPortal(citizenRoute,false);
 auth.updateUser({...user,permissions:citizenPermissions});assert.equal(auth.defaultRoute(),'/ciudadano/perfil');
+await verifyPortal(citizenRoute,true);await verifyPortal(adminRoute,false);
+for(const role of ['representante','moderador']) {
+  auth.updateUser({...user,primary_role:role,permissions:adminPermissions});
+  await verifyPortal(adminRoute,true);await verifyPortal(citizenRoute,false);
+}
+auth.updateUser({...user,permissions:adminPermissions}); // Conflicting citizen/admin data fails closed.
+assert.equal(auth.canAdmin(),false);assert.equal(auth.canCitizen(),false);
+await verifyPortal(adminRoute,false);await verifyPortal(citizenRoute,false);
+auth.updateUser({...user,primary_role:'unknown',permissions:adminPermissions});
+assert.equal(auth.defaultRoute(),'/acceso-denegado');
+await verifyPortal(adminRoute,false);await verifyPortal(citizenRoute,false);
+auth.updateUser({...user,estado:'suspendido'});
+await verifyPortal(citizenRoute,false);
+auth.updateUser(user);
 
 // Profile writes use real field names, UUID relations and multipart photo bytes.
 const profile=firstValueFrom(account.update({nombres:'Persona',apellidos:'Prueba',correo:user.correo,telefono:'',id_departamento:null,id_municipio:null,id_comunidad:null}));

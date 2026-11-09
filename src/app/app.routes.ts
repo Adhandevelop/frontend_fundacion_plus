@@ -7,9 +7,11 @@ export const routes: Routes = [
   {
     path: 'admin',
     canActivate: [accountGuard],
+    canActivateChild: [accountGuard],
     data: {requiresAdmin: true},
     loadComponent: () => import('./layouts/admin/admin-layout.component').then(m => m.AdminLayoutComponent),
     children: [
+      {path: 'perfil', title: 'Mi perfil administrativo · PLUS', loadComponent: () => import('./shared/account-profile/account-profile.component').then(m => m.AccountProfileComponent)},
       {path:'comentarios/:id',title:'Revisión de comentario · PLUS',loadComponent:() => import('./features/administration/comments/comment-detail.component').then(m => m.CommentDetailComponent)},
       {path:'comentarios',title:'Moderación de comentarios · PLUS',loadComponent:() => import('./features/administration/comments/comments-list.component').then(m => m.CommentsListComponent)},
       {path: 'postulaciones/:id', title: 'Revisión de postulación · PLUS', loadComponent: () => import('./features/administration/proposals/proposal-detail.component').then(m => m.ProposalDetailComponent)},
@@ -50,6 +52,8 @@ export const routes: Routes = [
   {
     path: 'ciudadano',
     canActivate: [accountGuard],
+    canActivateChild: [accountGuard],
+    data: {requiresCitizen: true},
     component: CitizenLayoutComponent,
     children: [
       {path: 'casos/nuevo', title: 'Radicar un caso · PLUS', loadComponent: () => import('./features/citizen/intake/case-intake.component').then(m => m.CaseIntakeComponent)},
@@ -58,7 +62,7 @@ export const routes: Routes = [
       {path: 'casos', title: 'Mis casos · PLUS', loadComponent: () => import('./features/citizen/cases/citizen-cases.component').then(m => m.CitizenCasesComponent)},
       {path: 'mensajes', title: 'Mis mensajes · PLUS', loadComponent: () => import('./features/citizen/messages/citizen-messages.component').then(m => m.CitizenMessagesComponent)},
       {path: 'notificaciones', title: 'Mis notificaciones · PLUS', loadComponent: () => import('./features/citizen/notifications/citizen-notifications.component').then(m => m.CitizenNotificationsComponent)},
-      {path: 'perfil', title: 'Mi perfil · PLUS', loadComponent: () => import('./features/citizen/profile/citizen-profile.component').then(m => m.CitizenProfileComponent)},
+      {path: 'perfil', title: 'Mi perfil · PLUS', loadComponent: () => import('./shared/account-profile/account-profile.component').then(m => m.AccountProfileComponent)},
       {path: '', pathMatch: 'full', redirectTo: 'casos'},
     ],
   },

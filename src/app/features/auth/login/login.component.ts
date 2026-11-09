@@ -22,7 +22,7 @@ export class LoginComponent {
   const value=this.form.getRawValue();this.pending.set(true);this.message.set('');
   this.auth.login(value.email.trim(),value.password,value.remember).pipe(finalize(()=>this.pending.set(false))).subscribe({
    next:()=>{this.form.controls.password.reset();const target=this.route.snapshot.queryParamMap.get('returnUrl');
-    const safe=target && /^\/(?:ciudadano|admin)(?:\/|\?|$)/.test(target) && (!target.startsWith('/admin') || this.auth.canAdmin());
+    const safe=target && /^\/(?:ciudadano|admin)(?:\/|\?|$)/.test(target) && (target.startsWith('/admin') ? this.auth.canAdmin() : this.auth.canCitizen());
     void this.router.navigateByUrl(safe ? target : this.auth.defaultRoute());},
    error:error=>this.message.set(apiErrorMessage(error)),
   });

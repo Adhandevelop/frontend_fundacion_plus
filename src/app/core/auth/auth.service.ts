@@ -22,7 +22,11 @@ export class AuthService {
   private refreshRequest?: Observable<string>;
   private accountRequest?: Observable<AccountUser>;
   readonly user = this.account.asReadonly();
-  readonly canAdmin = computed(() => canAccessAdministration(this.account()?.permissions));
+  readonly canAdmin = computed(() => {
+    const user = this.account();
+    return !!user && ['administrador', 'representante', 'moderador'].includes(user.primary_role) && canAccessAdministration(user.permissions);
+  });
+  readonly canCitizen = computed(() => this.account()?.primary_role === 'ciudadano' && !canAccessAdministration(this.account()?.permissions));
   readonly busy = signal(false);
   readonly logoutError = signal('');
   constructor() {
@@ -37,7 +41,7 @@ export class AuthService {
   }
   accessToken() {return this.tokens()?.access ?? null;}
   hasSession() {return !!this.tokens();}
-  defaultRoute() {return this.canAdmin() ? '/admin' : '/ciudadano/perfil';}
+  defaultRoute() {return this.canAdmin() ? '/admin' : this.canCitizen() ? '/ciudadano/perfil' : '/acceso-denegado';}
   login(correo: string, password: string, remember: boolean) {
     return this.http.post<AuthResponse>(`${this.base}/auth/login/`, {correo, password}).pipe(tap(response => this.accept(response, remember)));
   }

@@ -9,7 +9,11 @@ export const accountGuard: CanActivateFn = (route, state) => {
   return auth.ensureUser().pipe(
     map(user => {
       if (!user) return router.createUrlTree(['/login'], {queryParams: {returnUrl: state.url}});
-      if (user.estado !== 'activo' || (route.data['requiresAdmin'] && !auth.canAdmin())) return router.createUrlTree(['/acceso-denegado']);
+      // Child guards must also enforce the portal requirement declared on their ancestors.
+      const ancestors = route.pathFromRoot ?? [route];
+      const requiresAdmin = ancestors.some(parent => parent.data['requiresAdmin']);
+      const requiresCitizen = ancestors.some(parent => parent.data['requiresCitizen']);
+      if (user.estado !== 'activo' || (requiresAdmin && !auth.canAdmin()) || (requiresCitizen && !auth.canCitizen())) return router.createUrlTree(['/acceso-denegado']);
       return true;
     }),
     catchError(() => of(router.createUrlTree(['/login'], {queryParams: {returnUrl: state.url, sessionError: '1'}}))),

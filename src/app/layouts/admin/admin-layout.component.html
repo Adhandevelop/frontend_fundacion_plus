@@ -1,4 +1,4 @@
-<div class="admin-shell">
+﻿<div class="admin-shell">
   <aside class="admin-panel fixed inset-y-0 left-0 w-64 border-r z-50 p-4 flex flex-col justify-between gap-6 overflow-y-auto lg:flex" [class.hidden]="!menu()">
     <div>
       <a routerLink="/admin" class="flex items-center gap-3 pb-5 border-b border-slate-400/30"><span class="bg-primary-container text-black p-2 rounded-lg font-bold">P+</span><span><strong class="block text-title-md">PLUS Central Operativa</strong><span class="text-label-sm">Gestión y control territorial</span></span></a>
@@ -17,7 +17,7 @@
         <a routerLink="/admin/comentarios" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" class="rounded-lg px-3 py-3 flex gap-3 items-center"><span class="material-symbols-outlined" aria-hidden="true">forum</span>Moderación de comentarios</a>
       </nav>
     </div>
-    <div class="border-t border-slate-400/30 pt-4 space-y-3 text-body-sm"><p>{{auth.user()?.full_name}} · {{auth.user()?.rol_nombre}}</p><a routerLink="/" class="inline-flex admin-button">Volver al portal</a><a routerLink="/ciudadano/perfil" class="inline-flex admin-button">Mi perfil</a><button type="button" class="admin-button" [disabled]="auth.busy()" (click)="auth.logout()">Cerrar sesión</button><p role="status">{{auth.logoutError()}}</p></div>
+    <div class="border-t border-slate-400/30 pt-4 space-y-3 text-body-sm"><p>{{auth.user()?.full_name}} · {{auth.user()?.rol_nombre}}</p><a routerLink="/" class="inline-flex admin-button">Volver al portal</a><a routerLink="/admin/perfil" routerLinkActive="bg-primary-container/15" class="inline-flex admin-button" (click)="menu.set(false)">Mi perfil</a><button type="button" class="admin-button" [disabled]="auth.busy()" (click)="auth.logout()">Cerrar sesión</button><p role="status">{{auth.logoutError()}}</p></div>
   </aside>
   @if(menu()) {<button type="button" aria-label="Cerrar menú administrativo" class="fixed inset-0 bg-black/50 z-40 lg:hidden" (click)="menu.set(false)"></button>}
   <div class="lg:ml-64 min-w-0">

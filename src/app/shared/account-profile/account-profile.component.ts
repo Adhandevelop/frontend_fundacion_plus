@@ -2,12 +2,12 @@
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize, forkJoin, switchMap } from 'rxjs';
-import { AccountApiService, Community, Department, Municipality } from '../../../core/api/account-api.service';
-import { apiErrorMessage } from '../../../core/api/api-error';
-import { AuthService } from '../../../core/auth/auth.service';
+import { AccountApiService, Community, Department, Municipality } from '../../core/api/account-api.service';
+import { apiErrorMessage } from '../../core/api/api-error';
+import { AuthService } from '../../core/auth/auth.service';
 
-@Component({selector: 'plus-citizen-profile', standalone: true, imports: [ReactiveFormsModule], templateUrl: './citizen-profile.component.html'})
-export class CitizenProfileComponent {
+@Component({selector: 'plus-account-profile', standalone: true, imports: [ReactiveFormsModule], templateUrl: './account-profile.component.html', styleUrl: './account-profile.component.css'})
+export class AccountProfileComponent {
   readonly auth = inject(AuthService);
   private readonly api = inject(AccountApiService);
   private readonly destroy = inject(DestroyRef);

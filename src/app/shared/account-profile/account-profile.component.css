@@ -1,0 +1,13 @@
+:host {display: block; min-width: 0;}
+.cit-panel {background: #fff; border-color: #cbd5e1;}
+:host-context(.dark) .cit-panel {background: #1a1d24; border-color: #2e3340;}
+.cit-button {padding: .6rem .9rem; border: 1px solid #94a3b8; border-radius: .5rem;}
+.cit-primary {padding: .6rem 1rem; border-radius: .5rem; background: #facc15; color: #0f172a; font-weight: 600;}
+button:disabled, input:disabled {opacity: .5; cursor: not-allowed;}
+label.cit-field {display: flex; flex-direction: column; gap: .4rem; font-size: 14px;}
+.cit-field input, .cit-field select {width: 100%; border: 1px solid #94a3b8; border-radius: .5rem; padding: .7rem; background: #fff; color: #0f172a;}
+:host-context(.dark) .cit-field input, :host-context(.dark) .cit-field select {background: #121418; color: #f8fafc; border-color: #475569;}
+input[type=checkbox] {accent-color: #eab308;}
+.cit-error {color: #b91c1c; font-size: 13px;}
+:host-context(.dark) .cit-error {color: #fca5a5;}
+.cit-field .ng-invalid.ng-touched {border-color: #dc2626; outline: 1px solid #dc2626;}
