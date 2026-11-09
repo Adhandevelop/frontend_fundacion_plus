@@ -2,9 +2,12 @@ import { Routes } from '@angular/router';
 import { PublicLayoutComponent } from './layouts/public/public-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 import { CitizenLayoutComponent } from './layouts/citizen/citizen-layout.component';
+import { accountGuard } from './core/auth/auth.guards';
 export const routes: Routes = [
   {
     path: 'admin',
+    canActivate: [accountGuard],
+    data: {requiresAdmin: true},
     loadComponent: () => import('./layouts/admin/admin-layout.component').then(m => m.AdminLayoutComponent),
     children: [
       {path:'comentarios/:id',title:'Revisión de comentario · PLUS',loadComponent:() => import('./features/administration/comments/comment-detail.component').then(m => m.CommentDetailComponent)},
@@ -46,6 +49,7 @@ export const routes: Routes = [
   },
   {
     path: 'ciudadano',
+    canActivate: [accountGuard],
     component: CitizenLayoutComponent,
     children: [
       {path: 'casos/nuevo', title: 'Radicar un caso · PLUS', loadComponent: () => import('./features/citizen/intake/case-intake.component').then(m => m.CaseIntakeComponent)},

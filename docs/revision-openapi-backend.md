@@ -1,5 +1,9 @@
 # Revisión de endpoints entregados por el backend
 
+> **Estado posterior:** las copias locales del manual y del OpenAPI ya se sincronizaron con la entrega corregida 1.2.0 del backend. Este documento conserva el análisis de la entrega anterior. Ver [integración de acceso y perfil](integracion-acceso-perfil.md) para el estado actual.
+
+> **Actualización:** el backend añadió el manual [`endpoints_info.md`](../endpoints_info.md), versión 1.2. Resuelve varias dudas registradas en esta revisión del OpenAPI 1.0.0 y también introduce diferencias de contrato. Consultar la [revisión v1.2](revision-endpoints-v1.2.md) antes de usar los pendientes de este documento. Aún debe alinearse el esquema OpenAPI con el manual y comprobarse la versión desplegada.
+
 Revisión del **9 de noviembre de 2026**, sobre [`endpoints.md`](../endpoints.md), que contiene YAML **OpenAPI 3.0.3**, API versión **1.0.0**.
 
 ## 1. Resultado y alcance
@@ -8,7 +12,7 @@ La entrega documenta **170 rutas, 292 operaciones HTTP y 127 esquemas de compone
 
 Existe cobertura de autenticación, perfil, catálogos, casos, mensajes, notificaciones, usuarios, ámbitos, noticias, iniciativas/ediciones, jornadas, medios, postulaciones, comentarios, informes y auditoría. También aparecen preferencias, seguimiento de casos y campos ampliados de privacidad/corrección/aportes que no figuraban en el DDL inicial de 30 tablas.
 
-**La fuente para las rutas y DTO de integración pasa a ser `endpoints.md`.** `docs/endpoints-integracion-backend.md` conserva la petición previa y sus requisitos, pero sus rutas propuestas y carencias del SQL inicial no se deben tratar como el estado actual del backend.
+**En esta revisión original se usó `endpoints.md` para las rutas y DTO.** La actualización v1.2 indicada arriba modifica esa referencia. `docs/endpoints-integracion-backend.md` conserva la petición previa y sus requisitos, pero sus rutas propuestas y carencias del SQL inicial no se deben tratar como el estado actual del backend.
 
 No se llamaron endpoints ni se crearon cuentas/casos. No se comprobó despliegue, autenticación, permisos, migraciones, archivos o entrega de correos. «Documentado» significa que aparece en esta especificación entregada, no que se haya probado su funcionamiento.
 

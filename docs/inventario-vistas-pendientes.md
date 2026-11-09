@@ -1,5 +1,7 @@
 # Inventario de vistas PLUS y continuación del frontend
 
+> **Inicio de integración REST:** acceso y perfil ya llaman al backend, con JWT, guards, fotografía, preferencias y catálogos de residencia. Los escenarios de recuperación ahora validan tokens reales. Las filas originales siguientes conservan el inventario de demostración previo; para el alcance integrado y la verificación pendiente en producción consultar [integracion-acceso-perfil.md](integracion-acceso-perfil.md).
+
 Revisión del 9 de noviembre de 2026. Basada en `app.routes.ts`, componentes, navegación, controles pendientes y esquema v1.1. «Vista disponible» significa interfaz Angular con datos de demostración: no equivale a integración, permisos efectivos ni validación visual completados.
 
 ## 1. Vistas disponibles

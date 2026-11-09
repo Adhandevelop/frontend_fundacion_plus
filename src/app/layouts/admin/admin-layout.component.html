@@ -17,7 +17,7 @@
         <a routerLink="/admin/comentarios" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" class="rounded-lg px-3 py-3 flex gap-3 items-center"><span class="material-symbols-outlined" aria-hidden="true">forum</span>Moderación de comentarios</a>
       </nav>
     </div>
-    <div class="border-t border-slate-400/30 pt-4 space-y-3 text-body-sm"><p>Perfil de demostración · Sin permisos administrativos reales.</p><a routerLink="/" class="inline-flex admin-button">Volver al portal</a></div>
+    <div class="border-t border-slate-400/30 pt-4 space-y-3 text-body-sm"><p>{{auth.user()?.full_name}} · {{auth.user()?.rol_nombre}}</p><a routerLink="/" class="inline-flex admin-button">Volver al portal</a><a routerLink="/ciudadano/perfil" class="inline-flex admin-button">Mi perfil</a><button type="button" class="admin-button" [disabled]="auth.busy()" (click)="auth.logout()">Cerrar sesión</button><p role="status">{{auth.logoutError()}}</p></div>
   </aside>
   @if(menu()) {<button type="button" aria-label="Cerrar menú administrativo" class="fixed inset-0 bg-black/50 z-40 lg:hidden" (click)="menu.set(false)"></button>}
   <div class="lg:ml-64 min-w-0">
@@ -25,7 +25,7 @@
       <div class="flex gap-3 items-center min-w-0"><button type="button" class="lg:hidden admin-button" aria-controls="admin-content" [attr.aria-expanded]="menu()" (click)="menu.set(!menu())">Menú</button><span class="text-title-sm truncate">PLUS / Despacho territorial</span><span class="hidden xl:inline text-label-sm rounded border border-slate-400/40 px-3 py-1">Nodo Chocó y Urabá · Ejemplo</span></div>
       <div class="flex gap-3 items-center"><button type="button" class="admin-button flex items-center" (click)="theme.toggle()" [attr.aria-pressed]="theme.dark()" aria-label="Cambiar tema de color"><span class="material-symbols-outlined" aria-hidden="true">{{theme.dark() ? 'light_mode' : 'dark_mode'}}</span></button><span class="text-label-sm hidden sm:inline">Administración · Demo</span></div>
     </header>
-    <p class="bg-primary-container/15 px-4 py-2 text-body-sm text-center">Demostración administrativa. Datos, indicadores y actividad de ejemplo. No se consultan ni modifican expedientes reales.</p>
+    <p class="bg-primary-container/15 px-4 py-2 text-body-sm text-center">Sesión autenticada. Los módulos administrativos todavía usan datos de demostración; no modifican expedientes reales.</p>
     <main id="admin-content"><router-outlet/></main>
     <footer class="px-6 py-5 text-body-sm border-t border-slate-400/30">PLUS · Corporación Pluralismo Social</footer>
   </div>

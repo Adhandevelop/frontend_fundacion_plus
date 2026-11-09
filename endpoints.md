@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Plataforma Web PLUS — API REST
-  version: 1.0.0
+  version: 1.2.0
   description: API RESTful para la Corporación Pluralismo Social (PLUS). Incluye gestión
     de casos georreferenciados (PostGIS), iniciativas comunitarias, jornadas, noticias
     institucionales, participación ciudadana y auditoría.
@@ -46,6 +46,7 @@ paths:
       description: |-
         AUTH-02: POST /api/v1/auth/login/ (y endpoint legacy /api/login/)
         Registra en plus.auditoria_accesos cada intento exitoso o fallido.
+      summary: Inicio de sesión JWT + perfil de usuario (AUTH-02)
       tags:
       - login
       requestBody:
@@ -70,7 +71,72 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Login'
+                $ref: '#/components/schemas/AuthSessionResponse'
+          description: ''
+  /api/v1/admin/audit-events/:
+    get:
+      operationId: v1_admin_audit_events_retrieve
+      description: |-
+        AUD-01: GET /api/v1/admin/audit-events/ (y /api/v1/admin/audit/events/)
+        Proyección unificada de las 5 tablas de auditoría con referencia `event_ref` (`{source}:{uuid}`).
+      summary: Listado unificado de las 5 fuentes de auditoría con KPIs y filtros
+        (AUD-01)
+      parameters:
+      - in: query
+        name: action
+        schema:
+          type: string
+        description: Filtrar por tipo de acción
+      - in: query
+        name: actor
+        schema:
+          type: string
+          format: uuid
+        description: Filtrar por UUID de usuario actor
+      - in: query
+        name: source
+        schema:
+          type: string
+        description: 'Fuente: eventos, accesos, casos, permisos, seguridad'
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminAuditEventListResponse'
+          description: ''
+  /api/v1/admin/audit-events/{event_ref}/:
+    get:
+      operationId: v1_admin_audit_events_retrieve_2
+      description: |-
+        AUD-02: GET /api/v1/admin/audit/events/{event_ref}/
+        Soporta referencia `{source}:{uuid}` o búsqueda directa por UUID.
+      summary: Detalle de evento de auditoría por referencia {source}:{uuid} o UUID
+        (AUD-02)
+      parameters:
+      - in: path
+        name: event_ref
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLog'
           description: ''
   /api/v1/admin/audit-logs/:
     get:
@@ -233,10 +299,29 @@ paths:
           description: ''
   /api/v1/admin/audit/events/:
     get:
-      operationId: v1_admin_audit_events_retrieve
+      operationId: v1_admin_audit_events_retrieve_3
       description: |-
-        AUD-01: GET /api/v1/admin/audit-events/
+        AUD-01: GET /api/v1/admin/audit-events/ (y /api/v1/admin/audit/events/)
         Proyección unificada de las 5 tablas de auditoría con referencia `event_ref` (`{source}:{uuid}`).
+      summary: Listado unificado de las 5 fuentes de auditoría con KPIs y filtros
+        (AUD-01)
+      parameters:
+      - in: query
+        name: action
+        schema:
+          type: string
+        description: Filtrar por tipo de acción
+      - in: query
+        name: actor
+        schema:
+          type: string
+          format: uuid
+        description: Filtrar por UUID de usuario actor
+      - in: query
+        name: source
+        schema:
+          type: string
+        description: 'Fuente: eventos, accesos, casos, permisos, seguridad'
       tags:
       - v1
       security:
@@ -245,13 +330,19 @@ paths:
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminAuditEventListResponse'
+          description: ''
   /api/v1/admin/audit/events/{event_ref}/:
     get:
-      operationId: v1_admin_audit_events_retrieve_2
+      operationId: v1_admin_audit_events_retrieve_4
       description: |-
         AUD-02: GET /api/v1/admin/audit/events/{event_ref}/
         Soporta referencia `{source}:{uuid}` o búsqueda directa por UUID.
+      summary: Detalle de evento de auditoría por referencia {source}:{uuid} o UUID
+        (AUD-02)
       parameters:
       - in: path
         name: event_ref
@@ -266,10 +357,14 @@ paths:
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLog'
+          description: ''
   /api/v1/admin/basins/:
     get:
-      operationId: v1_admin_basins_retrieve
+      operationId: v1_admin_basins_list
       description: CRUD /api/v1/admin/basins/ — Pendiente de fuente oficial AMP-13;
         responde lista vacía controlada.
       tags:
@@ -280,7 +375,13 @@ paths:
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Community'
+          description: ''
   /api/v1/admin/case-categories/:
     get:
       operationId: v1_admin_case_categories_list
@@ -449,6 +550,178 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/v1/admin/case-comments/:
+    get:
+      operationId: v1_admin_case_comments_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCaseCommentList'
+          description: ''
+    post:
+      operationId: v1_admin_case_comments_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseComment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CaseComment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CaseComment'
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseComment'
+          description: ''
+  /api/v1/admin/case-comments/{id}/:
+    get:
+      operationId: v1_admin_case_comments_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this case comment.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseComment'
+          description: ''
+    delete:
+      operationId: v1_admin_case_comments_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this case comment.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/admin/case-comments/{id}/moderate/:
+    post:
+      operationId: v1_admin_case_comments_moderate_create
+      description: Alias compatible con POST /api/v1/admin/comments/{id}/moderate/
+      summary: Alias compatible para moderar un comentario
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this case comment.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentModerationAction'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CommentModerationAction'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CommentModerationAction'
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseComment'
+          description: ''
+  /api/v1/admin/case-comments/{id}/moderation/:
+    post:
+      operationId: v1_admin_case_comments_moderation_create
+      description: 'Sección 14: POST /api/v1/admin/comments/{id}/moderation/'
+      summary: Aprobar, rechazar u ocultar un comentario y guardar motivo en auditoría
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this case comment.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentModerationAction'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CommentModerationAction'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CommentModerationAction'
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseComment'
+          description: ''
   /api/v1/admin/cases/:
     get:
       operationId: v1_admin_cases_list
@@ -695,6 +968,7 @@ paths:
     post:
       operationId: v1_admin_cases_assign_create
       description: Alias compatible con POST /api/v1/admin/cases/{case_id}/assign/
+      summary: Alias compatible para asignar responsable al caso (ADM-08)
       parameters:
       - in: path
         name: id
@@ -707,14 +981,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseAssignResponsible'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseAssignResponsible'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
-        required: true
+              $ref: '#/components/schemas/CaseAssignResponsible'
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -730,6 +1003,7 @@ paths:
     post:
       operationId: v1_admin_cases_assignments_create
       description: 'ADM-08: POST /api/v1/admin/cases/{case_id}/assignments/'
+      summary: Asignar o reasignar responsable territorial al caso (ADM-08)
       parameters:
       - in: path
         name: id
@@ -742,14 +1016,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseAssignResponsible'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseAssignResponsible'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
-        required: true
+              $ref: '#/components/schemas/CaseAssignResponsible'
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -765,6 +1038,7 @@ paths:
     post:
       operationId: v1_admin_cases_correction_requests_create
       description: 'ADM-07: POST /api/v1/admin/cases/{case_id}/correction-requests/'
+      summary: Crear solicitud formal de corrección para el ciudadano (ADM-07)
       parameters:
       - in: path
         name: id
@@ -777,35 +1051,48 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseCorrectionRequestCreate'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseCorrectionRequestCreate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseCorrectionRequestCreate'
         required: true
       security:
       - jwtAuth: []
       - tokenAuth: []
       - cookieAuth: []
       responses:
-        '200':
+        '201':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminCaseDetail'
+                $ref: '#/components/schemas/CaseCorrectionRequest'
           description: ''
   /api/v1/admin/cases/{id}/evidence/:
     get:
-      operationId: v1_admin_cases_evidence_retrieve
+      operationId: v1_admin_cases_evidence_list
       description: 'ADM-05: GET / POST /api/v1/admin/cases/{case_id}/evidence/'
+      summary: Listar o subir evidencias desde el panel administrativo (ADM-05)
       parameters:
       - in: path
         name: id
         schema:
           type: string
         required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
       tags:
       - v1
       security:
@@ -817,31 +1104,49 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminCaseDetail'
+                $ref: '#/components/schemas/PaginatedCaseEvidenceList'
+          description: ''
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseEvidence'
           description: ''
     post:
       operationId: v1_admin_cases_evidence_create
       description: 'ADM-05: GET / POST /api/v1/admin/cases/{case_id}/evidence/'
+      summary: Listar o subir evidencias desde el panel administrativo (ADM-05)
       parameters:
       - in: path
         name: id
         schema:
           type: string
         required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
       tags:
       - v1
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseEvidence'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseEvidence'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
-        required: true
+              $ref: '#/components/schemas/CaseEvidence'
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -851,12 +1156,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminCaseDetail'
+                $ref: '#/components/schemas/PaginatedCaseEvidenceList'
+          description: ''
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseEvidence'
           description: ''
   /api/v1/admin/cases/{id}/evidence/{evidence_id}/:
     patch:
       operationId: v1_admin_cases_evidence_partial_update
       description: 'ADM-11 (AMP-10): PATCH /api/v1/admin/cases/{case_id}/evidence/{evidence_id}/'
+      summary: Actualizar audiencia, estado de revisión o descripción de evidencia
+        (ADM-11)
       parameters:
       - in: path
         name: evidence_id
@@ -874,13 +1187,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedAdminCaseDetail'
+              $ref: '#/components/schemas/PatchedCaseEvidenceUpdate'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedAdminCaseDetail'
+              $ref: '#/components/schemas/PatchedCaseEvidenceUpdate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedAdminCaseDetail'
+              $ref: '#/components/schemas/PatchedCaseEvidenceUpdate'
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -890,13 +1203,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminCaseDetail'
+                $ref: '#/components/schemas/CaseEvidence'
           description: ''
   /api/v1/admin/cases/{id}/evidence/{evidence_id}/download/:
     get:
       operationId: v1_admin_cases_evidence_download_retrieve
       description: 'ADM-06: GET /api/v1/admin/cases/{case_id}/evidence/{evidence_id}/download/'
+      summary: Descargar o consultar metadatos protegidos de una evidencia (ADM-06)
       parameters:
+      - in: query
+        name: download
+        schema:
+          type: boolean
+        description: Si es 1/true, descarga el binario directamente (FileResponse).
       - in: path
         name: evidence_id
         schema:
@@ -918,7 +1237,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminCaseDetail'
+                $ref: '#/components/schemas/CaseEvidence'
           description: ''
   /api/v1/admin/cases/{id}/history/:
     get:
@@ -947,6 +1266,7 @@ paths:
     post:
       operationId: v1_admin_cases_moderate_create
       description: Alias compatible con POST /api/v1/admin/cases/{case_id}/moderate/
+      summary: Alias compatible para moderar publicación de caso (ADM-07)
       parameters:
       - in: path
         name: id
@@ -959,14 +1279,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseModerationAction'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseModerationAction'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
-        required: true
+              $ref: '#/components/schemas/CaseModerationAction'
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -982,6 +1301,8 @@ paths:
     post:
       operationId: v1_admin_cases_moderation_create
       description: 'ADM-07: POST /api/v1/admin/cases/{case_id}/moderation/'
+      summary: Aprobar, rechazar o solicitar corrección sobre la publicación de un
+        caso (ADM-07)
       parameters:
       - in: path
         name: id
@@ -994,14 +1315,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseModerationAction'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseModerationAction'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
-        required: true
+              $ref: '#/components/schemas/CaseModerationAction'
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -1017,6 +1337,7 @@ paths:
     post:
       operationId: v1_admin_cases_progress_create
       description: 'ADM-09 (AMP-08): POST /api/v1/admin/cases/{case_id}/progress/'
+      summary: Registrar avance o seguimiento con nivel de audiencia (ADM-09)
       parameters:
       - in: path
         name: id
@@ -1029,29 +1350,30 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseUpdateCreate'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseUpdateCreate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
-        required: true
+              $ref: '#/components/schemas/CaseUpdateCreate'
       security:
       - jwtAuth: []
       - tokenAuth: []
       - cookieAuth: []
       responses:
-        '200':
+        '201':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminCaseDetail'
+                $ref: '#/components/schemas/CaseUpdate'
           description: ''
   /api/v1/admin/cases/{id}/resolution/:
     post:
       operationId: v1_admin_cases_resolution_create
       description: 'ADM-10 (AMP-11): POST /api/v1/admin/cases/{case_id}/resolution/'
+      summary: Resolver o cerrar narrativamente un caso y cambiar estado operativo
+        (ADM-10)
       parameters:
       - in: path
         name: id
@@ -1064,14 +1386,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseManagementStatus'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseManagementStatus'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
-        required: true
+              $ref: '#/components/schemas/CaseManagementStatus'
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -1087,6 +1408,7 @@ paths:
     post:
       operationId: v1_admin_cases_resolve_create
       description: Alias compatible con POST /api/v1/admin/cases/{case_id}/resolve/
+      summary: Alias compatible para resolver o cerrar un caso (ADM-10)
       parameters:
       - in: path
         name: id
@@ -1099,14 +1421,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseManagementStatus'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseManagementStatus'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
-        required: true
+              $ref: '#/components/schemas/CaseManagementStatus'
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -1122,6 +1443,7 @@ paths:
     post:
       operationId: v1_admin_cases_status_create
       description: Alias compatible con POST /api/v1/admin/cases/{case_id}/status/
+      summary: Cambiar estado operativo de un caso (ADM-10)
       parameters:
       - in: path
         name: id
@@ -1134,14 +1456,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseManagementStatus'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseManagementStatus'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
-        required: true
+              $ref: '#/components/schemas/CaseManagementStatus'
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -1180,6 +1501,7 @@ paths:
     post:
       operationId: v1_admin_cases_updates_create
       description: Alias compatible con POST /api/v1/admin/cases/{case_id}/updates/
+      summary: Alias compatible para registrar avance o seguimiento (ADM-09)
       parameters:
       - in: path
         name: id
@@ -1192,24 +1514,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseUpdateCreate'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
+              $ref: '#/components/schemas/CaseUpdateCreate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AdminCaseDetail'
-        required: true
+              $ref: '#/components/schemas/CaseUpdateCreate'
       security:
       - jwtAuth: []
       - tokenAuth: []
       - cookieAuth: []
       responses:
-        '200':
+        '201':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminCaseDetail'
+                $ref: '#/components/schemas/CaseUpdate'
           description: ''
   /api/v1/admin/comments/:
     get:
@@ -1313,6 +1634,7 @@ paths:
     post:
       operationId: v1_admin_comments_moderate_create
       description: Alias compatible con POST /api/v1/admin/comments/{id}/moderate/
+      summary: Alias compatible para moderar un comentario
       parameters:
       - in: path
         name: id
@@ -1327,13 +1649,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CaseComment'
+              $ref: '#/components/schemas/CommentModerationAction'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/CaseComment'
+              $ref: '#/components/schemas/CommentModerationAction'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/CaseComment'
+              $ref: '#/components/schemas/CommentModerationAction'
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -1349,6 +1671,7 @@ paths:
     post:
       operationId: v1_admin_comments_moderation_create
       description: 'Sección 14: POST /api/v1/admin/comments/{id}/moderation/'
+      summary: Aprobar, rechazar u ocultar un comentario y guardar motivo en auditoría
       parameters:
       - in: path
         name: id
@@ -1363,13 +1686,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CaseComment'
+              $ref: '#/components/schemas/CommentModerationAction'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/CaseComment'
+              $ref: '#/components/schemas/CommentModerationAction'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/CaseComment'
+              $ref: '#/components/schemas/CommentModerationAction'
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -1549,6 +1872,26 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/v1/admin/dashboard/:
+    get:
+      operationId: v1_admin_dashboard_retrieve
+      description: |-
+        ADM-01: GET /api/v1/admin/dashboard/ (y /api/v1/admin/metrics/dashboard/)
+        Indicadores operativos del Panel Administrativo desde las tablas de `plus`.
+      summary: Indicadores operativos del Dashboard Administrativo (ADM-01)
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminMetricsDashboardResponse'
+          description: ''
   /api/v1/admin/departments/:
     get:
       operationId: v1_admin_departments_list
@@ -1935,7 +2278,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CaseEvidence'
-        required: true
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -1994,7 +2336,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CaseEvidence'
-        required: true
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -3239,6 +3580,7 @@ paths:
       description: |-
         ADM-01: GET /api/v1/admin/dashboard/ (y /api/v1/admin/metrics/dashboard/)
         Indicadores operativos del Panel Administrativo desde las tablas de `plus`.
+      summary: Indicadores operativos del Dashboard Administrativo (ADM-01)
       tags:
       - v1
       security:
@@ -3247,7 +3589,11 @@ paths:
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminMetricsDashboardResponse'
+          description: ''
   /api/v1/admin/municipalities/:
     get:
       operationId: v1_admin_municipalities_list
@@ -4096,6 +4442,85 @@ paths:
       description: |-
         REP-01: GET /api/v1/admin/reports/cases/
         Retorna agregados de toda la selección autorizada y filas paginadas.
+      summary: Informe filtrado de casos con agregados globales y filas paginadas
+        (REP-01)
+      parameters:
+      - in: query
+        name: categoria
+        schema:
+          type: string
+        description: Categoría temática textual
+      - in: query
+        name: estado
+        schema:
+          type: string
+        description: Nombre de estado operativo
+      - in: query
+        name: estado_publicacion
+        schema:
+          type: string
+        description: pendiente, aprobado, rechazado
+      - in: query
+        name: id_comunidad
+        schema:
+          type: string
+          format: uuid
+        description: UUID de comunidad
+      - in: query
+        name: id_departamento
+        schema:
+          type: string
+          format: uuid
+        description: UUID de departamento
+      - in: query
+        name: id_estado
+        schema:
+          type: string
+          format: uuid
+        description: UUID de estado operativo
+      - in: query
+        name: id_municipio
+        schema:
+          type: string
+          format: uuid
+        description: UUID de municipio
+      - in: query
+        name: id_responsable
+        schema:
+          type: string
+          format: uuid
+        description: UUID de responsable activo
+      - in: query
+        name: id_tipo_caso
+        schema:
+          type: string
+          format: uuid
+        description: UUID de tipo de caso
+      - in: query
+        name: naturaleza
+        schema:
+          type: string
+        description: problematica, proyecto_iniciativa, otro
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: Número de página (1..N)
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: Tamaño de página (default 20)
+      - in: query
+        name: prioridad
+        schema:
+          type: string
+        description: baja, media, alta, critica
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: Búsqueda por código, título o descripción
       tags:
       - v1
       security:
@@ -4104,13 +4529,73 @@ paths:
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminCaseReportResponse'
+          description: ''
   /api/v1/admin/reports/cases/export/:
     get:
       operationId: v1_admin_reports_cases_export_retrieve
       description: |-
         REP-02: GET /api/v1/admin/reports/cases/export/
         Exporta en CSV toda la selección autorizada neutralizando fórmulas en celdas de texto.
+      summary: Exportación CSV de toda la selección filtrada de casos (REP-02)
+      parameters:
+      - in: query
+        name: categoria
+        schema:
+          type: string
+      - in: query
+        name: estado
+        schema:
+          type: string
+      - in: query
+        name: estado_publicacion
+        schema:
+          type: string
+      - in: query
+        name: id_comunidad
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: id_departamento
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: id_estado
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: id_municipio
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: id_responsable
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: id_tipo_caso
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: naturaleza
+        schema:
+          type: string
+      - in: query
+        name: prioridad
+        schema:
+          type: string
+      - in: query
+        name: search
+        schema:
+          type: string
       tags:
       - v1
       security:
@@ -4119,7 +4604,12 @@ paths:
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+          description: ''
   /api/v1/admin/roles/:
     get:
       operationId: v1_admin_roles_list
@@ -4825,6 +5315,7 @@ paths:
       operationId: v1_admin_users_role_create
       description: 'USR-05: PUT /api/v1/admin/users/{id}/role/ — Asigna un único rol
         al usuario.'
+      summary: Asignar rol único al usuario (USR-05)
       parameters:
       - in: path
         name: id
@@ -4839,14 +5330,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminUserCreateUpdate'
+              $ref: '#/components/schemas/AssignUserRole'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AdminUserCreateUpdate'
+              $ref: '#/components/schemas/AssignUserRole'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AdminUserCreateUpdate'
-        required: true
+              $ref: '#/components/schemas/AssignUserRole'
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -4856,12 +5346,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminUserCreateUpdate'
+                $ref: '#/components/schemas/UserMe'
           description: ''
     put:
       operationId: v1_admin_users_role_update
       description: 'USR-05: PUT /api/v1/admin/users/{id}/role/ — Asigna un único rol
         al usuario.'
+      summary: Asignar rol único al usuario (USR-05)
       parameters:
       - in: path
         name: id
@@ -4876,14 +5367,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminUserCreateUpdate'
+              $ref: '#/components/schemas/AssignUserRole'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AdminUserCreateUpdate'
+              $ref: '#/components/schemas/AssignUserRole'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AdminUserCreateUpdate'
-        required: true
+              $ref: '#/components/schemas/AssignUserRole'
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -4893,12 +5383,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminUserCreateUpdate'
+                $ref: '#/components/schemas/UserMe'
           description: ''
   /api/v1/admin/users/{id}/roles/:
     get:
       operationId: v1_admin_users_roles_retrieve
       description: Compatibilidad con /api/v1/admin/users/{id}/roles/
+      summary: Consultar o actualizar rol y ámbitos del usuario
       parameters:
       - in: path
         name: id
@@ -4918,11 +5409,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminUserCreateUpdate'
+                $ref: '#/components/schemas/UserMe'
           description: ''
     post:
       operationId: v1_admin_users_roles_create
       description: Compatibilidad con /api/v1/admin/users/{id}/roles/
+      summary: Consultar o actualizar rol y ámbitos del usuario
       parameters:
       - in: path
         name: id
@@ -4937,14 +5429,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminUserCreateUpdate'
+              $ref: '#/components/schemas/AssignUserRole'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AdminUserCreateUpdate'
+              $ref: '#/components/schemas/AssignUserRole'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AdminUserCreateUpdate'
-        required: true
+              $ref: '#/components/schemas/AssignUserRole'
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -4954,11 +5445,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminUserCreateUpdate'
+                $ref: '#/components/schemas/UserMe'
           description: ''
     put:
       operationId: v1_admin_users_roles_update
       description: Compatibilidad con /api/v1/admin/users/{id}/roles/
+      summary: Consultar o actualizar rol y ámbitos del usuario
       parameters:
       - in: path
         name: id
@@ -4973,14 +5465,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdminUserCreateUpdate'
+              $ref: '#/components/schemas/AssignUserRole'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AdminUserCreateUpdate'
+              $ref: '#/components/schemas/AssignUserRole'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AdminUserCreateUpdate'
-        required: true
+              $ref: '#/components/schemas/AssignUserRole'
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -4990,13 +5481,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminUserCreateUpdate'
+                $ref: '#/components/schemas/UserMe'
           description: ''
   /api/v1/admin/users/{id}/status/:
     patch:
       operationId: v1_admin_users_status_partial_update
       description: 'USR-06: PATCH /api/v1/admin/users/{id}/status/ — Cambia el estado
         (activo, suspendido, inactivo).'
+      summary: 'Cambiar estado del usuario: activo, suspendido, inactivo (USR-06)'
       parameters:
       - in: path
         name: id
@@ -5011,13 +5503,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedAdminUserCreateUpdate'
+              $ref: '#/components/schemas/PatchedAdminUserStatus'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedAdminUserCreateUpdate'
+              $ref: '#/components/schemas/PatchedAdminUserStatus'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedAdminUserCreateUpdate'
+              $ref: '#/components/schemas/PatchedAdminUserStatus'
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -5027,7 +5519,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdminUserCreateUpdate'
+                $ref: '#/components/schemas/UserMe'
           description: ''
   /api/v1/auth/change-password/:
     post:
@@ -5064,6 +5556,7 @@ paths:
       description: |-
         AUTH-02: POST /api/v1/auth/login/ (y endpoint legacy /api/login/)
         Registra en plus.auditoria_accesos cada intento exitoso o fallido.
+      summary: Inicio de sesión JWT + perfil de usuario (AUTH-02)
       tags:
       - v1
       requestBody:
@@ -5088,22 +5581,38 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Login'
+                $ref: '#/components/schemas/AuthSessionResponse'
           description: ''
   /api/v1/auth/logout/:
     post:
       operationId: v1_auth_logout_create
-      description: 'AUTH-04: POST /api/v1/auth/logout/ — Cierra sesión y revoca Token
-        de API.'
+      description: 'AUTH-04: POST /api/v1/auth/logout/ — Cierra sesión, revoca Token
+        en servidor e invalida refresh.'
+      summary: Cierre de sesión e invalidación de token en servidor (AUTH-04)
       tags:
       - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
       security:
       - jwtAuth: []
       - tokenAuth: []
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutResponse'
+          description: ''
   /api/v1/auth/me/:
     get:
       operationId: v1_auth_me_retrieve
@@ -5180,6 +5689,8 @@ paths:
     post:
       operationId: v1_auth_password_reset_confirm_create
       description: 'AUTH-07: POST /api/v1/auth/password-reset/confirm/'
+      summary: Confirmar nueva contraseña, invalidar enlace y revocar sesiones anteriores
+        (AUTH-07)
       tags:
       - v1
       requestBody:
@@ -5204,12 +5715,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PasswordResetConfirm'
+                $ref: '#/components/schemas/PasswordResetConfirmResponse'
           description: ''
   /api/v1/auth/password-reset/request/:
     post:
       operationId: v1_auth_password_reset_request_create
       description: 'AUTH-05: POST /api/v1/auth/password-reset/request/'
+      summary: Solicitar enlace de recuperación de contraseña por correo (AUTH-05)
       tags:
       - v1
       requestBody:
@@ -5233,12 +5745,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PasswordResetRequest'
+                $ref: '#/components/schemas/PasswordResetRequestResponse'
           description: ''
   /api/v1/auth/password-reset/validate/:
     post:
       operationId: v1_auth_password_reset_validate_create
       description: 'AUTH-06: POST /api/v1/auth/password-reset/validate/'
+      summary: Validar enlace/token de recuperación sin cambiar la contraseña (AUTH-06)
       tags:
       - v1
       requestBody:
@@ -5263,39 +5776,47 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PasswordResetValidate'
+                $ref: '#/components/schemas/PasswordResetValidateResponse'
           description: ''
   /api/v1/auth/refresh/:
     post:
       operationId: v1_auth_refresh_create
       description: |-
-        Takes a refresh type JSON web token and returns an access type JSON web
-        token if the refresh token is valid.
+        AUTH-03: POST /api/v1/auth/refresh/
+        Renueva el JWT validando que la cuenta siga en estado 'activo' y que la sesión ('sid')
+        no haya sido cerrada mediante `/auth/logout/` ni revocada por cambio de contraseña/suspensión.
+      summary: Renovar token JWT verificando estado de cuenta y sesión activa (AUTH-03)
       tags:
       - v1
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TokenRefresh'
+              $ref: '#/components/schemas/TokenRefreshRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/TokenRefresh'
+              $ref: '#/components/schemas/TokenRefreshRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/TokenRefresh'
+              $ref: '#/components/schemas/TokenRefreshRequest'
         required: true
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TokenRefresh'
+                $ref: '#/components/schemas/TokenRefreshResponse'
           description: ''
   /api/v1/auth/register/:
     post:
       operationId: v1_auth_register_create
       description: 'AUTH-01: POST /api/v1/auth/register/ — Registro ciudadano en plus.usuarios.'
+      summary: Registro de cuenta ciudadana (AUTH-01)
       tags:
       - v1
       requestBody:
@@ -5316,11 +5837,11 @@ paths:
       - cookieAuth: []
       - {}
       responses:
-        '200':
+        '201':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CitizenRegistration'
+                $ref: '#/components/schemas/AuthSessionResponse'
           description: ''
   /api/v1/cases/{case_id}/comments/:
     post:
@@ -5333,7 +5854,6 @@ paths:
         name: case_id
         schema:
           type: string
-          format: uuid
         required: true
       tags:
       - v1
@@ -5371,7 +5891,6 @@ paths:
         name: case_id
         schema:
           type: string
-          format: uuid
         required: true
       tags:
       - v1
@@ -5397,7 +5916,6 @@ paths:
         name: case_id
         schema:
           type: string
-          format: uuid
         required: true
       tags:
       - v1
@@ -5424,27 +5942,159 @@ paths:
                 $ref: '#/components/schemas/CaseMessage'
           description: ''
   /api/v1/cases/{case_id}/messages/mark-read/:
-    put:
-      operationId: v1_cases_messages_mark_read_update
+    post:
+      operationId: v1_cases_messages_mark_read_create
       description: |-
-        MSG-04: PUT /api/v1/cases/{case_id}/messages/read/
-        Marca como leídos únicamente los mensajes destinados al usuario autenticado.
+        MSG-04: PUT / POST /api/v1/cases/{case_id}/messages/read/
+        Marca como leídos únicamente los mensajes destinados al usuario autenticado,
+        soportando selección por lista (`message_ids`), corte por mensaje (`up_to_message_id`)
+        o corte temporal (`up_to_timestamp`) para no marcar mensajes recibidos después de abrir la conversación.
+      summary: Marcar mensajes privados recibidos como leídos con corte opcional (MSG-04)
       parameters:
       - in: path
         name: case_id
         schema:
           type: string
-          format: uuid
         required: true
       tags:
       - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarkMessagesReadRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MarkMessagesReadRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MarkMessagesReadRequest'
       security:
       - jwtAuth: []
       - tokenAuth: []
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarkMessagesReadResponse'
+          description: ''
+    put:
+      operationId: v1_cases_messages_mark_read_update
+      description: |-
+        MSG-04: PUT / POST /api/v1/cases/{case_id}/messages/read/
+        Marca como leídos únicamente los mensajes destinados al usuario autenticado,
+        soportando selección por lista (`message_ids`), corte por mensaje (`up_to_message_id`)
+        o corte temporal (`up_to_timestamp`) para no marcar mensajes recibidos después de abrir la conversación.
+      summary: Marcar mensajes privados recibidos como leídos con corte opcional (MSG-04)
+      parameters:
+      - in: path
+        name: case_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarkMessagesReadPutRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MarkMessagesReadPutRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MarkMessagesReadPutRequest'
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarkMessagesReadPutResponse'
+          description: ''
+  /api/v1/cases/{case_id}/messages/read/:
+    post:
+      operationId: v1_cases_messages_read_create
+      description: |-
+        MSG-04: PUT / POST /api/v1/cases/{case_id}/messages/read/
+        Marca como leídos únicamente los mensajes destinados al usuario autenticado,
+        soportando selección por lista (`message_ids`), corte por mensaje (`up_to_message_id`)
+        o corte temporal (`up_to_timestamp`) para no marcar mensajes recibidos después de abrir la conversación.
+      summary: Marcar mensajes privados recibidos como leídos con corte opcional (MSG-04)
+      parameters:
+      - in: path
+        name: case_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarkMessagesReadRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MarkMessagesReadRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MarkMessagesReadRequest'
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarkMessagesReadResponse'
+          description: ''
+    put:
+      operationId: v1_cases_messages_read_update
+      description: |-
+        MSG-04: PUT / POST /api/v1/cases/{case_id}/messages/read/
+        Marca como leídos únicamente los mensajes destinados al usuario autenticado,
+        soportando selección por lista (`message_ids`), corte por mensaje (`up_to_message_id`)
+        o corte temporal (`up_to_timestamp`) para no marcar mensajes recibidos después de abrir la conversación.
+      summary: Marcar mensajes privados recibidos como leídos con corte opcional (MSG-04)
+      parameters:
+      - in: path
+        name: case_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarkMessagesReadPutRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MarkMessagesReadPutRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MarkMessagesReadPutRequest'
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarkMessagesReadPutResponse'
+          description: ''
   /api/v1/catalogs/basins/:
     get:
       operationId: v1_catalogs_basins_retrieve
@@ -5459,13 +6109,18 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Community'
+          description: ''
   /api/v1/catalogs/case-categories/:
     get:
       operationId: v1_catalogs_case_categories_retrieve
       description: |-
         CAT-05: GET /api/v1/catalogs/case-categories/
         Retorna valores distintos de `tipos_caso.categoria` (textos de hasta 50 caracteres) y los tipos activos.
+      summary: Categorías temáticas y tipos de caso activos (CAT-05)
       tags:
       - v1
       security:
@@ -5475,13 +6130,19 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicCaseCategoryNamesResponse'
+          description: ''
   /api/v1/catalogs/case-options/:
     get:
       operationId: v1_catalogs_case_options_retrieve
       description: |-
         CAT-06: GET /api/v1/catalogs/case-options/
         Retorna tipos_caso activos, estados_caso, prioridades, estados de publicación y naturalezas.
+      summary: 'Opciones maestras de casos: tipos, estados, prioridades y audiencias
+        (CAT-06)'
       tags:
       - v1
       security:
@@ -5491,7 +6152,11 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicCaseOptionsResponse'
+          description: ''
   /api/v1/catalogs/case-statuses/:
     get:
       operationId: v1_catalogs_case_statuses_list
@@ -5569,6 +6234,27 @@ paths:
                 items:
                   $ref: '#/components/schemas/Department'
           description: ''
+  /api/v1/catalogs/initiative-categories/:
+    get:
+      operationId: v1_catalogs_initiative_categories_retrieve
+      description: |-
+        CAT-08: GET /api/v1/catalogs/initiative-categories/
+        Retorna valores distintos de `iniciativas.categoria` para programas publicados.
+      summary: Categorías distintas de iniciativas publicadas (CAT-08)
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicInitiativeCategoriesResponse'
+          description: ''
   /api/v1/catalogs/municipalities/:
     get:
       operationId: v1_catalogs_municipalities_list
@@ -5588,6 +6274,26 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Municipality'
+          description: ''
+  /api/v1/catalogs/news-categories/:
+    get:
+      operationId: v1_catalogs_news_categories_list
+      description: 'CAT-07 (AMP-01): GET /api/v1/catalogs/news-categories/ (y /api/v1/public/news/categories/)'
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NewsCategory'
           description: ''
   /api/v1/citizen/cases/:
     get:
@@ -5661,7 +6367,6 @@ paths:
         name: case_id
         schema:
           type: string
-          format: uuid
         required: true
       tags:
       - v1
@@ -5699,7 +6404,6 @@ paths:
         name: case_id
         schema:
           type: string
-          format: uuid
         required: true
       tags:
       - v1
@@ -5725,7 +6429,6 @@ paths:
         name: case_id
         schema:
           type: string
-          format: uuid
         required: true
       tags:
       - v1
@@ -5813,14 +6516,27 @@ paths:
           description: ''
   /api/v1/citizen/cases/{id}/contributions/:
     get:
-      operationId: v1_citizen_cases_contributions_retrieve
+      operationId: v1_citizen_cases_contributions_list
       description: 'CIT-08 (AMP-07): GET / POST /api/v1/me/cases/{case_id}/contributions/'
+      summary: Listar o registrar aportes ciudadanos y respuestas a corrección (CIT-08)
       parameters:
       - in: path
         name: id
         schema:
           type: string
         required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
       tags:
       - v1
       security:
@@ -5832,30 +6548,49 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+                $ref: '#/components/schemas/PaginatedCaseContributionList'
+          description: ''
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseContribution'
           description: ''
     post:
       operationId: v1_citizen_cases_contributions_create
       description: 'CIT-08 (AMP-07): GET / POST /api/v1/me/cases/{case_id}/contributions/'
+      summary: Listar o registrar aportes ciudadanos y respuestas a corrección (CIT-08)
       parameters:
       - in: path
         name: id
         schema:
           type: string
         required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
       tags:
       - v1
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+              $ref: '#/components/schemas/CitizenContributionCreate'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+              $ref: '#/components/schemas/CitizenContributionCreate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+              $ref: '#/components/schemas/CitizenContributionCreate'
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -5865,18 +6600,37 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+                $ref: '#/components/schemas/PaginatedCaseContributionList'
+          description: ''
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseContribution'
           description: ''
   /api/v1/citizen/cases/{id}/evidence/:
     get:
-      operationId: v1_citizen_cases_evidence_retrieve
+      operationId: v1_citizen_cases_evidence_list
       description: 'CIT-06: GET / POST /api/v1/me/cases/{case_id}/evidence/'
+      summary: Listar o subir evidencias del caso ciudadano (CIT-06)
       parameters:
       - in: path
         name: id
         schema:
           type: string
         required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
       tags:
       - v1
       security:
@@ -5888,30 +6642,49 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+                $ref: '#/components/schemas/PaginatedCaseEvidenceList'
+          description: ''
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseEvidence'
           description: ''
     post:
       operationId: v1_citizen_cases_evidence_create
       description: 'CIT-06: GET / POST /api/v1/me/cases/{case_id}/evidence/'
+      summary: Listar o subir evidencias del caso ciudadano (CIT-06)
       parameters:
       - in: path
         name: id
         schema:
           type: string
         required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
       tags:
       - v1
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+              $ref: '#/components/schemas/CaseEvidence'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+              $ref: '#/components/schemas/CaseEvidence'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+              $ref: '#/components/schemas/CaseEvidence'
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -5921,13 +6694,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+                $ref: '#/components/schemas/PaginatedCaseEvidenceList'
+          description: ''
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseEvidence'
           description: ''
   /api/v1/citizen/cases/{id}/evidence/{evidence_id}/download/:
     get:
       operationId: v1_citizen_cases_evidence_download_retrieve
       description: 'CIT-07: GET /api/v1/me/cases/{case_id}/evidence/{evidence_id}/download/'
+      summary: Descargar o consultar metadatos protegidos de una evidencia (CIT-07)
       parameters:
+      - in: query
+        name: download
+        schema:
+          type: boolean
+        description: Si es 1/true, descarga el binario directamente (FileResponse).
       - in: path
         name: evidence_id
         schema:
@@ -5949,7 +6734,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+                $ref: '#/components/schemas/CaseEvidence'
           description: ''
   /api/v1/citizen/cases/{id}/history/:
     get:
@@ -6040,6 +6825,7 @@ paths:
     get:
       operationId: v1_citizen_dashboard_retrieve
       description: 'CIT-01: GET /api/v1/me/dashboard/ (y /api/v1/citizen/dashboard/)'
+      summary: Resumen del panel ciudadano autenticado (CIT-01)
       tags:
       - v1
       security:
@@ -6048,7 +6834,11 @@ paths:
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CitizenDashboardResponse'
+          description: ''
   /api/v1/citizen/notifications/:
     get:
       operationId: v1_citizen_notifications_list
@@ -6454,14 +7244,27 @@ paths:
           description: ''
   /api/v1/me/cases/{id}/contributions/:
     get:
-      operationId: v1_me_cases_contributions_retrieve
+      operationId: v1_me_cases_contributions_list
       description: 'CIT-08 (AMP-07): GET / POST /api/v1/me/cases/{case_id}/contributions/'
+      summary: Listar o registrar aportes ciudadanos y respuestas a corrección (CIT-08)
       parameters:
       - in: path
         name: id
         schema:
           type: string
         required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
       tags:
       - v1
       security:
@@ -6473,30 +7276,49 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+                $ref: '#/components/schemas/PaginatedCaseContributionList'
+          description: ''
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseContribution'
           description: ''
     post:
       operationId: v1_me_cases_contributions_create
       description: 'CIT-08 (AMP-07): GET / POST /api/v1/me/cases/{case_id}/contributions/'
+      summary: Listar o registrar aportes ciudadanos y respuestas a corrección (CIT-08)
       parameters:
       - in: path
         name: id
         schema:
           type: string
         required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
       tags:
       - v1
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+              $ref: '#/components/schemas/CitizenContributionCreate'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+              $ref: '#/components/schemas/CitizenContributionCreate'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+              $ref: '#/components/schemas/CitizenContributionCreate'
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -6506,18 +7328,37 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+                $ref: '#/components/schemas/PaginatedCaseContributionList'
+          description: ''
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseContribution'
           description: ''
   /api/v1/me/cases/{id}/evidence/:
     get:
-      operationId: v1_me_cases_evidence_retrieve
+      operationId: v1_me_cases_evidence_list
       description: 'CIT-06: GET / POST /api/v1/me/cases/{case_id}/evidence/'
+      summary: Listar o subir evidencias del caso ciudadano (CIT-06)
       parameters:
       - in: path
         name: id
         schema:
           type: string
         required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
       tags:
       - v1
       security:
@@ -6529,30 +7370,49 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+                $ref: '#/components/schemas/PaginatedCaseEvidenceList'
+          description: ''
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseEvidence'
           description: ''
     post:
       operationId: v1_me_cases_evidence_create
       description: 'CIT-06: GET / POST /api/v1/me/cases/{case_id}/evidence/'
+      summary: Listar o subir evidencias del caso ciudadano (CIT-06)
       parameters:
       - in: path
         name: id
         schema:
           type: string
         required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
       tags:
       - v1
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+              $ref: '#/components/schemas/CaseEvidence'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+              $ref: '#/components/schemas/CaseEvidence'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+              $ref: '#/components/schemas/CaseEvidence'
       security:
       - jwtAuth: []
       - tokenAuth: []
@@ -6562,13 +7422,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+                $ref: '#/components/schemas/PaginatedCaseEvidenceList'
+          description: ''
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseEvidence'
           description: ''
   /api/v1/me/cases/{id}/evidence/{evidence_id}/download/:
     get:
       operationId: v1_me_cases_evidence_download_retrieve
       description: 'CIT-07: GET /api/v1/me/cases/{case_id}/evidence/{evidence_id}/download/'
+      summary: Descargar o consultar metadatos protegidos de una evidencia (CIT-07)
       parameters:
+      - in: query
+        name: download
+        schema:
+          type: boolean
+        description: Si es 1/true, descarga el binario directamente (FileResponse).
       - in: path
         name: evidence_id
         schema:
@@ -6590,7 +7462,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CitizenCaseCreateUpdate'
+                $ref: '#/components/schemas/CaseEvidence'
           description: ''
   /api/v1/me/cases/{id}/history/:
     get:
@@ -6712,6 +7584,7 @@ paths:
       description: |-
         MSG-01: GET /api/v1/me/conversations/
         Agrupa los mensajes privados permitidos al usuario autenticado por caso y contraparte.
+      summary: Listar conversaciones privadas agrupadas por caso y contraparte (MSG-01)
       tags:
       - v1
       security:
@@ -6720,7 +7593,29 @@ paths:
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeConversationListResponse'
+          description: ''
+  /api/v1/me/dashboard/:
+    get:
+      operationId: v1_me_dashboard_retrieve
+      description: 'CIT-01: GET /api/v1/me/dashboard/ (y /api/v1/citizen/dashboard/)'
+      summary: Resumen del panel ciudadano autenticado (CIT-01)
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CitizenDashboardResponse'
+          description: ''
   /api/v1/me/followed-cases/:
     get:
       operationId: v1_me_followed_cases_retrieve
@@ -6823,7 +7718,6 @@ paths:
         name: case_id
         schema:
           type: string
-          format: uuid
         required: true
       tags:
       - v1
@@ -6848,7 +7742,6 @@ paths:
         name: case_id
         schema:
           type: string
-          format: uuid
         required: true
       tags:
       - v1
@@ -6884,7 +7777,6 @@ paths:
         name: case_id
         schema:
           type: string
-          format: uuid
         required: true
       tags:
       - v1
@@ -6920,7 +7812,6 @@ paths:
         name: case_id
         schema:
           type: string
-          format: uuid
         required: true
       tags:
       - v1
@@ -7142,21 +8033,66 @@ paths:
                 $ref: '#/components/schemas/Notification'
           description: ''
   /api/v1/me/photo/:
-    put:
-      operationId: v1_me_photo_update
-      description: 'ME-03 y ME-04: PUT / DELETE /api/v1/me/photo/'
+    post:
+      operationId: v1_me_photo_create
+      description: 'ME-03 y ME-04: PUT / POST / DELETE /api/v1/me/photo/'
+      summary: Subir o actualizar fotografía de perfil (ME-03)
       tags:
       - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MePhotoUploadRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MePhotoUploadRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MePhotoUploadRequest'
       security:
       - jwtAuth: []
       - tokenAuth: []
       - cookieAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+    put:
+      operationId: v1_me_photo_update
+      description: 'ME-03 y ME-04: PUT / POST / DELETE /api/v1/me/photo/'
+      summary: Subir o actualizar fotografía de perfil (ME-03)
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MePhotoPutRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MePhotoPutRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MePhotoPutRequest'
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
     delete:
       operationId: v1_me_photo_destroy
-      description: 'ME-03 y ME-04: PUT / DELETE /api/v1/me/photo/'
+      description: 'ME-03 y ME-04: PUT / POST / DELETE /api/v1/me/photo/'
+      summary: Eliminar fotografía de perfil (ME-04)
       tags:
       - v1
       security:
@@ -7317,7 +8253,6 @@ paths:
         name: case_id
         schema:
           type: string
-          format: uuid
         required: true
       - name: page
         required: false
@@ -7345,18 +8280,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedPublicCaseCommentList'
           description: ''
-  /api/v1/public/cases/{case_id}/evidences/:
+  /api/v1/public/cases/{case_id}/evidence/:
     get:
-      operationId: v1_public_cases_evidences_retrieve
+      operationId: v1_public_cases_evidence_list
       description: |-
         MAP-05: GET /api/v1/public/cases/{case_id}/evidence/
         Solo entrega evidencias expresamente marcadas como `audiencia='publico'` y `estado_revision='aprobada'`.
+      summary: Listado de evidencias públicas aprobadas de un caso (MAP-05)
       parameters:
       - in: path
         name: case_id
         schema:
           type: string
-          format: uuid
         required: true
       tags:
       - v1
@@ -7367,19 +8302,54 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CaseEvidence'
+          description: ''
+  /api/v1/public/cases/{case_id}/evidences/:
+    get:
+      operationId: v1_public_cases_evidences_list
+      description: |-
+        MAP-05: GET /api/v1/public/cases/{case_id}/evidence/
+        Solo entrega evidencias expresamente marcadas como `audiencia='publico'` y `estado_revision='aprobada'`.
+      summary: Listado de evidencias públicas aprobadas de un caso (MAP-05)
+      parameters:
+      - in: path
+        name: case_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CaseEvidence'
+          description: ''
   /api/v1/public/cases/{case_id}/history/:
     get:
       operationId: v1_public_cases_history_retrieve
       description: |-
         MAP-04: GET /api/v1/public/cases/{case_id}/history/
         Solo entrega seguimientos con `visible_publicamente=True` (audiencia='publico') y cambios de estado del caso aprobado.
+      summary: Historial público de seguimientos autorizados y cambios de estado (MAP-04)
       parameters:
       - in: path
         name: case_id
         schema:
           type: string
-          format: uuid
         required: true
       tags:
       - v1
@@ -7390,7 +8360,11 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicCaseHistoryResponse'
+          description: ''
   /api/v1/public/cases/{lookup}/:
     get:
       operationId: v1_public_cases_retrieve
@@ -7419,9 +8393,71 @@ paths:
     get:
       operationId: v1_public_cases_geojson_retrieve
       description: |-
-        MAP-02: GET /api/v1/public/cases/map/
+        MAP-02: GET /api/v1/public/cases/map/ (y /api/v1/public/cases/geojson/)
         Retorna un GeoJSON FeatureCollection (SRID 4326) de los casos con `estado_publicacion='aprobado'`.
         Generaliza las coordenadas (`public_location`) para proteger ubicaciones sensibles (base de datos.md línea 60).
+      summary: Capa GeoJSON FeatureCollection de casos públicos aprobados (MAP-02)
+      parameters:
+      - in: query
+        name: bbox
+        schema:
+          type: string
+        description: 'Bounding box: minLon,minLat,maxLon,maxLat (SRID 4326)'
+      - in: query
+        name: categoria
+        schema:
+          type: string
+        description: Filtrar por categoría temática textual
+      - in: query
+        name: estado
+        schema:
+          type: string
+        description: Filtrar por nombre de estado operativo
+      - in: query
+        name: id_comunidad
+        schema:
+          type: string
+          format: uuid
+        description: Filtrar por comunidad
+      - in: query
+        name: id_departamento
+        schema:
+          type: string
+          format: uuid
+        description: Filtrar por departamento
+      - in: query
+        name: id_estado
+        schema:
+          type: string
+          format: uuid
+        description: Filtrar por UUID de estado operativo
+      - in: query
+        name: id_municipio
+        schema:
+          type: string
+          format: uuid
+        description: Filtrar por municipio
+      - in: query
+        name: id_tipo_caso
+        schema:
+          type: string
+          format: uuid
+        description: Filtrar por tipo de caso
+      - in: query
+        name: naturaleza
+        schema:
+          type: string
+        description: Filtrar por naturaleza (problematica, proyecto_iniciativa, otro)
+      - in: query
+        name: prioridad
+        schema:
+          type: string
+        description: Filtrar por prioridad (baja, media, alta, critica)
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: Búsqueda por código, título o descripción
       tags:
       - v1
       security:
@@ -7434,15 +8470,77 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PublicCaseList'
+                $ref: '#/components/schemas/GeoJSONCaseFeatureCollection'
           description: ''
   /api/v1/public/cases/map/:
     get:
       operationId: v1_public_cases_map_retrieve
       description: |-
-        MAP-02: GET /api/v1/public/cases/map/
+        MAP-02: GET /api/v1/public/cases/map/ (y /api/v1/public/cases/geojson/)
         Retorna un GeoJSON FeatureCollection (SRID 4326) de los casos con `estado_publicacion='aprobado'`.
         Generaliza las coordenadas (`public_location`) para proteger ubicaciones sensibles (base de datos.md línea 60).
+      summary: Capa GeoJSON FeatureCollection de casos públicos aprobados (MAP-02)
+      parameters:
+      - in: query
+        name: bbox
+        schema:
+          type: string
+        description: 'Bounding box: minLon,minLat,maxLon,maxLat (SRID 4326)'
+      - in: query
+        name: categoria
+        schema:
+          type: string
+        description: Filtrar por categoría temática textual
+      - in: query
+        name: estado
+        schema:
+          type: string
+        description: Filtrar por nombre de estado operativo
+      - in: query
+        name: id_comunidad
+        schema:
+          type: string
+          format: uuid
+        description: Filtrar por comunidad
+      - in: query
+        name: id_departamento
+        schema:
+          type: string
+          format: uuid
+        description: Filtrar por departamento
+      - in: query
+        name: id_estado
+        schema:
+          type: string
+          format: uuid
+        description: Filtrar por UUID de estado operativo
+      - in: query
+        name: id_municipio
+        schema:
+          type: string
+          format: uuid
+        description: Filtrar por municipio
+      - in: query
+        name: id_tipo_caso
+        schema:
+          type: string
+          format: uuid
+        description: Filtrar por tipo de caso
+      - in: query
+        name: naturaleza
+        schema:
+          type: string
+        description: Filtrar por naturaleza (problematica, proyecto_iniciativa, otro)
+      - in: query
+        name: prioridad
+        schema:
+          type: string
+        description: Filtrar por prioridad (baja, media, alta, critica)
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: Búsqueda por código, título o descripción
       tags:
       - v1
       security:
@@ -7455,7 +8553,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PublicCaseList'
+                $ref: '#/components/schemas/GeoJSONCaseFeatureCollection'
           description: ''
   /api/v1/public/event-proposals/:
     post:
@@ -7494,6 +8592,8 @@ paths:
         PUB-02: GET /api/v1/public/home/
         Agrega datos institucionales desde plus.configuracion_plataforma, indicadores reales validados,
         iniciativas destacadas (plus.iniciativas) y noticias recientes (plus.noticias) para el Home en Angular.
+      summary: Resumen de portada institucional, indicadores verificados, iniciativas
+        y noticias (PUB-02)
       tags:
       - v1
       security:
@@ -7503,7 +8603,41 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicHomeSummaryResponse'
+          description: ''
+  /api/v1/public/initiative-proposals/:
+    post:
+      operationId: v1_public_initiative_proposals_create
+      description: 'PUB-08: POST /api/v1/public/initiative-proposals/ (y /api/v1/citizen/proposals/)'
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventProposal'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EventProposal'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EventProposal'
+        required: true
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventProposal'
+          description: ''
   /api/v1/public/initiatives/:
     get:
       operationId: v1_public_initiatives_list
@@ -7669,12 +8803,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedInitiativeActivityList'
           description: ''
-  /api/v1/public/initiatives/categories/:
+  /api/v1/public/initiatives/{lookup}/gallery/:
     get:
-      operationId: v1_public_initiatives_categories_retrieve
-      description: |-
-        CAT-08: GET /api/v1/catalogs/initiative-categories/
-        Retorna valores distintos de `iniciativas.categoria` para programas publicados.
+      operationId: v1_public_initiatives_gallery_list_2
+      description: 'PUB-07: GET /api/v1/public/initiatives/{id}/gallery/'
+      parameters:
+      - in: path
+        name: lookup
+        schema:
+          type: string
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
       tags:
       - v1
       security:
@@ -7684,7 +8834,32 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedInitiativeMediaList'
+          description: ''
+  /api/v1/public/initiatives/categories/:
+    get:
+      operationId: v1_public_initiatives_categories_retrieve
+      description: |-
+        CAT-08: GET /api/v1/catalogs/initiative-categories/
+        Retorna valores distintos de `iniciativas.categoria` para programas publicados.
+      summary: Categorías distintas de iniciativas publicadas (CAT-08)
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicInitiativeCategoriesResponse'
+          description: ''
   /api/v1/public/initiatives/gallery/:
     get:
       operationId: v1_public_initiatives_gallery_list
@@ -7745,6 +8920,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EventProposal'
+          description: ''
+  /api/v1/public/media/{file_path}:
+    get:
+      operationId: v1_public_media_retrieve
+      description: |-
+        Entrega autorizada de archivos multimedia públicos a través de `/api/v1/public/media/<path:file_path>`.
+        Compatible con configuraciones Nginx donde solo `/api/` se reenvía al contenedor backend.
+        - Permite carpetas públicas: `profiles/`, `news/`, `initiatives/`.
+        - Para `cases/evidence/`, verifica en base de datos que la evidencia pertenezca a un caso con
+          `estado_publicacion='aprobado'` y que la evidencia tenga `audiencia='publico'` y `estado_revision='aprobada'`.
+        - Cualquier evidencia privada o en revisión es bloqueada con 403/404.
+      summary: Servir archivo multimedia público verificado (fotos de perfil, portadas
+        y evidencias públicas aprobadas)
+      parameters:
+      - in: path
+        name: file_path
+        schema:
+          type: string
+        description: Ruta relativa del recurso multimedia público (ej. profiles/foto.jpg,
+          news/portada.webp).
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: string
+                format: binary
           description: ''
   /api/v1/public/news/:
     get:
@@ -7841,10 +9051,131 @@ paths:
                 items:
                   $ref: '#/components/schemas/NewsCategory'
           description: ''
+  /api/v1/public/newsletter-subscriptions/:
+    post:
+      operationId: v1_public_newsletter_subscriptions_create
+      description: 'PUB-09 (AMP-02): POST /api/v1/public/newsletter-subscriptions/'
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewsletterSubscription'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NewsletterSubscription'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NewsletterSubscription'
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsletterSubscription'
+          description: ''
+  /api/v1/public/newsletter-subscriptions/confirm/:
+    get:
+      operationId: v1_public_newsletter_subscriptions_confirm_retrieve
+      description: 'PUB-10 (AMP-02): POST / GET /api/v1/public/newsletter-subscriptions/confirm/'
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsletterTokenAction'
+          description: ''
+    post:
+      operationId: v1_public_newsletter_subscriptions_confirm_create
+      description: 'PUB-10 (AMP-02): POST / GET /api/v1/public/newsletter-subscriptions/confirm/'
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewsletterTokenAction'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NewsletterTokenAction'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NewsletterTokenAction'
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsletterTokenAction'
+          description: ''
+  /api/v1/public/newsletter-subscriptions/unsubscribe/:
+    post:
+      operationId: v1_public_newsletter_subscriptions_unsubscribe_create
+      description: 'PUB-11 (AMP-02): POST /api/v1/public/newsletter-subscriptions/unsubscribe/'
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewsletterTokenAction'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NewsletterTokenAction'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NewsletterTokenAction'
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsletterTokenAction'
+          description: ''
   /api/v1/public/newsletter/confirm/:
+    get:
+      operationId: v1_public_newsletter_confirm_retrieve
+      description: 'PUB-10 (AMP-02): POST / GET /api/v1/public/newsletter-subscriptions/confirm/'
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsletterTokenAction'
+          description: ''
     post:
       operationId: v1_public_newsletter_confirm_create
-      description: 'PUB-10 (AMP-02): POST /api/v1/public/newsletter-subscriptions/confirm/'
+      description: 'PUB-10 (AMP-02): POST / GET /api/v1/public/newsletter-subscriptions/confirm/'
       tags:
       - v1
       requestBody:
@@ -7947,12 +9278,13 @@ paths:
                 items:
                   $ref: '#/components/schemas/SiteSetting'
           description: ''
-  /api/v1/public/site-info/:
+  /api/v1/public/site/:
     get:
-      operationId: v1_public_site_info_retrieve
+      operationId: v1_public_site_retrieve
       description: |-
         PUB-01: GET /api/v1/public/site/
         Proyección pública autorizada de `configuracion_plataforma` y documentos legales vigentes (AMP-09).
+      summary: Información institucional pública y políticas vigentes (PUB-01)
       tags:
       - v1
       security:
@@ -7962,7 +9294,32 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicSiteInfoResponse'
+          description: ''
+  /api/v1/public/site-info/:
+    get:
+      operationId: v1_public_site_info_retrieve
+      description: |-
+        PUB-01: GET /api/v1/public/site/
+        Proyección pública autorizada de `configuracion_plataforma` y documentos legales vigentes (AMP-09).
+      summary: Información institucional pública y políticas vigentes (PUB-01)
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicSiteInfoResponse'
+          description: ''
   /api/v1/public/territories/communities/:
     get:
       operationId: v1_public_territories_communities_list
@@ -8051,6 +9408,22 @@ paths:
           description: ''
 components:
   schemas:
+    AdminAuditEventListResponse:
+      type: object
+      properties:
+        kpis:
+          type: object
+          additionalProperties: {}
+        count:
+          type: integer
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/UnifiedAuditEventItem'
+      required:
+      - count
+      - kpis
+      - results
     AdminCaseDetail:
       type: object
       properties:
@@ -8259,6 +9632,32 @@ components:
       - usuario_correo
       - usuario_nombre
       - usuario_telefono
+    AdminCaseReportResponse:
+      type: object
+      properties:
+        kpis:
+          type: object
+          additionalProperties: {}
+        totals:
+          type: object
+          additionalProperties: {}
+        count:
+          type: integer
+        page:
+          type: integer
+        page_size:
+          type: integer
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdminCaseDetail'
+      required:
+      - count
+      - kpis
+      - page
+      - page_size
+      - results
+      - totals
     AdminEventProposal:
       type: object
       properties:
@@ -8443,6 +9842,30 @@ components:
       - id_iniciativa
       - multimedia
       - slug
+    AdminMetricsDashboardResponse:
+      type: object
+      properties:
+        cases:
+          type: object
+          additionalProperties: {}
+        moderation_queues:
+          type: object
+          additionalProperties: {}
+        territories:
+          type: object
+          additionalProperties: {}
+        content:
+          type: object
+          additionalProperties: {}
+        users:
+          type: object
+          additionalProperties: {}
+      required:
+      - cases
+      - content
+      - moderation_queues
+      - territories
+      - users
     AdminUserCreateUpdate:
       type: object
       properties:
@@ -8509,6 +9932,49 @@ components:
       - nombres
       - primary_role
       - roles
+    AssignUserRole:
+      type: object
+      description: 'USR-05: Soporta PUT /admin/users/{id}/role/ con un único rol (id_rol
+        UUID o role_code).'
+      properties:
+        id_rol:
+          type: string
+          format: uuid
+        role_code:
+          type: string
+        rol:
+          type: string
+        motivo:
+          type: string
+          default: ''
+        id_comunidad:
+          type: string
+          format: uuid
+          nullable: true
+        id_tipo_caso:
+          type: string
+          format: uuid
+          nullable: true
+    Audiencia01dEnum:
+      enum:
+      - publico
+      - ciudadano
+      - interno
+      type: string
+      description: |-
+        * `publico` - Público
+        * `ciudadano` - Ciudadano / Equipo
+        * `interno` - Interno
+    AudienciaFebEnum:
+      enum:
+      - publico
+      - ciudadano
+      - privado
+      type: string
+      description: |-
+        * `publico` - Público
+        * `ciudadano` - Ciudadano / Equipo
+        * `privado` - Privado / Interno
     AuditLog:
       type: object
       properties:
@@ -8580,6 +10046,57 @@ components:
       - user_agent
       - usuario
       - usuario_correo
+    AuthSessionResponse:
+      type: object
+      properties:
+        tokens:
+          $ref: '#/components/schemas/TokenBundle'
+        access:
+          type: string
+          description: Token JWT de acceso (Bearer).
+        refresh:
+          type: string
+          description: Token JWT de renovación.
+        token:
+          type: string
+          description: Token de sesión revocable en servidor.
+        token_type:
+          type: string
+          default: Bearer
+        expires_in:
+          type: integer
+          description: Segundos de vigencia del access token.
+        refresh_expires_in:
+          type: integer
+          description: Segundos de vigencia del refresh token.
+        primary_role:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+        user:
+          $ref: '#/components/schemas/UserMe'
+      required:
+      - access
+      - expires_in
+      - refresh
+      - refresh_expires_in
+      - token
+      - tokens
+      - user
+    CaseAssignResponsible:
+      type: object
+      properties:
+        id_responsable:
+          type: string
+          format: uuid
+        assigned_to:
+          type: string
+          format: uuid
+        motivo:
+          type: string
+          default: ''
     CaseAssignment:
       type: object
       properties:
@@ -8700,7 +10217,7 @@ components:
           type: string
         estado_moderacion:
           allOf:
-          - $ref: '#/components/schemas/EstadoModeracionEnum'
+          - $ref: '#/components/schemas/CaseCommentEstadoModeracionEnum'
           readOnly: true
         fecha_creacion:
           type: string
@@ -8715,6 +10232,18 @@ components:
       - id
       - id_comentario
       - usuario
+    CaseCommentEstadoModeracionEnum:
+      enum:
+      - pendiente
+      - aprobado
+      - rechazado
+      - oculto
+      type: string
+      description: |-
+        * `pendiente` - Pendiente
+        * `aprobado` - Aprobado
+        * `rechazado` - Rechazado
+        * `oculto` - Oculto
     CaseContribution:
       type: object
       properties:
@@ -8830,6 +10359,20 @@ components:
       - revisor_nombre
       - solicitante
       - solicitante_nombre
+    CaseCorrectionRequestCreate:
+      type: object
+      description: 'ADM-07: Solicitud formal de corrección sobre un caso.'
+      properties:
+        motivo:
+          type: string
+          description: Explicación clara de los datos o soportes requeridos al ciudadano.
+        campos_solicitados:
+          type: array
+          items:
+            type: string
+          description: Lista opcional de campos sugeridos para subsanar.
+      required:
+      - motivo
     CaseCorrectionRequestEstadoEnum:
       enum:
       - abierta
@@ -8844,6 +10387,10 @@ components:
         * `cancelada` - Cancelada
     CaseEvidence:
       type: object
+      description: |-
+        Serializador de evidencias de caso (CIT-06, ADM-05).
+        Soporta subida multipart mediante el campo `file` o `archivo` (máximo 15 MB; JPG, PNG, WEBP, PDF, MP4, MP3, DOC/X, XLS/X),
+        o referencia interna `ruta_archivo`.
       properties:
         id:
           type: string
@@ -8868,6 +10415,16 @@ components:
           type: string
           format: uuid
           readOnly: true
+        file:
+          type: string
+          format: uri
+          nullable: true
+          writeOnly: true
+        archivo:
+          type: string
+          format: uri
+          nullable: true
+          writeOnly: true
         tipo_archivo:
           $ref: '#/components/schemas/CaseEvidenceTipoArchivoEnum'
         ruta_archivo:
@@ -8879,7 +10436,7 @@ components:
           type: string
           nullable: true
         audiencia:
-          $ref: '#/components/schemas/CaseEvidenceAudienciaEnum'
+          $ref: '#/components/schemas/AudienciaFebEnum'
         estado_revision:
           $ref: '#/components/schemas/EstadoRevisionEnum'
         nombre_original:
@@ -8907,19 +10464,8 @@ components:
       - id
       - id_aporte
       - id_evidencia
-      - ruta_archivo
       - usuario
       - usuario_nombre
-    CaseEvidenceAudienciaEnum:
-      enum:
-      - publico
-      - ciudadano
-      - privado
-      type: string
-      description: |-
-        * `publico` - Público
-        * `ciudadano` - Ciudadano / Equipo
-        * `privado` - Privado / Interno
     CaseEvidenceTipoArchivoEnum:
       enum:
       - imagen
@@ -8932,6 +10478,33 @@ components:
         * `video` - Video
         * `audio` - Audio
         * `documento` - Documento
+    CaseManagementStatus:
+      type: object
+      properties:
+        id_estado:
+          type: string
+        estado:
+          type: string
+        management_status:
+          type: string
+        titulo:
+          type: string
+          default: ''
+        descripcion:
+          type: string
+          default: ''
+        motivo:
+          type: string
+          default: ''
+        observations:
+          type: string
+          default: ''
+        final_result:
+          type: string
+          default: ''
+        resultado_resumen:
+          type: string
+          default: ''
     CaseMessage:
       type: object
       properties:
@@ -8983,6 +10556,28 @@ components:
       - id_mensaje
       - remitente
       - remitente_nombre
+    CaseModerationAction:
+      type: object
+      properties:
+        estado_publicacion:
+          type: string
+        moderation_status:
+          type: string
+        accion:
+          type: string
+        solicitar_correccion:
+          type: boolean
+          default: false
+        motivo:
+          type: string
+          default: ''
+        moderation_reason:
+          type: string
+          default: ''
+        prioridad:
+          type: string
+        priority:
+          type: string
     CaseStatus:
       type: object
       properties:
@@ -9097,7 +10692,7 @@ components:
         descripcion:
           type: string
         audiencia:
-          $ref: '#/components/schemas/CaseUpdateAudienciaEnum'
+          $ref: '#/components/schemas/Audiencia01dEnum'
         tipo_evento:
           $ref: '#/components/schemas/TipoEventoEnum'
         fecha_seguimiento:
@@ -9114,16 +10709,32 @@ components:
       - id
       - id_seguimiento
       - usuario
-    CaseUpdateAudienciaEnum:
-      enum:
-      - publico
-      - ciudadano
-      - interno
-      type: string
-      description: |-
-        * `publico` - Público
-        * `ciudadano` - Ciudadano / Equipo
-        * `interno` - Interno
+    CaseUpdateCreate:
+      type: object
+      properties:
+        titulo:
+          type: string
+          maxLength: 200
+        title:
+          type: string
+          maxLength: 200
+        descripcion:
+          type: string
+        content:
+          type: string
+        audiencia:
+          type: string
+        visibility:
+          type: string
+        visible_publicamente:
+          type: boolean
+        tipo_evento:
+          type: string
+          default: seguimiento
+        id_estado:
+          type: string
+        estado:
+          type: string
     ChangePassword:
       type: object
       properties:
@@ -9336,6 +10947,59 @@ components:
       - seguimientos
       - solicitudes_correccion
       - tipo_nombre
+    CitizenContributionCreate:
+      type: object
+      description: 'CIT-08: Envío de aporte ciudadano o respuesta a solicitud de corrección.'
+      properties:
+        contenido:
+          type: string
+          description: Texto del aporte o subsanación del ciudadano.
+        mensaje:
+          type: string
+          description: Alias de contenido.
+        id_solicitud_correccion:
+          type: string
+          format: uuid
+          nullable: true
+          description: UUID de la solicitud de corrección que se responde (opcional).
+        files:
+          type: array
+          items:
+            type: string
+            format: uri
+          description: Archivos adjuntos opcionales (multipart/form-data, máx. 15
+            MB por archivo).
+    CitizenDashboardResponse:
+      type: object
+      properties:
+        total_cases:
+          type: integer
+        pendientes_publicacion:
+          type: integer
+        aprobados_publicacion:
+          type: integer
+        en_gestion:
+          type: integer
+        resueltos_o_cerrados:
+          type: integer
+        open_correction_requests:
+          type: integer
+        unread_notifications:
+          type: integer
+        unread_messages:
+          type: integer
+        followed_cases_count:
+          type: integer
+      required:
+      - aprobados_publicacion
+      - en_gestion
+      - followed_cases_count
+      - open_correction_requests
+      - pendientes_publicacion
+      - resueltos_o_cerrados
+      - total_cases
+      - unread_messages
+      - unread_notifications
     CitizenRegistration:
       type: object
       properties:
@@ -9376,6 +11040,61 @@ components:
           type: boolean
       required:
       - password
+    CommentModerationAction:
+      type: object
+      properties:
+        estado_moderacion:
+          allOf:
+          - $ref: '#/components/schemas/CommentModerationActionEstadoModeracionEnum'
+          description: |-
+            Acción de moderación sobre el comentario: 'pendiente', 'aprobado', 'rechazado' u 'oculto'.
+
+            * `pendiente` - pendiente
+            * `aprobado` - aprobado
+            * `rechazado` - rechazado
+            * `oculto` - oculto
+            * `pending` - pending
+            * `approved` - approved
+            * `rejected` - rejected
+            * `hidden` - hidden
+        moderation_status:
+          type: string
+        motivo:
+          type: string
+          default: ''
+          description: Nota o motivo interno de moderación (se guarda en auditoria_eventos;
+            no se expone al autor salvo que notificar_motivo=true).
+        nota_interna:
+          type: string
+          default: ''
+        moderation_reason:
+          type: string
+          default: ''
+        notificar_motivo:
+          type: boolean
+          default: false
+          description: Si es true, incluye el motivo en la notificación enviada al
+            autor del comentario.
+    CommentModerationActionEstadoModeracionEnum:
+      enum:
+      - pendiente
+      - aprobado
+      - rechazado
+      - oculto
+      - pending
+      - approved
+      - rejected
+      - hidden
+      type: string
+      description: |-
+        * `pendiente` - pendiente
+        * `aprobado` - aprobado
+        * `rechazado` - rechazado
+        * `oculto` - oculto
+        * `pending` - pending
+        * `approved` - approved
+        * `rejected` - rejected
+        * `hidden` - hidden
     Community:
       type: object
       properties:
@@ -9437,6 +11156,40 @@ components:
         * `comuna` - Comuna
         * `sector` - Sector
         * `otro` - Otro
+    ConversationSummaryItem:
+      type: object
+      properties:
+        id_caso:
+          type: string
+          format: uuid
+          nullable: true
+        caso_codigo:
+          type: string
+          nullable: true
+        caso_titulo:
+          type: string
+          nullable: true
+        contraparte_id:
+          type: string
+          format: uuid
+        contraparte_nombre:
+          type: string
+        ultimo_mensaje:
+          type: string
+        fecha_ultimo_mensaje:
+          type: string
+          format: date-time
+        unread_count:
+          type: integer
+      required:
+      - caso_codigo
+      - caso_titulo
+      - contraparte_id
+      - contraparte_nombre
+      - fecha_ultimo_mensaje
+      - id_caso
+      - ultimo_mensaje
+      - unread_count
     Department:
       type: object
       properties:
@@ -9500,18 +11253,6 @@ components:
         * `en_curso` - En Curso
         * `finalizada` - Finalizada
         * `cancelada` - Cancelada
-    EstadoModeracionEnum:
-      enum:
-      - pendiente
-      - aprobado
-      - rechazado
-      - oculto
-      type: string
-      description: |-
-        * `pendiente` - Pendiente
-        * `aprobado` - Aprobado
-        * `rechazado` - Rechazado
-        * `oculto` - Oculto
     EstadoPublicacion0baEnum:
       enum:
       - borrador
@@ -9696,6 +11437,134 @@ components:
       - id_caso
       - id_seguimiento_usuario
       - titulo
+    GeoJSONCaseFeature:
+      type: object
+      properties:
+        type:
+          type: string
+          default: Feature
+        id:
+          type: string
+          format: uuid
+        geometry:
+          $ref: '#/components/schemas/GeoJSONPointGeometry'
+        properties:
+          $ref: '#/components/schemas/GeoJSONCaseProperties'
+      required:
+      - geometry
+      - id
+      - properties
+    GeoJSONCaseFeatureCollection:
+      type: object
+      description: 'MAP-02: Respuesta GeoJSON FeatureCollection RFC 7946 (SRID 4326).'
+      properties:
+        type:
+          type: string
+          default: FeatureCollection
+        srid:
+          type: integer
+          default: 4326
+        count:
+          type: integer
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeoJSONCaseFeature'
+      required:
+      - count
+      - features
+    GeoJSONCaseProperties:
+      type: object
+      properties:
+        id_caso:
+          type: string
+          format: uuid
+        codigo:
+          type: string
+        radicado_code:
+          type: string
+        titulo:
+          type: string
+        prioridad:
+          $ref: '#/components/schemas/PrioridadEnum'
+        id_estado:
+          type: string
+          format: uuid
+        estado:
+          type: string
+        id_tipo_caso:
+          type: string
+          format: uuid
+        tipo:
+          type: string
+        categoria:
+          type: string
+        naturaleza:
+          type: string
+        id_comunidad:
+          type: string
+          format: uuid
+        comunidad:
+          type: string
+        id_municipio:
+          type: string
+          format: uuid
+        municipio:
+          type: string
+        id_departamento:
+          type: string
+          format: uuid
+        departamento:
+          type: string
+        longitud:
+          type: number
+          format: double
+        latitud:
+          type: number
+          format: double
+        fecha_creacion:
+          type: string
+          format: date-time
+      required:
+      - categoria
+      - codigo
+      - comunidad
+      - departamento
+      - estado
+      - fecha_creacion
+      - id_caso
+      - id_comunidad
+      - id_departamento
+      - id_estado
+      - id_municipio
+      - id_tipo_caso
+      - latitud
+      - longitud
+      - municipio
+      - naturaleza
+      - prioridad
+      - radicado_code
+      - tipo
+      - titulo
+    GeoJSONPointGeometry:
+      type: object
+      properties:
+        type:
+          type: string
+          default: Point
+        srid:
+          type: integer
+          default: 4326
+        coordinates:
+          type: array
+          items:
+            type: number
+            format: double
+          description: '[longitud, latitud] generalizadas a 2 decimales en SRID 4326.'
+          maxItems: 2
+          minItems: 2
+      required:
+      - coordinates
     InitiativeActivity:
       type: object
       properties:
@@ -10183,6 +12052,60 @@ components:
       - edicion
       - id
       - id_indicador
+    LegalDocument:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        id_documento:
+          type: string
+          format: uuid
+          readOnly: true
+        tipo:
+          allOf:
+          - $ref: '#/components/schemas/LegalDocumentTipoEnum'
+          readOnly: true
+          default: tratamiento_datos
+        version:
+          type: string
+          readOnly: true
+          default: '1.0'
+        titulo:
+          type: string
+          readOnly: true
+        contenido:
+          type: string
+          readOnly: true
+        vigente:
+          type: boolean
+          readOnly: true
+        fecha_vigencia:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - contenido
+      - fecha_vigencia
+      - id
+      - id_documento
+      - tipo
+      - titulo
+      - version
+      - vigente
+    LegalDocumentTipoEnum:
+      enum:
+      - tratamiento_datos
+      - terminos_uso
+      - radicacion_caso
+      - boletin
+      type: string
+      description: |-
+        * `tratamiento_datos` - Política de tratamiento de datos personales
+        * `terminos_uso` - Términos y condiciones de uso
+        * `radicacion_caso` - Declaración de veracidad y radicación
+        * `boletin` - Consentimiento de suscripción a boletín
     Login:
       type: object
       description: Soporta inicio de sesión por correo o username.
@@ -10198,6 +12121,120 @@ components:
           writeOnly: true
       required:
       - password
+    LogoutRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          description: Token JWT refresh opcional para invalidar.
+    LogoutResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        detail:
+          type: string
+      required:
+      - detail
+      - message
+    MarkMessagesReadPutRequest:
+      type: object
+      properties:
+        message_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: Lista opcional de UUIDs de mensajes recibidos a marcar como
+            leídos.
+        up_to_message_id:
+          type: string
+          format: uuid
+          description: UUID del último mensaje visible en pantalla; marca como leídos
+            hasta ese mensaje inclusive.
+        up_to_timestamp:
+          type: string
+          format: date-time
+          description: Fecha/hora ISO de corte; excluye mensajes recibidos con fecha
+            posterior.
+    MarkMessagesReadPutResponse:
+      type: object
+      properties:
+        marked_read:
+          type: integer
+        unread_remaining:
+          type: integer
+      required:
+      - marked_read
+      - unread_remaining
+    MarkMessagesReadRequest:
+      type: object
+      properties:
+        message_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: Lista opcional de UUIDs de mensajes recibidos a marcar como
+            leídos.
+        up_to_message_id:
+          type: string
+          format: uuid
+          description: UUID del último mensaje visible en pantalla; marca como leídos
+            hasta ese mensaje inclusive.
+        up_to_timestamp:
+          type: string
+          format: date-time
+          description: Fecha/hora ISO de corte; excluye mensajes recibidos con fecha
+            posterior.
+    MarkMessagesReadResponse:
+      type: object
+      properties:
+        marked_read:
+          type: integer
+        unread_remaining:
+          type: integer
+      required:
+      - marked_read
+      - unread_remaining
+    MeConversationListResponse:
+      type: object
+      properties:
+        count:
+          type: integer
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConversationSummaryItem'
+      required:
+      - count
+      - results
+    MePhotoPutRequest:
+      type: object
+      properties:
+        photo:
+          type: string
+          format: uri
+          nullable: true
+          description: Archivo de imagen (JPG, PNG o WEBP, máx. 15 MB). También acepta
+            el nombre de campo `foto` o `file`.
+        foto:
+          type: string
+          format: uri
+          nullable: true
+    MePhotoUploadRequest:
+      type: object
+      properties:
+        photo:
+          type: string
+          format: uri
+          nullable: true
+          description: Archivo de imagen (JPG, PNG o WEBP, máx. 15 MB). También acepta
+            el nombre de campo `foto` o `file`.
+        foto:
+          type: string
+          format: uri
+          nullable: true
     Municipality:
       type: object
       properties:
@@ -10809,6 +12846,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CaseComment'
+    PaginatedCaseContributionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseContribution'
     PaginatedCaseEvidenceList:
       type: object
       required:
@@ -11320,16 +13380,32 @@ components:
       properties:
         uid:
           type: string
+          description: Identificador base64 del usuario (opcional si token viene en
+            formato <uid>.<token>).
         token:
           type: string
+          description: Token de recuperación o cadena compuesta <uid>.<token>.
         new_password:
+          type: string
+          writeOnly: true
+          minLength: 8
+        new_password_confirm:
           type: string
           writeOnly: true
           minLength: 8
       required:
       - new_password
       - token
-      - uid
+    PasswordResetConfirmResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        detail:
+          type: string
+      required:
+      - detail
+      - message
     PasswordResetRequest:
       type: object
       properties:
@@ -11339,16 +13415,35 @@ components:
         email:
           type: string
           format: email
+    PasswordResetRequestResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        detail:
+          type: string
+      required:
+      - detail
+      - message
     PasswordResetValidate:
       type: object
       properties:
         uid:
           type: string
+          description: Identificador base64 del usuario (opcional si token viene en
+            formato <uid>.<token>).
         token:
           type: string
+          description: Token de recuperación o cadena compuesta <uid>.<token>.
       required:
       - token
-      - uid
+    PasswordResetValidateResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+      required:
+      - valid
     PatchedAdminCaseDetail:
       type: object
       properties:
@@ -11742,6 +13837,15 @@ components:
           type: string
           format: date-time
           readOnly: true
+    PatchedAdminUserStatus:
+      type: object
+      description: 'USR-06: PATCH /admin/users/{id}/status/ con estado de tres valores.'
+      properties:
+        estado:
+          $ref: '#/components/schemas/Estado6c7Enum'
+        motivo:
+          type: string
+          default: ''
     PatchedCaseCategory:
       type: object
       properties:
@@ -11772,6 +13876,10 @@ components:
           readOnly: true
     PatchedCaseEvidence:
       type: object
+      description: |-
+        Serializador de evidencias de caso (CIT-06, ADM-05).
+        Soporta subida multipart mediante el campo `file` o `archivo` (máximo 15 MB; JPG, PNG, WEBP, PDF, MP4, MP3, DOC/X, XLS/X),
+        o referencia interna `ruta_archivo`.
       properties:
         id:
           type: string
@@ -11796,6 +13904,16 @@ components:
           type: string
           format: uuid
           readOnly: true
+        file:
+          type: string
+          format: uri
+          nullable: true
+          writeOnly: true
+        archivo:
+          type: string
+          format: uri
+          nullable: true
+          writeOnly: true
         tipo_archivo:
           $ref: '#/components/schemas/CaseEvidenceTipoArchivoEnum'
         ruta_archivo:
@@ -11807,7 +13925,7 @@ components:
           type: string
           nullable: true
         audiencia:
-          $ref: '#/components/schemas/CaseEvidenceAudienciaEnum'
+          $ref: '#/components/schemas/AudienciaFebEnum'
         estado_revision:
           $ref: '#/components/schemas/EstadoRevisionEnum'
         nombre_original:
@@ -11828,6 +13946,17 @@ components:
           type: string
           format: date-time
           readOnly: true
+    PatchedCaseEvidenceUpdate:
+      type: object
+      description: 'ADM-11 (AMP-10): PATCH /api/v1/admin/cases/{case_id}/evidence/{evidence_id}/'
+      properties:
+        descripcion:
+          type: string
+          nullable: true
+        audiencia:
+          $ref: '#/components/schemas/AudienciaFebEnum'
+        estado_revision:
+          $ref: '#/components/schemas/EstadoRevisionEnum'
     PatchedCitizenCaseCreateUpdate:
       type: object
       properties:
@@ -12718,10 +14847,16 @@ components:
           readOnly: true
         notificar_novedades_casos:
           type: boolean
+        notificar_avance_casos:
+          type: boolean
+          description: Alias de notificar_novedades_casos.
         notificar_mensajes:
           type: boolean
         suscrito_boletin:
           type: boolean
+        recibir_boletin:
+          type: boolean
+          description: Alias de suscrito_boletin.
         fecha_actualizacion:
           type: string
           format: date-time
@@ -12738,6 +14873,20 @@ components:
         * `media` - Media
         * `alta` - Alta
         * `critica` - Crítica
+    PublicCaseCategoryNamesResponse:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            type: string
+        tipos_caso:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseCategory'
+      required:
+      - categories
+      - tipos_caso
     PublicCaseComment:
       type: object
       properties:
@@ -12908,6 +15057,27 @@ components:
       - tipo_naturaleza
       - tipo_nombre
       - titulo
+    PublicCaseHistoryResponse:
+      type: object
+      properties:
+        id_caso:
+          type: string
+          format: uuid
+        codigo:
+          type: string
+        seguimientos:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicCaseUpdate'
+        historial_estados:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicCaseStatusHistory'
+      required:
+      - codigo
+      - historial_estados
+      - id_caso
+      - seguimientos
     PublicCaseList:
       type: object
       description: |-
@@ -13025,6 +15195,190 @@ components:
       - tipo_naturaleza
       - tipo_nombre
       - titulo
+    PublicCaseOptionsResponse:
+      type: object
+      properties:
+        tipos_caso:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseCategory'
+        categorias:
+          type: array
+          items:
+            type: string
+        estados_caso:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseStatus'
+        prioridades:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        estados_publicacion:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        naturalezas:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        audiencias_seguimiento:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        tipos_evento_seguimiento:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+      required:
+      - audiencias_seguimiento
+      - categorias
+      - estados_caso
+      - estados_publicacion
+      - naturalezas
+      - prioridades
+      - tipos_caso
+      - tipos_evento_seguimiento
+    PublicCaseStatusHistory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        id_historial:
+          type: string
+          format: uuid
+          readOnly: true
+        estado_anterior:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        estado_anterior_nombre:
+          type: string
+          readOnly: true
+        estado_nuevo:
+          type: string
+          format: uuid
+          readOnly: true
+        estado_nuevo_nombre:
+          type: string
+          readOnly: true
+        motivo:
+          type: string
+          readOnly: true
+          nullable: true
+        fecha_cambio:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - estado_anterior
+      - estado_anterior_nombre
+      - estado_nuevo
+      - estado_nuevo_nombre
+      - fecha_cambio
+      - id
+      - id_historial
+      - motivo
+    PublicCaseUpdate:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        id_seguimiento:
+          type: string
+          format: uuid
+          readOnly: true
+        titulo:
+          type: string
+          readOnly: true
+          nullable: true
+        descripcion:
+          type: string
+          readOnly: true
+        audiencia:
+          allOf:
+          - $ref: '#/components/schemas/Audiencia01dEnum'
+          readOnly: true
+        tipo_evento:
+          allOf:
+          - $ref: '#/components/schemas/TipoEventoEnum'
+          readOnly: true
+        fecha_seguimiento:
+          type: string
+          format: date-time
+          readOnly: true
+        visible_publicamente:
+          type: boolean
+          readOnly: true
+      required:
+      - audiencia
+      - descripcion
+      - fecha_seguimiento
+      - id
+      - id_seguimiento
+      - tipo_evento
+      - titulo
+      - visible_publicamente
+    PublicHomeSummaryResponse:
+      type: object
+      properties:
+        institution:
+          type: object
+          additionalProperties: {}
+        verified_indicators:
+          type: object
+          additionalProperties: {}
+        featured_initiatives:
+          type: array
+          items:
+            $ref: '#/components/schemas/InitiativeList'
+        recent_news:
+          type: array
+          items:
+            $ref: '#/components/schemas/NewsArticleList'
+        site_settings:
+          type: object
+          additionalProperties: {}
+      required:
+      - featured_initiatives
+      - institution
+      - recent_news
+      - site_settings
+      - verified_indicators
+    PublicInitiativeCategoriesResponse:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            type: string
+      required:
+      - categories
+    PublicSiteInfoResponse:
+      type: object
+      properties:
+        institucion: {}
+        configuracion:
+          type: object
+          additionalProperties: {}
+        documentos_legales:
+          type: array
+          items:
+            $ref: '#/components/schemas/LegalDocument'
+      required:
+      - configuracion
+      - documentos_legales
+      - institucion
     ResponsibleScopeAssignment:
       type: object
       properties:
@@ -13179,17 +15533,106 @@ components:
         * `seguimiento` - Seguimiento
         * `resultado` - Resultado
         * `otro` - Otro
-    TokenRefresh:
+    TokenBundle:
       type: object
       properties:
         access:
           type: string
-          readOnly: true
         refresh:
           type: string
+        token:
+          type: string
+        token_type:
+          type: string
+          default: Bearer
+        expires_in:
+          type: integer
+        refresh_expires_in:
+          type: integer
       required:
       - access
+      - expires_in
       - refresh
+      - refresh_expires_in
+      - token
+    TokenRefreshRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          description: Token JWT refresh vigente.
+      required:
+      - refresh
+    TokenRefreshResponse:
+      type: object
+      properties:
+        access:
+          type: string
+        refresh:
+          type: string
+        token_type:
+          type: string
+          default: Bearer
+        expires_in:
+          type: integer
+      required:
+      - access
+      - expires_in
+      - refresh
+    UnifiedAuditEventItem:
+      type: object
+      properties:
+        event_ref:
+          type: string
+        id:
+          type: string
+          format: uuid
+        source:
+          type: string
+        action:
+          type: string
+        module:
+          type: string
+        entity:
+          type: string
+          nullable: true
+        entity_id:
+          type: string
+          nullable: true
+        actor:
+          type: string
+          format: uuid
+          nullable: true
+        actor_nombre:
+          type: string
+          nullable: true
+        result:
+          type: string
+        description:
+          type: string
+          nullable: true
+        changed_columns:
+          type: array
+          items:
+            type: string
+          nullable: true
+        timestamp:
+          type: string
+          format: date-time
+      required:
+      - action
+      - actor
+      - actor_nombre
+      - changed_columns
+      - description
+      - entity
+      - entity_id
+      - event_ref
+      - id
+      - module
+      - result
+      - source
+      - timestamp
     UserMe:
       type: object
       properties:
@@ -13304,10 +15747,16 @@ components:
           readOnly: true
         notificar_novedades_casos:
           type: boolean
+        notificar_avance_casos:
+          type: boolean
+          description: Alias de notificar_novedades_casos.
         notificar_mensajes:
           type: boolean
         suscrito_boletin:
           type: boolean
+        recibir_boletin:
+          type: boolean
+          description: Alias de suscrito_boletin.
         fecha_actualizacion:
           type: string
           format: date-time
@@ -13315,6 +15764,57 @@ components:
       required:
       - fecha_actualizacion
       - id_preferencia
+    UserProfile:
+      type: object
+      properties:
+        id_perfil:
+          type: string
+          format: uuid
+          readOnly: true
+        ruta_foto:
+          type: string
+          readOnly: true
+          nullable: true
+        foto_url:
+          type: string
+          nullable: true
+          readOnly: true
+        id_departamento:
+          type: string
+          format: uuid
+          readOnly: true
+        departamento_nombre:
+          type: string
+          readOnly: true
+        id_municipio:
+          type: string
+          format: uuid
+          readOnly: true
+        municipio_nombre:
+          type: string
+          readOnly: true
+        id_comunidad:
+          type: string
+          format: uuid
+          readOnly: true
+        comunidad_nombre:
+          type: string
+          readOnly: true
+        fecha_actualizacion:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - comunidad_nombre
+      - departamento_nombre
+      - fecha_actualizacion
+      - foto_url
+      - id_comunidad
+      - id_departamento
+      - id_municipio
+      - id_perfil
+      - municipio_nombre
+      - ruta_foto
   securitySchemes:
     cookieAuth:
       type: apiKey

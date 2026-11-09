@@ -1,15 +1,18 @@
-# PLUS ? Frontend
+﻿# PLUS · Frontend
 
 Angular 18, TypeScript y Tailwind CSS 3. Requiere Node 20.11 o superior compatible con Angular 18.
 
 ```sh
-npm install
+npm ci
 npm start
+npm run test:api
 npm run build
 ```
 
-P?gina principal en http://127.0.0.1:4200. Layout p?blico, componentes de encabezado y pie, y secciones independientes de hero, mapa ilustrativo, iniciativas y noticias. Tema persistente, men? m?vil y carrusel gestionados por Angular.
+La aplicación local abre en http://127.0.0.1:4200. `proxy.conf.json` reenvía `/api` al backend local en `http://127.0.0.1:8000`. En Docker se usa el proxy existente de Nginx hacia `backend:8000`. La base de API es `/api/v1`; no se incluyen credenciales en el código.
 
-El contenido reproduce el HTML de Stitch aportado. Las cifras, fotograf?as, credenciales y casos son demostrativos, pendientes de validaci?n. Las im?genes y fuentes mantienen las URL externas del dise?o y requieren conexi?n. El mapa es una ilustraci?n SVG, con controles desactivados hasta integrar cartograf?a y contratos REST. Los enlaces de pantallas pendientes muestran un aviso. No hay autenticaci?n, env?o de formularios ni peticiones a una API ficticia.
+Acceso, registro, recuperación/restablecimiento y perfil usan servicios REST. Las rutas de ciudadano y administración requieren sesión, y administración verifica las capacidades devueltas por el servidor. El perfil incluye fotografía, preferencias y ubicación mediante catálogos reales.
 
-La aplicaci?n usa rutas standalone con carga diferida para el inicio. Los futuros contratos y servicios REST se incorporar?n por funcionalidad cuando el backend los defina.
+Los demás módulos todavía usan datos de demostración, señalados en sus vistas. El contenido público de noticias e iniciativas se conserva hasta preparar su carga inicial e integrar sus consultas. Las cifras e imágenes del diseño deben validarse antes de publicarlas como contenido institucional.
+
+Ver [estado de integración y despliegue](docs/integracion-acceso-perfil.md), [contratos del backend](endpoints_info.md) y [configuración Docker](docker/README.md).

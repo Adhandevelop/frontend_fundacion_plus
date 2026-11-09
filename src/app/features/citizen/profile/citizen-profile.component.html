@@ -1,25 +1,35 @@
-<div class="space-y-5">
-  <header><p class="text-label-md uppercase tracking-wider mb-2">Cuenta ciudadana</p><h1 class="text-headline-lg">Mi perfil</h1><p class="text-body-sm mt-2">Edita el perfil de demostración. Los datos y preferencias permanecen en esta pestaña y se pierden al recargar.</p></header>
-  <div class="grid xl:grid-cols-[280px_minmax(0,1fr)] gap-5 items-start">
+﻿<div class="space-y-5">
+  <header><p class="text-label-md uppercase tracking-wider mb-2">Mi cuenta</p><h1 class="text-headline-lg">Mi perfil</h1><p class="text-body-sm mt-2">Consulta y actualiza los datos de tu cuenta PLUS.</p></header>
+  @if(loading()){<p role="status">Cargando perfil y territorios…</p>}
+  @else if(loadError()){<div role="alert" class="cit-panel border rounded-xl p-5 space-y-3"><p>{{loadError()}}</p><button type="button" class="cit-button" (click)="load()">Reintentar</button></div>}
+  @else {
+  <div class="grid xl:grid-cols-[280px_minmax(0,1fr)] gap-5 items-start" [attr.aria-busy]="pending()">
     <aside class="cit-panel border rounded-xl p-5 space-y-5">
       <h2 class="text-title-md">Imagen del perfil</h2>
-      @if(photo();as image){<img [src]="image" alt="Fotografía seleccionada para el perfil de ejemplo" class="w-28 h-28 rounded-full object-cover border border-slate-400/40">} @else {<div class="w-28 h-28 rounded-full bg-yellow-400/20 flex items-center justify-center" role="img" aria-label="Perfil sin fotografía"><span class="material-symbols-outlined text-[48px]" aria-hidden="true">person</span></div>}
-      <label class="cit-field">Seleccionar fotografía<input type="file" accept="image/jpeg,image/png" (change)="selectPhoto($event)" aria-describedby="profile-photo-help"></label>
-      <p id="profile-photo-help" class="text-label-sm">JPG o PNG, hasta 2 MB en esta demostración. La imagen no se envía.</p>
-      <button type="button" class="cit-button" [disabled]="!photo()" (click)="removePhoto()">Quitar fotografía</button>
-      <div class="pt-4 border-t border-slate-400/30 space-y-2 text-body-sm"><p class="font-semibold">Ciudadana de ejemplo</p><p>Sin sesión autenticada ni acreditaciones reales.</p><p>El perfil no permite asignarse roles o permisos.</p></div>
+      @if(auth.user()?.perfil?.foto_url;as image){<img [src]="image" alt="Fotografía de tu perfil" class="w-28 h-28 rounded-full object-cover border border-slate-400/40">} @else {<div class="w-28 h-28 rounded-full bg-yellow-400/20 flex items-center justify-center" role="img" aria-label="Perfil sin fotografía"><span class="material-symbols-outlined text-[48px]" aria-hidden="true">person</span></div>}
+      <label class="cit-field">Actualizar fotografía<input type="file" accept="image/jpeg,image/png,image/webp" [disabled]="pending()" (change)="selectPhoto($event)" aria-describedby="profile-photo-help"></label>
+      <p id="profile-photo-help" class="text-label-sm">JPG, PNG o WEBP, hasta 15 MB. Se guarda al seleccionarla.</p>
+      <button type="button" class="cit-button" [disabled]="pending() || !auth.user()?.perfil?.foto_url" (click)="removePhoto()">Quitar fotografía</button>
+      <div class="pt-4 border-t border-slate-400/30 space-y-2 text-body-sm"><p class="font-semibold">{{auth.user()?.full_name}}</p><p>{{auth.user()?.rol_nombre}}</p></div>
     </aside>
-    <form [formGroup]="form" (ngSubmit)="save()" novalidate class="cit-panel border rounded-xl p-5 space-y-6">
-      <section class="space-y-4"><h2 class="text-headline-sm">Datos personales de ejemplo</h2><div class="grid sm:grid-cols-2 gap-4">
-        <label class="cit-field">Nombre completo *<input formControlName="name" autocomplete="name" maxlength="150" [attr.aria-invalid]="invalid('name')">@if(invalid('name')){<span class="cit-error">Escribe un nombre de hasta 150 caracteres.</span>}</label>
-        <label class="cit-field">Correo electrónico *<input type="email" formControlName="email" autocomplete="email" [attr.aria-invalid]="invalid('email')">@if(invalid('email')){<span class="cit-error">Introduce un correo electrónico válido.</span>}</label>
-        <label class="cit-field">Teléfono de contacto (opcional)<input type="tel" formControlName="phone" autocomplete="tel" [attr.aria-invalid]="invalid('phone')">@if(invalid('phone')){<span class="cit-error">Revisa el teléfono: entre 7 y 30 caracteres, usando números y signos de teléfono.</span>}</label>
-      </div><p class="text-body-sm">El correo de ejemplo no está verificado. Guardarlo no envía mensajes ni modifica credenciales.</p></section>
-      <section class="space-y-4 pt-5 border-t border-slate-400/30"><h2 class="text-title-md">Ubicación de referencia</h2><div class="grid sm:grid-cols-3 gap-4"><label class="cit-field">Departamento<input formControlName="department" maxlength="100"></label><label class="cit-field">Municipio<input formControlName="municipality" maxlength="100"></label><label class="cit-field">Comunidad o vereda<input formControlName="community" maxlength="150"></label></div><p class="text-body-sm">No se solicita geolocalización ni dirección exacta.</p></section>
-      <section class="space-y-3 pt-5 border-t border-slate-400/30"><h2 class="text-title-md">Preferencias de ejemplo</h2><label class="flex gap-3 items-start text-body-sm"><input type="checkbox" formControlName="caseUpdates" class="mt-1">Actualizaciones de mis casos</label><label class="flex gap-3 items-start text-body-sm"><input type="checkbox" formControlName="messageAlerts" class="mt-1">Avisos de nuevos mensajes</label><label class="flex gap-3 items-start text-body-sm"><input type="checkbox" formControlName="bulletin" class="mt-1">Boletín institucional</label><p class="text-label-sm">Estas opciones no suscriben a servicios ni activan correo, WhatsApp o notificaciones del navegador.</p></section>
-      <div class="flex flex-wrap gap-3 pt-4 border-t border-slate-400/30"><button type="submit" class="cit-primary">Guardar perfil de ejemplo</button><button type="button" class="cit-button" (click)="cancel()">Descartar cambios</button><button type="button" class="cit-button" (click)="confirmingReset.set(true)">Restablecer ejemplo</button></div>
-      @if(confirmingReset()){<section class="rounded-xl border border-slate-400/40 p-4 space-y-3" aria-label="Confirmación de restablecimiento"><p class="text-body-sm">Se quitarán los datos y la fotografía guardados en este perfil de demostración.</p><div class="flex flex-wrap gap-3"><button type="button" class="cit-button" (click)="reset()">Restablecer datos de ejemplo</button><button type="button" class="cit-button" (click)="confirmingReset.set(false)">Cancelar</button></div></section>}
-      <p role="status" class="text-body-sm">{{status()}}</p>
+    <form [formGroup]="form" (ngSubmit)="save()" novalidate class="cit-panel border rounded-xl p-5">
+      <fieldset [disabled]="pending()" class="space-y-6 min-w-0">
+      <section class="space-y-4"><h2 class="text-headline-sm">Datos personales</h2><div class="grid sm:grid-cols-2 gap-4">
+        <label class="cit-field">Nombres *<input formControlName="name" autocomplete="given-name" maxlength="100" [attr.aria-invalid]="invalid('name')">@if(invalid('name')){<span class="cit-error">Escribe tus nombres, hasta 100 caracteres.</span>}</label>
+        <label class="cit-field">Apellidos *<input formControlName="surname" autocomplete="family-name" maxlength="100" [attr.aria-invalid]="invalid('surname')">@if(invalid('surname')){<span class="cit-error">Escribe tus apellidos, hasta 100 caracteres.</span>}</label>
+        <label class="cit-field">Correo electrónico *<input type="email" formControlName="email" autocomplete="email" maxlength="150" [attr.aria-invalid]="invalid('email')">@if(invalid('email')){<span class="cit-error">Introduce un correo electrónico válido.</span>}</label>
+        <label class="cit-field">Teléfono (opcional)<input type="tel" formControlName="phone" autocomplete="tel" maxlength="20"></label>
+      </div></section>
+      <section class="space-y-4 pt-5 border-t border-slate-400/30"><h2 class="text-title-md">Ubicación de referencia</h2><div class="grid sm:grid-cols-3 gap-4">
+        <label class="cit-field">Departamento<select formControlName="department" (change)="changeDepartment()"><option value="">Sin seleccionar</option>@for(item of departments();track item.id_departamento){<option [value]="item.id_departamento">{{item.nombre}}</option>}</select></label>
+        <label class="cit-field">Municipio<select formControlName="municipality" (change)="changeMunicipality()"><option value="">Sin seleccionar</option>@for(item of municipalities();track item.id_municipio){<option [value]="item.id_municipio">{{item.nombre}}</option>}</select></label>
+        <label class="cit-field">Comunidad<select formControlName="community"><option value="">Sin seleccionar</option>@for(item of communities();track item.id_comunidad){<option [value]="item.id_comunidad">{{item.nombre}}</option>}</select></label>
+      </div></section>
+      <div class="flex flex-wrap gap-3"><button type="submit" class="cit-primary">Guardar datos personales</button><button type="button" class="cit-button" (click)="cancel()">Descartar cambios</button></div>
+      <section class="space-y-3 pt-5 border-t border-slate-400/30"><h2 class="text-title-md">Preferencias</h2><label class="flex gap-3 items-start text-body-sm"><input type="checkbox" formControlName="caseUpdates" class="mt-1">Actualizaciones de mis casos</label><label class="flex gap-3 items-start text-body-sm"><input type="checkbox" formControlName="messageAlerts" class="mt-1">Avisos de nuevos mensajes</label><label class="flex gap-3 items-start text-body-sm"><input type="checkbox" formControlName="bulletin" class="mt-1">Deseo suscribirme al boletín institucional</label><button type="button" class="cit-button" (click)="savePreferences()">Guardar preferencias</button></section>
+      </fieldset>
     </form>
   </div>
+  }
+  <p role="status" class="text-body-sm">{{status()}}</p>
 </div>

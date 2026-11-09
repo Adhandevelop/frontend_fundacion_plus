@@ -1,12 +1,30 @@
 import { Component, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { finalize } from 'rxjs';
+import { AuthService } from '../../../core/auth/auth.service';
+import { apiErrorMessage } from '../../../core/api/api-error';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PasswordToggleComponent } from '../shared/password-toggle.component';
 import { AuthFieldErrorComponent } from '../shared/auth-field-error.component';
 @Component({selector:'plus-login',standalone:true,imports:[RouterLink,ReactiveFormsModule,PasswordToggleComponent,AuthFieldErrorComponent],templateUrl:'./login.component.html'})
 export class LoginComponent {
  private readonly builder=inject(FormBuilder).nonNullable;
+ private readonly auth=inject(AuthService);
+ private readonly router=inject(Router);
+ private readonly route=inject(ActivatedRoute);
  readonly form=this.builder.group({email:['',[Validators.required,Validators.email]],password:['',Validators.required],remember:[false]});
  readonly message=signal('');
- submit(){this.form.markAllAsTouched();if(this.form.invalid){this.message.set('Revisa los campos señalados antes de continuar.');return;}this.message.set('Datos de ejemplo válidos. No se ha iniciado sesión.');}
+ readonly pending=signal(false);
+ constructor(){if(this.route.snapshot.queryParamMap.has('sessionError'))this.message.set('No se pudo verificar tu sesión. Intenta iniciar sesión de nuevo.');}
+ submit(){
+  if(this.pending())return;
+  this.form.markAllAsTouched();if(this.form.invalid){this.message.set('Revisa los campos señalados antes de continuar.');return;}
+  const value=this.form.getRawValue();this.pending.set(true);this.message.set('');
+  this.auth.login(value.email.trim(),value.password,value.remember).pipe(finalize(()=>this.pending.set(false))).subscribe({
+   next:()=>{this.form.controls.password.reset();const target=this.route.snapshot.queryParamMap.get('returnUrl');
+    const safe=target && /^\/(?:ciudadano|admin)(?:\/|\?|$)/.test(target) && (!target.startsWith('/admin') || this.auth.canAdmin());
+    void this.router.navigateByUrl(safe ? target : this.auth.defaultRoute());},
+   error:error=>this.message.set(apiErrorMessage(error)),
+  });
+ }
 }

@@ -1,14 +1,27 @@
 import { Component, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { finalize } from 'rxjs';
+import { AuthService } from '../../../core/auth/auth.service';
+import { apiErrorMessage } from '../../../core/api/api-error';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PasswordToggleComponent } from '../shared/password-toggle.component';
 import { AuthFieldErrorComponent } from '../shared/auth-field-error.component';
 @Component({selector:'plus-register',standalone:true,imports:[RouterLink,ReactiveFormsModule,PasswordToggleComponent,AuthFieldErrorComponent],templateUrl:'./register.component.html'})
 export class RegisterComponent {
  private readonly builder=inject(FormBuilder).nonNullable;
- readonly form=this.builder.group({name:['',[Validators.required,Validators.maxLength(150),Validators.pattern(/\S/)]],email:['',[Validators.required,Validators.email]],password:['',[Validators.required,Validators.minLength(8)]],confirmation:['',Validators.required],affiliation:['ciudadano'],consent:[false,Validators.requiredTrue],notifications:[false]},{validators:group=>group.get('password')?.value === group.get('confirmation')?.value ? null : {passwordMismatch:true}});
+ private readonly auth=inject(AuthService);
+ private readonly router=inject(Router);
+ readonly form=this.builder.group({name:['',[Validators.required,Validators.maxLength(100),Validators.pattern(/\S/)]],surname:['',[Validators.required,Validators.maxLength(100),Validators.pattern(/\S/)]],phone:['',Validators.maxLength(20)],email:['',[Validators.required,Validators.email,Validators.maxLength(150)]],password:['',[Validators.required,Validators.minLength(8)]],confirmation:['',Validators.required],consent:[false,Validators.requiredTrue]},{validators:group=>group.get('password')?.value === group.get('confirmation')?.value ? null : {passwordMismatch:true}});
  readonly message=signal('');
- submit(){this.form.markAllAsTouched();if(this.form.invalid){this.message.set('Revisa los campos señalados antes de continuar.');return;}this.message.set('Datos de ejemplo válidos. No se ha creado ninguna cuenta.');}
+ readonly pending=signal(false);
+ submit(){
+  if(this.pending())return;
+  this.form.markAllAsTouched();if(this.form.invalid){this.message.set('Revisa los campos señalados antes de continuar.');return;}
+  const value=this.form.getRawValue();this.pending.set(true);this.message.set('');
+  this.auth.register({nombres:value.name.trim(),apellidos:value.surname.trim(),correo:value.email.trim(),telefono:value.phone.trim(),password:value.password,acepta_tratamiento_datos:value.consent}).pipe(finalize(()=>this.pending.set(false))).subscribe({
+   next:()=>{this.form.reset();void this.router.navigateByUrl('/ciudadano/perfil');},error:error=>this.message.set(apiErrorMessage(error)),
+  });
+ }
  confirmationError(){return this.form.controls.confirmation.touched && this.form.hasError('passwordMismatch') ? 'Las contraseñas deben coincidir.' : '';}
  passwordProgress(){return Math.min(100,this.form.controls.password.value.length / 8 * 100);}
  passwordHint(){return this.form.controls.password.value.length >= 8 ? 'Longitud mínima cumplida' : 'Pendiente';}

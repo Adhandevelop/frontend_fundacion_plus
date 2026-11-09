@@ -58,8 +58,8 @@
             </a>
 </div>
 <div class="pt-space-sm">
-<button class="w-full h-12 bg-primary-container auth-hoverbg-eab308 text-slate-950 font-title-md text-title-md font-semibold rounded-lg flex items-center justify-center gap-space-sm shadow-md transition-all duration-150 active:scale-[0.99] focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2 focus:ring-offset-[#18181b]" type="submit">
-<span>Iniciar sesión</span>
+<button class="w-full h-12 bg-primary-container auth-hoverbg-eab308 text-slate-950 font-title-md text-title-md font-semibold rounded-lg flex items-center justify-center gap-space-sm shadow-md transition-all duration-150 active:scale-[0.99] focus:outline-none focus:ring-2 focus:ring-primary-container focus:ring-offset-2 focus:ring-offset-[#18181b]" [disabled]="pending()" [attr.aria-busy]="pending()" type="submit">
+<span>{{pending() ? 'Ingresando…' : 'Iniciar sesión'}}</span>
 <span class="material-symbols-outlined text-title-md" data-icon="arrow_forward">arrow_forward</span>
 </button>
 </div>
@@ -81,7 +81,7 @@
 </div>
 <div class="pt-space-md max-w-xl mx-auto w-full">
 <p class="font-label-sm text-label-sm auth-text-71717a">
-          Vista de demostración · No se envían ni almacenan credenciales.
+          Acceso a tu cuenta PLUS. Los indicadores de esta ilustración son de ejemplo.
         </p>
 </div>
 </div>
