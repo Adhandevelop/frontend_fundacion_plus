@@ -7,6 +7,7 @@ export const routes: Routes = [
     children: [
       {path: '', title: 'PLUS · Corporación Pluralismo Social', loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent)},
       {path: 'mapa', title: 'Mapa de casos comunitarios · PLUS', loadComponent: () => import('./features/map/public-map.component').then(m => m.PublicMapComponent)},
+      {path: 'casos/:radicado', title: 'Información del caso · PLUS', loadComponent: () => import('./features/cases/public-case.component').then(m => m.PublicCaseComponent)},
     ],
   },
   {path: '**', redirectTo: ''},

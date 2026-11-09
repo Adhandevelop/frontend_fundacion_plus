@@ -1,0 +1,83 @@
+<article class="case-bg-1f1f23 rounded-xl border case-border-333338 p-6 shadow-xs">
+<div class="flex items-center justify-between mb-4 pb-3 border-b case-border-333338">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-5 rounded-full bg-primary-container"></span>
+<h2 class="text-title-md font-title-md case-text-fafafa">Participación Ciudadana y Comentarios Públicos Moderados</h2>
+</div>
+<span class="inline-flex items-center gap-1 text-label-sm font-label-sm case-text-a1a1aa case-bg-141416 px-2.5 py-1 rounded-md border case-border-333338">
+<span class="material-symbols-outlined text-[14px]">lock</span> Moderación institucional
+            </span>
+</div>
+<div class="case-bg-141416 rounded-lg p-3.5 border case-border-333338 flex items-start gap-3 mb-6">
+<span class="material-symbols-outlined text-[20px] text-primary-container flex-shrink-0 mt-0.5">info</span>
+<p class="text-body-sm font-body-sm case-text-d4d4d8 leading-snug">
+<strong class="font-semibold case-text-fafafa">Espacio de diálogo constructivo.</strong> Todos los aportes ciudadanos son verificados conforme a las normas de respeto, veracidad ciudadana y el marco de la Ley 850 de 2003. No se admiten descalificaciones ni se publican datos sensibles personales.
+            </p>
+</div>
+<div class="space-y-4 mb-8">
+<div class="case-bg-141416 rounded-lg p-4 border case-border-333338">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full case-bg-242428 case-text-fafafa flex items-center justify-center font-semibold text-label-md border case-border-3f3f46">
+                    MC
+                  </div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="text-title-sm font-title-sm case-text-fafafa">M. Córdoba Palacios</span>
+<span class="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-label-sm font-label-sm bg-primary-container text-black font-semibold">
+<span class="material-symbols-outlined text-[12px]">check</span> Verificado
+                      </span>
+</div>
+<span class="text-label-sm font-label-sm case-text-a1a1aa">Presidente JAC · Vereda El Porvenir</span>
+</div>
+</div>
+<span class="text-label-sm font-label-sm case-text-a1a1aa">29 Ene 2025</span>
+</div>
+<p class="text-body-sm font-body-sm case-text-d4d4d8">
+                Agradecemos a PLUS el acompañamiento técnico. Necesitamos con urgencia que la Personería presione al consorcio vial para que al menos tape las alcantarillas abiertas antes de que comiencen los aguaceros fuertes de marzo. Hay cosechas de plátano ya listas para corte.
+              </p>
+</div>
+<div class="case-bg-141416 rounded-lg p-4 border case-border-333338">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full case-bg-242428 case-text-fafafa flex items-center justify-center font-semibold text-label-md border case-border-3f3f46">
+                    JR
+                  </div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="text-title-sm font-title-sm case-text-fafafa">J. Rentería Murillo</span>
+<span class="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-label-sm font-label-sm case-bg-242428 case-text-d4d4d8 font-medium border case-border-3f3f46">
+                        Comité Veedor Local
+                      </span>
+</div>
+<span class="text-label-sm font-label-sm case-text-a1a1aa">Productor Agrícola · Cuenca Cacarica</span>
+</div>
+</div>
+<span class="text-label-sm font-label-sm case-text-a1a1aa">22 Ene 2025</span>
+</div>
+<p class="text-body-sm font-body-sm case-text-d4d4d8">
+                Respaldamos plenamente el informe fotográfico. Estuvimos presentes en la visita del km 6 y confirmamos que no hay ningún operario en el campamento desde diciembre. La maquinaria que dejaron está obstaculizando el paso de las bestias de carga.
+              </p>
+</div>
+</div>
+<form class="case-bg-141416 rounded-lg p-5 border case-border-333338" [formGroup]="form" (ngSubmit)="submit()">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-[20px] text-primary-container">edit_note</span>
+<h3 class="text-title-sm font-title-sm case-text-fafafa">Aportar información testimonial o reporte complementario</h3>
+</div>
+<div class="mb-3">
+<label class="sr-only" for="aporte-ciudadano">Comentario o aporte ciudadano</label>
+<textarea formControlName="contribution" maxlength="2000" aria-describedby="contribution-help" class="w-full rounded-md case-border-3f3f46 case-bg-121214 case-text-fafafa text-body-sm font-body-sm case-placeholdertext-71717a focus:border-primary-container focus:ring-1 focus:ring-primary-container p-3" id="aporte-ciudadano" placeholder="Escriba su aporte, novedad en la vía o información verificable para la veeduría ciudadana..." rows="3"></textarea>
+</div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+<span class="text-label-sm font-label-sm case-text-a1a1aa flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-primary-container">verified_user</span>
+                Demostración pública · Sin sesión ciudadana
+              </span>
+<button class="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-primary-container text-black font-semibold text-title-sm font-title-sm shadow-sm hover:bg-yellow-400 transition-all duration-150 active:scale-95" type="submit">
+<span class="material-symbols-outlined text-[18px]">send</span>
+                Validar aporte de ejemplo
+              </button>
+</div>
+<p id="contribution-help" class="mt-3 text-body-sm">Entre 20 y 2000 caracteres. Este formulario no publica ni guarda aportes.</p><p class="mt-2 text-body-sm" role="status">{{ message() }}</p></form>
+</article>

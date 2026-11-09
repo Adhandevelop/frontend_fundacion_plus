@@ -1,0 +1,56 @@
+.public-case-page .case-bg-1f1f23{background-color:rgb(255 255 255 / 1)}
+.dark .public-case-page .case-bg-1f1f23{background-color:rgb(31 31 35 / 1)}
+.public-case-page .case-border-333338{border-color:rgb(209 198 171 / 1)}
+.dark .public-case-page .case-border-333338{border-color:rgb(51 51 56 / 1)}
+.public-case-page .case-text-fafafa{color:rgb(26 28 28 / 1)}
+.dark .public-case-page .case-text-fafafa{color:rgb(250 250 250 / 1)}
+.public-case-page .case-text-d4d4d8{color:rgb(77 70 50 / 1)}
+.dark .public-case-page .case-text-d4d4d8{color:rgb(212 212 216 / 1)}
+.public-case-page .case-bg-141416{background-color:rgb(243 243 244 / 1)}
+.dark .public-case-page .case-bg-141416{background-color:rgb(20 20 22 / 1)}
+.public-case-page .case-text-a1a1aa{color:rgb(95 94 97 / 1)}
+.dark .public-case-page .case-text-a1a1aa{color:rgb(161 161 170 / 1)}
+.public-case-page .case-bg-242428{background-color:rgb(238 238 238 / 1)}
+.dark .public-case-page .case-bg-242428{background-color:rgb(36 36 40 / 1)}
+.public-case-page .case-bg-121214-90{background-color:rgb(249 249 249 / 0.9)}
+.dark .public-case-page .case-bg-121214-90{background-color:rgb(18 18 20 / 0.9)}
+.public-case-page .case-border-3f3f46{border-color:rgb(209 198 171 / 1)}
+.dark .public-case-page .case-border-3f3f46{border-color:rgb(63 63 70 / 1)}
+.public-case-page .case-border-121214{border-color:rgb(249 249 249 / 1)}
+.dark .public-case-page .case-border-121214{border-color:rgb(18 18 20 / 1)}
+.public-case-page .case-bg-2a2a2e{background-color:rgb(232 232 232 / 1)}
+.dark .public-case-page .case-bg-2a2a2e{background-color:rgb(42 42 46 / 1)}
+.public-case-page .case-border-52525b{border-color:rgb(127 118 96 / 1)}
+.dark .public-case-page .case-border-52525b{border-color:rgb(82 82 91 / 1)}
+.public-case-page .case-bg-121214{background-color:rgb(249 249 249 / 1)}
+.dark .public-case-page .case-bg-121214{background-color:rgb(18 18 20 / 1)}
+.public-case-page .case-placeholdertext-71717a::placeholder{color:rgb(95 94 97 / 1)}
+.dark .public-case-page .case-placeholdertext-71717a::placeholder{color:rgb(113 113 122 / 1)}
+.public-case-page .case-text-f87171{color:rgb(185 28 28 / 1)}
+.dark .public-case-page .case-text-f87171{color:rgb(248 113 113 / 1)}
+.public-case-page .case-bg-450a0a-70{background-color:rgb(254 226 226 / 0.7)}
+.dark .public-case-page .case-bg-450a0a-70{background-color:rgb(69 10 10 / 0.7)}
+.public-case-page .case-border-7f1d1d{border-color:rgb(252 165 165 / 1)}
+.dark .public-case-page .case-border-7f1d1d{border-color:rgb(127 29 29 / 1)}
+.public-case-page .case-bg-121214-95{background-color:rgb(249 249 249 / 0.95)}
+.dark .public-case-page .case-bg-121214-95{background-color:rgb(18 18 20 / 0.95)}
+.public-case-page .case-hoverbg-242428:hover{background-color:rgb(238 238 238 / 1)}
+.dark .public-case-page .case-hoverbg-242428:hover{background-color:rgb(36 36 40 / 1)}
+.public-case-page .case-bg-18181b{background-color:rgb(255 255 255 / 1)}
+.dark .public-case-page .case-bg-18181b{background-color:rgb(24 24 27 / 1)}
+.public-case-page .case-text-52525b{color:rgb(127 118 96 / 1)}
+.dark .public-case-page .case-text-52525b{color:rgb(82 82 91 / 1)}
+.public-case-page .case-hovertext-fafafa:hover{color:rgb(26 28 28 / 1)}
+.dark .public-case-page .case-hovertext-fafafa:hover{color:rgb(250 250 250 / 1)}
+.public-case-page .case-hoverbg-2a2a2e:hover{background-color:rgb(232 232 232 / 1)}
+.dark .public-case-page .case-hoverbg-2a2a2e:hover{background-color:rgb(42 42 46 / 1)}
+.public-case-page {background:#f9f9f9;color:#1a1c1c;}
+.dark .public-case-page {background:#121214;color:#fafafa;}
+.public-case-page plus-case-description,.public-case-page plus-case-evidence,.public-case-page plus-case-timeline,.public-case-page plus-case-results,.public-case-page plus-case-participation,.public-case-page plus-case-sidebar{display:block;min-width:0;}
+.public-case-page .text-primary-container {color:#735c00;}
+.dark .public-case-page .text-primary-container {color:#facc15;}
+.public-case-page button:disabled {opacity:.6;cursor:not-allowed;}
+.public-case-page textarea {border-width:1px;resize:vertical;}
+.public-case-page img {display:block;}
+.public-case-page article {overflow-wrap:anywhere;}
+@media(max-width:640px){.public-case-page h1{font-size:26px!important;line-height:34px!important;}.public-case-page article{padding:1rem;}.public-case-page article > div:first-child{flex-wrap:wrap;gap:.75rem;}.public-case-page .flex.items-center.justify-between.mb-2{flex-wrap:wrap;gap:.5rem;}}

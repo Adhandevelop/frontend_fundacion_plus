@@ -1,0 +1,78 @@
+<div class="public-case-page">@if(isDemoCase()) {
+<p class="max-w-7xl mx-auto px-margin md:px-margin-desktop py-3 text-body-sm" role="note">Caso de demostración. Los textos, fotografías, comentarios e indicadores son ejemplos del diseño y no corresponden a un expediente real verificado.</p>
+<section class="case-bg-18181b border-b case-border-333338 py-space-sm">
+<div class="w-full max-w-7xl mx-auto px-margin md:px-margin-desktop flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<div class="flex flex-wrap items-center gap-space-sm text-body-sm font-body-sm case-text-a1a1aa">
+<a class="inline-flex items-center gap-1 font-semibold case-text-fafafa hover:text-primary-container transition-colors py-1 px-2 rounded-md case-hoverbg-242428" routerLink="/mapa">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+          Volver al mapa
+        </a>
+<span class="case-text-52525b">/</span>
+<a class="case-hovertext-fafafa transition-colors" routerLink="/">Inicio</a>
+<span class="case-text-52525b">/</span>
+<a class="case-hovertext-fafafa transition-colors" routerLink="/mapa">Mapa de casos</a>
+<span class="case-text-52525b">/</span>
+<span class="case-text-fafafa font-medium truncate max-w-[220px] sm:max-w-none">Caso Radicado #PLUS-2025-084</span>
+</div>
+<div class="flex items-center flex-wrap gap-space-sm">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-label-sm font-label-sm case-bg-242428 case-text-d4d4d8 font-medium border case-border-3f3f46">
+<span class="material-symbols-outlined text-[14px] text-primary-container" style="font-variation-settings: 'FILL' 1;">verified</span>
+          Caso Verificado y Aprobado · Ley 850 de 2003 de Veedurías Ciudadanas
+        </span>
+<div class="flex items-center gap-1.5">
+<button disabled title="No hay informe disponible para este caso de ejemplo" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border case-border-3f3f46 case-bg-1f1f23 text-label-md font-label-md case-text-fafafa case-hoverbg-2a2a2e transition-colors shadow-2xs" type="button">
+<span class="material-symbols-outlined text-[16px] text-primary-container">picture_as_pdf</span>
+            Descargar Informe Técnico (PDF)
+          </button>
+<button aria-label="Copiar enlace del caso" (click)="copyLink()" class="p-1.5 rounded-lg border case-border-3f3f46 case-bg-1f1f23 case-text-a1a1aa case-hovertext-fafafa case-hoverbg-2a2a2e transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">share</span>
+</button>
+</div>
+</div>
+</div>
+<p class="max-w-7xl mx-auto px-margin md:px-margin-desktop text-body-sm" role="status">{{ shareMessage() }}</p></section>
+<div class="w-full max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-lg flex-1">
+<header class="mb-space-lg pb-space-md border-b case-border-333338">
+<div class="flex flex-wrap items-center gap-2 mb-3">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-label-md font-label-md bg-primary-container text-black font-bold tracking-wide">
+<span class="w-2 h-2 rounded-full bg-black animate-pulse"></span>
+          En Gestión Activa
+        </span>
+<span class="px-2.5 py-0.5 rounded-full text-label-sm font-label-sm font-semibold case-bg-242428 case-text-fafafa border case-border-3f3f46">
+          Radicado: #PLUS-2025-084
+        </span>
+<span class="px-2.5 py-0.5 rounded-full text-label-sm font-label-sm case-bg-242428 case-text-a1a1aa border case-border-3f3f46">
+          Problemática comunitaria
+        </span>
+<span class="px-2.5 py-0.5 rounded-full text-label-sm font-label-sm case-bg-242428 case-text-a1a1aa border case-border-3f3f46">
+          Infraestructura Vial y Puentes
+        </span>
+<span class="px-2.5 py-0.5 rounded-full text-label-sm font-label-sm case-bg-242428 case-text-a1a1aa border case-border-3f3f46">
+          Subregión Darién - Subcuenca Cacarica y Jiguamiandó
+        </span>
+</div>
+<h1 class="text-headline-lg font-headline-lg case-text-fafafa tracking-tight mb-2">
+        Rehabilitación de vía terciaria vereda El Porvenir
+      </h1>
+<div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-body-sm font-body-sm case-text-a1a1aa">
+<span class="inline-flex items-center gap-1 case-text-fafafa font-medium">
+<span class="material-symbols-outlined text-[17px] text-primary-container">location_on</span>
+          Municipio de Riosucio, Chocó · Vereda El Porvenir
+        </span>
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+          Última actualización: 03 de Febrero, 2025
+        </span>
+</div>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<div class="lg:col-span-8 flex flex-col gap-space-lg">
+<plus-case-description/>
+<plus-case-evidence/>
+<plus-case-timeline/>
+<plus-case-results/>
+<plus-case-participation/>
+</div>
+<aside class="lg:col-span-4 lg:sticky lg:top-24"><plus-case-sidebar/></aside>
+</div>
+</div>} @else {<section class="max-w-7xl mx-auto p-8 min-h-[50vh]"><h1 class="text-headline-md">Caso no disponible en la demostración</h1><p class="my-4">Por ahora solo está disponible el caso de ejemplo PLUS-2025-084. La consulta de casos reales se conectará con la API.</p><a routerLink="/mapa" class="inline-flex rounded-lg bg-primary-container text-black px-4 py-2">Volver al mapa</a></section>}</div>
