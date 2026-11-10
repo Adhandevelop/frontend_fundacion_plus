@@ -1,6 +1,6 @@
 import { FormControl, FormGroup } from '@angular/forms';
 
-// Frontend presentation state, pending the REST contract.
+// Form state: category and territory selections contain backend UUIDs.
 export interface IntakeViewValue {
   kind: string;
   priority: string;
@@ -18,7 +18,7 @@ export interface IntakeViewValue {
 export type IntakeForm = FormGroup<{[K in keyof IntakeViewValue]: FormControl<IntakeViewValue[K]>}>;
 
 export const EMPTY_INTAKE: IntakeViewValue = {
-  kind: 'Problemática comunitaria', priority: 'Media', title: '', category: '', description: '',
+  kind: 'problematica', priority: 'media', title: '', category: '', description: '',
   families: 0, months: 0, department: '', municipality: '', community: '', latitude: null, longitude: null,
 };
 

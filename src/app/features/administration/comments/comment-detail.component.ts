@@ -1,33 +1,85 @@
-import { Component, ElementRef, Injector, afterNextRender, computed, effect, inject, signal, viewChild } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommentModerationDemoService } from './services/comment-moderation-demo.service';
-import { COMMENT_LABELS, CommentState, commentActions } from './data/comments.demo';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize, Subscription } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AuthService } from '../../../core/auth/auth.service';
+import { apiErrorMessage } from '../../../core/api/api-error';
+import { canAccessAdminSection } from '../../../core/auth/admin-access.policy';
+import { AdminComment, AdminCommentsApiService, COMMENT_LABELS, COMMENT_STATES, CommentDecision, CommentState } from './admin-comments-api.service';
 
-@Component({selector:'plus-comment-detail',standalone:true,imports:[RouterLink,DatePipe,ReactiveFormsModule],templateUrl:'./comment-detail.component.html'})
+interface DecisionReview {id: string; caseCode: string; previous: CommentState; payload: CommentDecision}
+
+@Component({selector: 'plus-comment-detail', standalone: true, imports: [RouterLink, DatePipe, ReactiveFormsModule], templateUrl: './comment-detail.component.html'})
 export class CommentDetailComponent {
-  readonly store = inject(CommentModerationDemoService);
-  private readonly route = inject(ActivatedRoute); private readonly injector = inject(Injector);
-  private readonly panel = viewChild<ElementRef<HTMLElement>>('decisionPanel');
-  private readonly params = toSignal(this.route.paramMap,{initialValue:this.route.snapshot.paramMap});
-  readonly id = computed(() => this.params().get('id') ?? ''); readonly row = computed(() => this.store.find(this.id()));
-  readonly actions = computed(() => this.row() ? commentActions(this.row()!.state) : []);
-  readonly preview = computed(() => {const row=this.row();return row ? this.store.publicPreview(row.caseCode).find(item => item.id === row.id) ?? null : null;});
-  readonly labels = COMMENT_LABELS; readonly pending = signal<CommentState | null>(null); readonly status = signal('');
-  private revisionAtOpen = 0; private trigger: HTMLElement | null = null;
-  private readonly builder = inject(FormBuilder).nonNullable;
-  readonly form = this.builder.group({reason:['',Validators.maxLength(2000)]});
-  constructor() {effect(() => {this.id();this.pending.set(null);this.form.reset();this.status.set('');},{allowSignalWrites:true});}
-  actionLabel(state:CommentState) {return state === 'aprobado' ? 'Aprobar ejemplo' : state === 'rechazado' ? 'Rechazar ejemplo' : state === 'oculto' ? 'Ocultar ejemplo aprobado' : 'Volver a revisión pendiente';}
-  begin(target:CommentState,event:Event) {const row=this.row();if(!row)return;this.trigger=event.currentTarget as HTMLElement|null;this.revisionAtOpen=row.revision;this.pending.set(target);this.form.reset();this.status.set('');afterNextRender(() => this.panel()?.nativeElement.focus(),{injector:this.injector});}
-  cancel() {this.pending.set(null);this.trigger?.focus();}
+  private readonly api = inject(AdminCommentsApiService);
+  private readonly auth = inject(AuthService);
+  private readonly destroy = inject(DestroyRef);
+  private request?: Subscription;
+  private revision = 0;
+  readonly id = signal('');
+  readonly row = signal<AdminComment | null>(null);
+  readonly loading = signal(true);
+  readonly saving = signal(false);
+  readonly error = signal('');
+  readonly status = signal('');
+  readonly uncertain = signal(false);
+  readonly review = signal<DecisionReview | null>(null);
+  readonly labels = COMMENT_LABELS;
+  readonly canModerate = computed(() => canAccessAdminSection(this.auth.user(), 'comments'));
+  readonly actions = computed(() => {
+    const state = this.row()?.estado_moderacion;
+    return this.canModerate() && state && COMMENT_STATES.includes(state) ? COMMENT_STATES.filter(value => value !== state) : [];
+  });
+  readonly form = inject(FormBuilder).nonNullable.group({reason: ['', Validators.maxLength(2000)], notifyReason: false});
+
+  constructor() {
+    inject(ActivatedRoute).paramMap.pipe(takeUntilDestroyed(this.destroy)).subscribe(params => {
+      this.id.set(params.get('id') ?? ''); this.row.set(null); this.review.set(null); this.form.reset();
+      this.status.set(''); this.uncertain.set(false); this.saving.set(false); this.load();
+    });
+  }
+  load() {
+    if (this.saving()) return;
+    const revision = ++this.revision;
+    this.request?.unsubscribe(); this.review.set(null); this.loading.set(true); this.error.set('');
+    this.request = this.api.get(this.id()).pipe(
+      takeUntilDestroyed(this.destroy), finalize(() => {if (revision === this.revision) this.loading.set(false);}),
+    ).subscribe({next: value => {
+      if (revision !== this.revision) return;
+      this.row.set(value); this.uncertain.set(false);
+    }, error: error => {if (revision === this.revision) this.error.set(apiErrorMessage(error));}});
+  }
+  begin(target: CommentState) {
+    const row = this.row();
+    if (!row || this.loading() || this.error() || this.saving() || this.uncertain() || this.review() || !this.actions().includes(target)) return;
+    this.form.markAllAsTouched(); const reason = this.form.controls.reason.value.trim();
+    if (this.form.invalid || (target !== 'aprobado' && reason.length < 10) || (this.form.controls.notifyReason.value && !reason)) {
+      this.status.set('Escribe un motivo de 10 a 2000 caracteres para rechazar, ocultar o devolver a revisión. Para compartir un motivo debes escribirlo.'); return;
+    }
+    this.status.set('');
+    this.review.set({id: row.id_comentario, caseCode: row.caso_codigo, previous: row.estado_moderacion, payload: {estado_moderacion: target, motivo: reason, notificar_motivo: this.form.controls.notifyReason.value}});
+    if (typeof document !== 'undefined') setTimeout(() => document.getElementById('comment-decision')?.focus(), 0);
+  }
+  cancel() {if (!this.saving()) this.review.set(null);}
   confirm() {
-    const target=this.pending();if(!target)return;this.form.markAllAsTouched();const reason=this.form.controls.reason.value;
-    if(this.form.invalid || target !== 'aprobado' && reason.trim().length < 10){this.status.set('Explica la decisión con entre 10 y 2000 caracteres. La nota de aprobación es opcional.');return;}
-    const result=this.store.moderate(this.id(),target,reason,this.revisionAtOpen);
-    if(!result.ok){this.status.set(result.error === 'conflict' ? 'El comentario cambió desde que abriste la acción. Cancela y vuelve a revisar su estado.' : 'No se pudo aplicar la decisión. Revisa estado y motivo.');return;}
-    this.pending.set(null);this.form.reset();this.status.set('Decisión guardada en memoria. No se publicó contenido ni se notificó al autor.');
+    const decision = this.review();
+    if (!decision || this.saving() || this.uncertain() || this.loading() || this.error() || !this.canModerate() || this.row()?.id_comentario !== decision.id) return;
+    const revision = this.revision;
+    this.saving.set(true); this.status.set('');
+    this.api.moderate(decision.id, {...decision.payload}).pipe(
+      takeUntilDestroyed(this.destroy), finalize(() => {if (revision === this.revision) this.saving.set(false);}),
+    ).subscribe({next: () => {
+      if (revision !== this.revision) return;
+      this.saving.set(false); this.review.set(null); this.form.reset(); this.status.set('Decisión guardada. Consultando el estado del comentario…'); this.load();
+    }, error: error => {
+      if (revision !== this.revision) return;
+      this.review.set(null);
+      const uncertain = error instanceof HttpErrorResponse && (error.status === 0 || error.status >= 500);
+      this.uncertain.set(uncertain);
+      this.status.set(uncertain ? 'No se pudo confirmar el resultado. Actualiza y revisa el estado y la auditoría antes de realizar otra acción.' : apiErrorMessage(error));
+    }});
   }
 }

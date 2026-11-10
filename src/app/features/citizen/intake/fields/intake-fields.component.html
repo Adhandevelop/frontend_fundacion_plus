@@ -1,35 +1,31 @@
-<section class="cit-panel border rounded-xl p-5 space-y-5" [formGroup]="form()">
-  <h2 class="text-headline-sm">Paso {{ step() }} de 5</h2>
+﻿<section class="cit-panel border rounded-xl p-5 space-y-5" [formGroup]="form()">
+  <h2 class="text-headline-sm">Paso {{step()}} de 5</h2>
   @switch(step()) {
-    @case(1) {
-      <label class="cit-field">Tipo de caso<select formControlName="kind"><option>Problemática comunitaria</option><option>Proyecto o iniciativa</option></select></label>
-      <label class="cit-field">Prioridad<select formControlName="priority"><option>Alta (Urgente)</option><option>Media</option><option>Baja</option></select></label>
+    @case(1){
+      <label class="cit-field">Naturaleza del caso<select formControlName="kind" (change)="kindChanged.emit()"><option value="problematica">Problemática comunitaria</option><option value="proyecto_iniciativa">Proyecto / Iniciativa</option><option value="otro">Otro</option></select></label>
+      <label class="cit-field">Prioridad<select formControlName="priority"><option value="baja">Baja</option><option value="media">Media</option><option value="alta">Alta</option><option value="critica">Crítica</option></select></label>
     }
-    @case(2) {
-      <label class="cit-field">Título del caso<input formControlName="title" maxlength="200"></label>
-      <label class="cit-field">Categoría<input formControlName="category" placeholder="Categoría del caso"></label>
-      <label class="cit-field">Descripción<textarea formControlName="description" rows="7" maxlength="5000"></textarea></label>
-      <div class="grid sm:grid-cols-2 gap-4">
-        <label class="cit-field">Familias afectadas<input type="number" formControlName="families" min="0" step="1"></label>
-        <label class="cit-field">Meses de afectación<input type="number" formControlName="months" min="0" step="1"></label>
-      </div>
+    @case(2){
+      <label class="cit-field">Título del caso *<input formControlName="title" maxlength="200" required></label>
+      <label class="cit-field">Tipo de caso *<select formControlName="category" required><option value="">Selecciona un tipo</option>@for(item of types();track item.id_tipo_caso){<option [value]="item.id_tipo_caso">{{item.nombre}} · {{item.categoria}}</option>}</select></label>
+      @if(!types().length){<p class="text-body-sm">No hay tipos de caso disponibles para esta naturaleza.</p>}
+      <label class="cit-field">Descripción *<textarea formControlName="description" rows="7" maxlength="5000" required></textarea></label>
+      <div class="grid sm:grid-cols-2 gap-4"><label class="cit-field">Familias afectadas<input type="number" formControlName="families" min="0" step="1"></label><label class="cit-field">Meses de afectación<input type="number" formControlName="months" min="0" step="1"></label></div>
     }
-    @case(3) {
-      <label class="cit-field">Departamento<input formControlName="department"></label>
-      <label class="cit-field">Municipio<input formControlName="municipality"></label>
-      <label class="cit-field">Comunidad o vereda<input formControlName="community"></label>
-      <div class="grid sm:grid-cols-2 gap-4">
-        <label class="cit-field">Latitud<input type="number" formControlName="latitude" min="-90" max="90" step="any"></label>
-        <label class="cit-field">Longitud<input type="number" formControlName="longitude" min="-180" max="180" step="any"></label>
-      </div>
-      <p class="text-body-sm">La ubicación es de ejemplo. No se solicita acceso a la ubicación del dispositivo.</p>
+    @case(3){
+      <label class="cit-field">Departamento *<select formControlName="department" (change)="departmentChanged.emit()"><option value="">Selecciona un departamento</option>@for(item of departments();track item.id_departamento){<option [value]="item.id_departamento">{{item.nombre}}</option>}</select></label>
+      <label class="cit-field">Municipio *<select formControlName="municipality" (change)="municipalityChanged.emit()"><option value="">Selecciona un municipio</option>@for(item of municipalities();track item.id_municipio){<option [value]="item.id_municipio">{{item.nombre}}</option>}</select></label>
+      <label class="cit-field">Comunidad o vereda *<select formControlName="community"><option value="">Selecciona una comunidad</option>@for(item of communities();track item.id_comunidad){<option [value]="item.id_comunidad">{{item.nombre}}</option>}</select></label>
+      @if(form().controls.municipality.value && !communities().length){<p class="text-body-sm">No hay comunidades cargadas para el municipio seleccionado o todavía se están consultando.</p>}
+      <div class="grid sm:grid-cols-2 gap-4"><label class="cit-field">Latitud (opcional)<input type="number" formControlName="latitude" min="-90" max="90" step="any"></label><label class="cit-field">Longitud (opcional)<input type="number" formControlName="longitude" min="-180" max="180" step="any"></label></div>
+      <p class="text-body-sm">Si conoces las coordenadas, completa ambos campos. No se solicita acceso a la ubicación del dispositivo.</p>
     }
-    @case(4) {
+    @case(4){
       <h3 class="text-title-md">Evidencias y anexos</h3>
-      <label class="cit-field">Seleccionar archivos<input type="file" multiple accept=".jpg,.jpeg,.png,.pdf" (change)="selectFiles($event)" aria-describedby="file-help"></label>
-      <p id="file-help" class="text-body-sm">JPG, PNG o PDF. Máximo 15 MB por archivo según el diseño. Los archivos no salen de esta pestaña; no se realiza análisis antivirus.</p>
-      <ul class="divide-y divide-slate-400/30">@for(file of files(); track $index) {<li class="py-3 flex flex-wrap items-center justify-between gap-3"><span class="break-all">{{ file.name }}</span><button type="button" class="cit-button" (click)="remove($index)" [attr.aria-label]="'Quitar '+file.name">Quitar</button></li>}</ul>
-      <p role="status" class="text-body-sm">{{ fileMessage() }}</p>
+      <label class="cit-field">Seleccionar archivos<input type="file" multiple accept=".jpg,.jpeg,.png,.webp,.pdf" (change)="selectFiles($event)" aria-describedby="file-help"></label>
+      <p id="file-help" class="text-body-sm">JPG, PNG, WEBP o PDF, hasta 15 MB por archivo. Los anexos se subirán después de crear el radicado; revisa su resultado en la confirmación.</p>
+      <ul class="divide-y divide-slate-400/30">@for(file of files();track $index){<li class="py-3 flex flex-wrap items-center justify-between gap-3"><span class="break-all">{{file.name}}</span><button type="button" class="cit-button" (click)="remove($index)" [attr.aria-label]="'Quitar '+file.name">Quitar</button></li>}</ul>
+      <p role="status" class="text-body-sm">{{fileMessage()}}</p>
     }
   }
 </section>

@@ -1,4 +1,5 @@
-﻿import { Component, DestroyRef, inject, signal } from '@angular/core';
+﻿import { AuthIconComponent } from '../shared/auth-icon.component';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -8,8 +9,10 @@ import { AuthFieldErrorComponent } from '../shared/auth-field-error.component';
 import { matchingPasswords } from '../shared/matching-passwords.validator';
 import { AuthService } from '../../../core/auth/auth.service';
 import { apiErrorMessage } from '../../../core/api/api-error';
+import { authFieldError, authFormIssues } from '../shared/auth-form-feedback';
+import { FormErrorSummaryComponent, focusFormTarget } from '../../../shared/forms/form-error-summary.component';
 
-@Component({selector: 'plus-password-reset', standalone: true, imports: [RouterLink, ReactiveFormsModule, PasswordToggleComponent, AuthFieldErrorComponent], templateUrl: './password-reset.component.html'})
+@Component({selector: 'plus-password-reset', standalone: true, imports: [RouterLink, ReactiveFormsModule, PasswordToggleComponent, AuthFieldErrorComponent, FormErrorSummaryComponent,AuthIconComponent], templateUrl: './password-reset.component.html'})
 export class PasswordResetComponent {
   private readonly builder = inject(FormBuilder).nonNullable;
   private readonly auth = inject(AuthService);
@@ -19,10 +22,13 @@ export class PasswordResetComponent {
   readonly completed = signal(false);
   readonly pending = signal(false);
   readonly status = signal('');
+  readonly attempted = signal(false);
+  validationIssues(){return authFormIssues(this.form,[['password','Nueva contraseña'],['confirmation','Confirmación']]);}
+  fieldError(field:string){return authFieldError(this.form,field);}
   readonly form = this.builder.group({password: ['', [Validators.required, Validators.minLength(8)]], confirmation: ['', Validators.required]}, {validators: matchingPasswords});
   constructor() {
     inject(ActivatedRoute).queryParamMap.pipe(
-      tap(() => {this.valid.set(false);this.completed.set(false);this.form.reset();this.status.set('');}),
+      tap(() => {this.valid.set(false);this.completed.set(false);this.attempted.set(false);this.form.reset();this.status.set('');}),
       switchMap(params => {
         this.checking.set(true);
         const token=params.get('token') ?? '';const uid=params.get('uid');
@@ -34,7 +40,7 @@ export class PasswordResetComponent {
   }
   submit() {
     if(this.pending() || !this.valid())return;
-    this.form.markAllAsTouched();if(this.form.invalid)return;
+    this.attempted.set(true);this.form.markAllAsTouched();if(this.form.invalid){focusFormTarget('reset-errors');return;}
     this.pending.set(true);this.status.set('');
     const value=this.form.getRawValue();
     this.auth.confirmReset({...this.payload,new_password:value.password,new_password_confirm:value.confirmation}).pipe(finalize(()=>this.pending.set(false))).subscribe({

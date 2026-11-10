@@ -74,4 +74,7 @@
 .auth-shell [aria-invalid=true]{border-color:#dc2626;}
 .auth-shell .text-slate-950{color:#020617;}
 .auth-shell .text-white{color:#fff;}
+.auth-shell input:not([type=checkbox]){font-size:16px;}
+.dark .auth-shell [aria-invalid=true]{border-color:#fca5a5;}
+.auth-shell button[aria-label="Cambiar tema de color"]{min-height:44px;}
 @media(max-width:640px){.auth-shell h1{font-size:26px!important;line-height:34px!important;}.auth-shell .flex.items-center.justify-between.pt-space-xs{flex-wrap:wrap;gap:.75rem;}}

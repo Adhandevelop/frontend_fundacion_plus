@@ -1,5 +1,7 @@
 # Mensajes, notificaciones y perfil ciudadano
 
+> **Documento histórico de demostración.** El perfil y la comunicación ciudadanos ya se integraron por REST. Consultar [integración de acceso/perfil](integracion-acceso-perfil.md) e [integración de mensajes/notificaciones](integracion-mensajes-notificaciones.md) para el alcance vigente y las pruebas.
+
 Rutas de demostración:
 
 - `/ciudadano/mensajes`: bandeja, filtros y conversación vinculada al expediente. `caso` selecciona el radicado en la URL.

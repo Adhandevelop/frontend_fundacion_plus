@@ -2,6 +2,8 @@
 
 ## Rutas y organización
 
+> Documento histórico. Las rutas de usuarios y roles ya usan REST con rol único, tres estados y permisos de escritura restringidos. Consultar [integracion-usuarios.md](integracion-usuarios.md) para el comportamiento vigente; el multirrol y los datos temporales descritos abajo no alimentan esas vistas.
+
 - `/admin/usuarios`: directorio con filtros, indicadores y paginación de cinco registros.
 - `/admin/usuarios/nuevo`: creación de un registro de ejemplo.
 - `/admin/usuarios/:id`: detalle y cambio de estado simulado con confirmación.

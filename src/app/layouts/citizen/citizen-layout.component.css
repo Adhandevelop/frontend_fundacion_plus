@@ -86,3 +86,4 @@
 .citizen-shell .cit-error{color:#b91c1c;font-size:13px;}.dark .citizen-shell .cit-error{color:#fca5a5;}
 .citizen-shell .cit-field .ng-invalid.ng-touched{border-color:#dc2626;outline:1px solid #dc2626;}
 @media(max-width:640px){.citizen-shell h1{font-size:25px!important;line-height:32px!important;}.citizen-shell .intake-actions{position:static;}.citizen-shell .cit-table{min-width:950px;}}
+.citizen-shell plus-citizen-case-detail{display:block;min-width:0;}

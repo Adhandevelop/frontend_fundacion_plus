@@ -1,4 +1,4 @@
-<div class="flex-grow w-full max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-lg lg:py-space-xl">
+﻿<div class="flex-grow w-full max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-lg lg:py-space-xl">
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
 <section class="lg:col-span-7 auth-bg-1a1d24 rounded-xl p-space-lg md:p-space-xl border auth-border-2e3440 shadow-xl">
 <div class="flex items-start gap-space-md mb-space-lg pb-space-md border-b auth-border-2e3440">
@@ -14,51 +14,51 @@
 <h1 class="text-headline-lg font-headline-lg auth-text-f8fafc tracking-tight mb-space-xs">Crear cuenta en PLUS</h1>
 <p class="text-body-md font-body-md auth-text-94a3b8">Súmate a la red de veeduría ciudadana y participa activamente en el seguimiento de proyectos en tu comunidad.</p>
 </div>
-<form class="space-y-space-md" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+<form class="space-y-space-md" [formGroup]="form" (ngSubmit)="submit()" novalidate>@if(attempted() && !pending() && validationIssues().length){<plus-form-error-summary summaryId="register-errors" prefix="register-" [issues]="validationIssues()"/>}
 <div>
-<label class="block text-title-sm font-title-sm auth-text-f8fafc mb-space-xs" for="full-name">
+<label class="block text-title-sm font-title-sm auth-text-f8fafc mb-space-xs" for="register-name">
               Nombres <span class="text-error">*</span>
 </label>
 <div class="relative">
 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none auth-text-94a3b8">
-<span class="material-symbols-outlined text-lg" data-icon="person">person</span>
+<plus-auth-icon class=" text-lg" name="person"/>
 </div>
-<input autocomplete="given-name" maxlength="100" formControlName="name" [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid" class="block w-full h-11 pl-10 pr-3 rounded-lg border auth-border-2e3440 auth-bg-121418 auth-text-f8fafc text-body-md font-body-md placeholder-[#64748b] focus:border-primary-container focus:ring-2 focus:ring-primary-container/40 focus:outline-none transition-all" id="full-name" name="full-name" placeholder="Ej. María Elena" required="" type="text">
-</div><plus-auth-field-error [control]="form.controls.name"/>
+<input autocomplete="given-name" maxlength="100" formControlName="name" class="block w-full h-11 pl-10 pr-3 rounded-lg border auth-border-2e3440 auth-bg-121418 auth-text-f8fafc text-body-md font-body-md placeholder-[#64748b] focus:border-primary-container focus:ring-2 focus:ring-primary-container/40 focus:outline-none transition-all" name="full-name" placeholder="Ej. María Elena" required="" type="text" id="register-name" [attr.aria-invalid]="!!fieldError('name')" [attr.aria-describedby]="fieldError('name')?'register-name-error':null">
+</div><plus-auth-field-error errorId="register-name-error" [control]="form.controls.name"/>
 </div>
 <div class="grid sm:grid-cols-2 gap-space-md">
-<label class="block text-title-sm auth-text-f8fafc">Apellidos *<input formControlName="surname" autocomplete="family-name" maxlength="100" required class="mt-2 block w-full h-11 px-3 rounded-lg border auth-border-2e3440 auth-bg-121418 auth-text-f8fafc"><plus-auth-field-error [control]="form.controls.surname"/></label>
-<label class="block text-title-sm auth-text-f8fafc">Teléfono (opcional)<input formControlName="phone" type="tel" autocomplete="tel" maxlength="20" class="mt-2 block w-full h-11 px-3 rounded-lg border auth-border-2e3440 auth-bg-121418 auth-text-f8fafc"><plus-auth-field-error [control]="form.controls.phone"/></label>
+<label class="block text-title-sm auth-text-f8fafc">Apellidos *<input formControlName="surname" autocomplete="family-name" maxlength="100" required class="mt-2 block w-full h-11 px-3 rounded-lg border auth-border-2e3440 auth-bg-121418 auth-text-f8fafc" id="register-surname" [attr.aria-invalid]="!!fieldError('surname')" [attr.aria-describedby]="fieldError('surname')?'register-surname-error':null"><plus-auth-field-error errorId="register-surname-error" [control]="form.controls.surname"/></label>
+<label class="block text-title-sm auth-text-f8fafc">Teléfono (opcional)<input formControlName="phone" type="tel" autocomplete="tel" maxlength="20" class="mt-2 block w-full h-11 px-3 rounded-lg border auth-border-2e3440 auth-bg-121418 auth-text-f8fafc" id="register-phone" [attr.aria-invalid]="!!fieldError('phone')" [attr.aria-describedby]="fieldError('phone')?'register-phone-error':null"><plus-auth-field-error errorId="register-phone-error" [control]="form.controls.phone"/></label>
 </div>
 <div>
-<label class="block text-title-sm font-title-sm auth-text-f8fafc mb-space-xs" for="email">
+<label class="block text-title-sm font-title-sm auth-text-f8fafc mb-space-xs" for="register-email">
               Correo electrónico institucional o personal <span class="text-error">*</span>
 </label>
 <div class="relative">
 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none auth-text-94a3b8">
-<span class="material-symbols-outlined text-lg" data-icon="mail">mail</span>
+<plus-auth-icon class=" text-lg" name="mail"/>
 </div>
-<input autocomplete="email" formControlName="email" [attr.aria-invalid]="form.controls.email.touched && form.controls.email.invalid" class="block w-full h-11 pl-10 pr-3 rounded-lg border auth-border-2e3440 auth-bg-121418 auth-text-f8fafc text-body-md font-body-md placeholder-[#64748b] focus:border-primary-container focus:ring-2 focus:ring-primary-container/40 focus:outline-none transition-all" id="email" name="email" placeholder="ejemplo&#64;correo.com" required="" type="email">
-</div><plus-auth-field-error [control]="form.controls.email"/>
+<input autocomplete="email" formControlName="email" class="block w-full h-11 pl-10 pr-3 rounded-lg border auth-border-2e3440 auth-bg-121418 auth-text-f8fafc text-body-md font-body-md placeholder-[#64748b] focus:border-primary-container focus:ring-2 focus:ring-primary-container/40 focus:outline-none transition-all" name="email" placeholder="ejemplo&#64;correo.com" required="" type="email" id="register-email" [attr.aria-invalid]="!!fieldError('email')" [attr.aria-describedby]="fieldError('email')?'register-email-error':null">
+</div><plus-auth-field-error errorId="register-email-error" [control]="form.controls.email"/>
 <p class="mt-space-xs text-body-sm font-body-sm auth-text-94a3b8 flex items-center gap-1">
-<span class="material-symbols-outlined text-xs auth-text-64748b" data-icon="info">info</span>
+<plus-auth-icon class=" text-xs auth-text-64748b" name="info"/>
               Utiliza un correo al que tengas acceso para recuperar tu cuenta.
             </p>
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
 <div>
 <div class="flex items-center justify-between mb-space-xs">
-<label class="text-title-sm font-title-sm auth-text-f8fafc" for="password">
+<label class="text-title-sm font-title-sm auth-text-f8fafc" for="register-password">
                   Contraseña <span class="text-error">*</span>
 </label>
 </div>
 <div class="relative">
 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none auth-text-94a3b8">
-<span class="material-symbols-outlined text-lg" data-icon="lock">lock</span>
+<plus-auth-icon class=" text-lg" name="lock"/>
 </div>
-<input #passwordInput autocomplete="new-password" formControlName="password" [attr.aria-invalid]="form.controls.password.touched && form.controls.password.invalid" class="block w-full h-11 pl-10 pr-10 rounded-lg border auth-border-2e3440 auth-bg-121418 auth-text-f8fafc text-body-md font-body-md focus:border-primary-container focus:ring-2 focus:ring-primary-container/40 focus:outline-none transition-all" id="password" name="password" placeholder="••••••••" required="" type="password">
+<input #passwordInput autocomplete="new-password" formControlName="password" class="block w-full h-11 pl-10 pr-10 rounded-lg border auth-border-2e3440 auth-bg-121418 auth-text-f8fafc text-body-md font-body-md focus:border-primary-container focus:ring-2 focus:ring-primary-container/40 focus:outline-none transition-all" name="password" placeholder="••••••••" required="" type="password" id="register-password" [attr.aria-invalid]="!!fieldError('password')" [attr.aria-describedby]="fieldError('password')?'register-password-error':null">
 <plus-password-toggle [target]="passwordInput"/>
-</div><plus-auth-field-error [control]="form.controls.password"/>
+</div><plus-auth-field-error errorId="register-password-error" [control]="form.controls.password"/>
 <div class="mt-2">
 <div class="w-full auth-bg-262b36 h-1.5 rounded-full overflow-hidden flex">
 <div [style.width.%]="passwordProgress()" class="bg-primary-container h-full rounded-full"></div>
@@ -70,22 +70,22 @@
 </div>
 </div>
 <div>
-<label class="block text-title-sm font-title-sm auth-text-f8fafc mb-space-xs" for="confirm-password">
+<label class="block text-title-sm font-title-sm auth-text-f8fafc mb-space-xs" for="register-confirmation">
                 Confirmar contraseña <span class="text-error">*</span>
 </label>
 <div class="relative">
 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none auth-text-94a3b8">
-<span class="material-symbols-outlined text-lg" data-icon="lock_clock">lock_clock</span>
+<plus-auth-icon class=" text-lg" name="lock_clock"/>
 </div>
-<input #confirmationInput autocomplete="new-password" formControlName="confirmation" [attr.aria-invalid]="form.controls.confirmation.touched && form.controls.confirmation.invalid" class="block w-full h-11 pl-10 pr-10 rounded-lg border auth-border-2e3440 auth-bg-121418 auth-text-f8fafc text-body-md font-body-md focus:border-primary-container focus:ring-2 focus:ring-primary-container/40 focus:outline-none transition-all" id="confirm-password" name="confirm-password" placeholder="••••••••" required="" type="password">
+<input #confirmationInput autocomplete="new-password" formControlName="confirmation" class="block w-full h-11 pl-10 pr-10 rounded-lg border auth-border-2e3440 auth-bg-121418 auth-text-f8fafc text-body-md font-body-md focus:border-primary-container focus:ring-2 focus:ring-primary-container/40 focus:outline-none transition-all" name="confirm-password" placeholder="••••••••" required="" type="password" id="register-confirmation" [attr.aria-invalid]="!!fieldError('confirmation')" [attr.aria-describedby]="fieldError('confirmation')?'register-confirmation-error':null">
 <plus-password-toggle [target]="confirmationInput"/>
-</div><plus-auth-field-error [control]="form.controls.confirmation"/>
+</div><plus-auth-field-error errorId="register-confirmation-error" [control]="form.controls.confirmation" [extraError]="fieldError('confirmation')"/>
 <p class="mt-2 text-label-sm font-label-sm auth-text-94a3b8">Las contraseñas deben coincidir.</p>
 </div>
 </div>
 <div class="space-y-space-sm pt-space-xs">
 <label class="flex items-start gap-space-sm cursor-pointer select-none">
-<input formControlName="consent" [attr.aria-invalid]="form.controls.consent.touched && form.controls.consent.invalid" class="mt-0.5 w-4 h-4 rounded auth-border-374151 auth-bg-121418 text-primary-container focus:ring-primary-container accent-primary-container" required="" type="checkbox">
+<input formControlName="consent" class="mt-0.5 w-4 h-4 rounded auth-border-374151 auth-bg-121418 text-primary-container focus:ring-primary-container accent-primary-container" required="" type="checkbox" id="register-consent" [attr.aria-invalid]="!!fieldError('consent')" [attr.aria-describedby]="fieldError('consent')?'register-consent-error':null">
 <span class="text-body-sm font-body-sm auth-text-94a3b8">
                 Acepto los <a class="underline font-medium auth-text-f8fafc hover:text-primary-container transition-colors" href="#">Términos de Servicio</a> y autorizo el tratamiento de mis datos personales según la <span class="auth-text-f8fafc font-medium">Ley Estatutaria 1581 de 2012</span> y el marco institucional de PLUS.
               </span>
@@ -95,7 +95,7 @@
 <div class="pt-space-sm">
 <button class="w-full h-12 bg-primary-container auth-hoverbg-eab308 text-slate-950 text-title-md font-title-md font-semibold rounded-lg shadow-md transition-all duration-150 ease-out active:scale-[0.99] flex items-center justify-center gap-space-xs focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#1a1d24] focus:ring-primary-container" [disabled]="pending()" [attr.aria-busy]="pending()" type="submit">
 <span>{{pending() ? 'Creando cuenta…' : 'Crear cuenta'}}</span>
-<span class="material-symbols-outlined text-lg" data-icon="how_to_reg">how_to_reg</span>
+<plus-auth-icon class=" text-lg" name="how_to_reg"/>
 </button>
 </div>
 <div class="text-center pt-space-xs pb-space-xs border-t auth-border-2e3440 mt-space-md">
@@ -103,12 +103,12 @@
               ¿Ya tienes una cuenta registrada? 
               <a class="font-semibold text-primary-container hover:underline ml-1 inline-flex items-center gap-0.5" routerLink="/login">
                 Iniciar sesión
-                <span class="material-symbols-outlined text-xs" data-icon="arrow_forward">arrow_forward</span>
+                <plus-auth-icon class=" text-xs" name="arrow_forward"/>
 </a>
 </p>
 </div>
-<plus-auth-field-error [control]="form.controls.consent"/>
-<p class="auth-error" role="status">{{ confirmationError() }}</p>
+<plus-auth-field-error errorId="register-consent-error" [control]="form.controls.consent"/>
+
 <p class="mt-3 text-body-sm" role="status">{{ message() }}</p></form>
 </section>
 <section class="lg:col-span-5 space-y-space-md">
@@ -119,7 +119,7 @@
 <div class="absolute inset-0 bg-gradient-to-t from-[#0f1115] via-[#0f1115]/50 to-transparent flex items-end p-space-md">
 <div class="text-white">
 <span class="inline-flex items-center gap-1 bg-primary-container text-slate-950 font-medium text-label-sm font-label-sm px-2 py-0.5 rounded-full mb-1">
-<span class="material-symbols-outlined text-xs" data-icon="verified">verified</span>
+<plus-auth-icon class=" text-xs" name="verified"/>
                   Veeduría Activa 2025
                 </span>
 <p class="text-title-sm font-title-sm font-semibold text-white">Asambleas Territoriales y Control Social</p>
@@ -161,7 +161,7 @@
 </div>
 <div class="auth-bg-161d2b rounded-xl p-space-md border auth-border-2e3440 flex items-start gap-space-md shadow-md">
 <div class="w-10 h-10 rounded-lg auth-bg-1a1d24 border auth-border-2e3440 flex items-center justify-center shrink-0 text-primary-container">
-<span class="material-symbols-outlined text-xl" data-icon="shield">shield</span>
+<plus-auth-icon class=" text-xl" name="shield"/>
 </div>
 <div>
 <h4 class="text-title-sm font-title-sm font-semibold auth-text-f8fafc mb-0.5">Seguridad y Reserva Institucional</h4>

@@ -1,36 +1,25 @@
-<header class="mb-space-lg">
-<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md pb-space-md border-b cit-border-27272a">
-<div>
-<div class="flex items-center gap-2 mb-1">
-<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-primary-container/20 cit-text-facc15 font-semibold border border-primary-container/40">
-              Formulario de Veeduría Ciudadana
-            </span>
-<span class="text-label-sm font-label-sm cit-text-a1a1aa">Ley 850 de 2003</span>
+﻿<header class="mb-space-lg space-y-4">
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md pb-space-md border-b cit-border-27272a">
+    <div><p class="text-label-sm font-semibold cit-text-facc15 mb-2">Formulario de Veeduría Ciudadana</p><h1 class="text-headline-lg text-white">Radicar nuevo caso comunitario</h1><p class="text-body-md cit-text-94a3b8 mt-2 max-w-3xl">Documenta una problemática o iniciativa de tu comunidad. El equipo de PLUS revisará la información antes de su publicación.</p></div>
+    <div class="space-y-2"><button (click)="saveDraft()" [disabled]="pending()" class="cit-button" type="button">Guardar borrador temporal</button><p class="text-label-sm">{{draftMessage()}}</p></div>
+  </div>
+  @if(loading()){<p role="status">Cargando catálogos…</p>}
+  @if(catalogError()){<div role="alert" class="cit-panel border rounded-xl p-4 space-y-3"><p>{{catalogError()}}</p><button type="button" class="cit-button" (click)="loadCatalogs()">Reintentar catálogos</button></div>}
+  @if(!loading() && !catalogError() && (!departments().length || !types().length)){<p role="status" class="rounded-lg border border-amber-500/50 p-4">Los catálogos necesarios para radicar todavía no tienen datos. El equipo administrador debe cargar los tipos de caso y los territorios.</p>}
+  <fieldset [disabled]="pending()"><plus-intake-stepper [step]="step()" (selectStep)="goTo($event)"/></fieldset>
+</header>
+<fieldset [disabled]="pending() || loading()" [attr.aria-busy]="pending()" class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start min-w-0">
+  <div class="lg:col-span-8 min-w-0">
+    @if(step()===5){<plus-intake-summary [data]="summaryValue()" [files]="files()" [truth]="truth()" [consent]="consent()" (truthChanged)="truth.set($event)" (consentChanged)="consent.set($event)" (edit)="goTo($event)"/>}
+    @else{<plus-intake-fields [form]="form" [step]="step()" [files]="files()" [types]="availableTypes()" [departments]="departments()" [municipalities]="municipalities()" [communities]="communities()" (kindChanged)="changeKind()" (departmentChanged)="changeDepartment()" (municipalityChanged)="changeMunicipality()" (filesChanged)="files.set($event)"/>}
+  </div>
+  <div class="lg:col-span-4"><plus-intake-support [step]="step()"/></div>
+</fieldset>
+<p class="py-4 text-body-sm" role="status">{{message()}}</p>
+@if(uncertain()){<a routerLink="/ciudadano/casos" class="cit-button inline-flex mb-4">Consultar Mis casos</a>}
+<div class="intake-actions flex flex-wrap justify-between gap-3 p-4 rounded-xl border sticky bottom-0 z-30">
+  <button type="button" (click)="previous()" [disabled]="step()===1 || pending()" class="cit-button">Anterior</button>
+  <div class="flex flex-wrap gap-3"><button type="button" (click)="saveDraft()" [disabled]="pending()" class="cit-button">Guardar borrador temporal</button>
+  @if(step()<5){<button type="button" (click)="next()" [disabled]="pending() || loading()" class="cit-primary">Siguiente</button>}
+  @else{<button type="button" (click)="submit()" [disabled]="pending() || loading() || uncertain() || !!catalogError()" class="cit-primary">{{pending()?'Enviando…':'Radicar caso'}}</button>}</div>
 </div>
-<h1 class="text-headline-md md:text-headline-lg font-headline-lg tracking-tight text-white">Radicar nuevo caso comunitario</h1>
-<p class="text-body-md font-body-md cit-text-94a3b8 mt-1 max-w-3xl">
-            Diligencia este formulario paso a paso para documentar una problemática o iniciativa ciudadana. Nuestro equipo técnico y jurídico revisará la información antes de su publicación en el mapa territorial.
-          </p>
-</div>
-<div class="flex md:flex-col items-center md:items-end justify-between gap-1 flex-shrink-0">
-<button (click)="saveDraft()" class="inline-flex items-center gap-2 px-3 py-2 rounded-lg border cit-border-333842 cit-bg-1e1e22 text-title-sm font-title-sm cit-text-f4f4f5 cit-hoverbg-272a31 transition-all" type="button">
-<span class="material-symbols-outlined cit-text-a1a1aa" style="font-size: 18px;">save</span>
-<span>Guardar borrador</span>
-</button>
-<span class="text-label-sm font-label-sm cit-text-94a3b8 flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-            {{ draftMessage() }}
-          </span>
-</div>
-</div>
-<div class="py-4 space-y-3">
-<button type="button" (click)="requestExample()" class="cit-button">Cargar ejemplo del diseño</button>
-@if(confirmingExample()) {
-<div role="group" aria-label="Confirmar reemplazo del formulario" class="rounded-xl border cit-border-333842 p-4 space-y-3">
-<p>Se reemplazarán los campos actuales y se quitarán los anexos seleccionados. El ejemplo no se enviará.</p>
-<div class="flex flex-wrap gap-3"><button type="button" (click)="loadExample()" class="cit-primary">Reemplazar con el ejemplo</button><button type="button" (click)="confirmingExample.set(false)" class="cit-button">Conservar mis datos</button></div>
-</div>
-}
-</div>
-<plus-intake-stepper [step]="step()" (selectStep)="goTo($event)"/>
-</header><div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start"><div class="lg:col-span-8 min-w-0">@if(step() === 5) {<plus-intake-summary [data]="form.getRawValue()" [files]="files()" [truth]="truth()" [consent]="consent()" (truthChanged)="truth.set($event)" (consentChanged)="consent.set($event)" (edit)="goTo($event)"/>} @else {<plus-intake-fields [form]="form" [step]="step()" [files]="files()" (filesChanged)="files.set($event)"/>}</div><div class="lg:col-span-4"><plus-intake-support [step]="step()"/></div></div><p class="py-4 text-body-sm" role="status">{{ message() }}</p><div class="intake-actions flex flex-wrap justify-between gap-3 p-4 rounded-xl border sticky bottom-0 z-30"><button type="button" (click)="previous()" [disabled]="step() === 1" class="cit-button">Anterior</button><div class="flex flex-wrap gap-3"><button type="button" (click)="saveDraft()" class="cit-button">Guardar borrador temporal</button>@if(step() < 5) {<button type="button" (click)="next()" class="cit-primary">Siguiente</button>} @else {<button type="button" (click)="submit()" class="cit-primary">Validar caso de ejemplo</button>}</div></div>

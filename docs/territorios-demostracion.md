@@ -2,6 +2,8 @@
 
 ## Vistas y arquitectura
 
+> Documento histórico de la demostración. El listado, la ficha y el editor de comunidades ya usan REST. Consultar [integracion-territorios.md](integracion-territorios.md) para el alcance vigente, permisos y pruebas. Los ejemplos temporales descritos aquí no alimentan esas rutas administrativas.
+
 - `/admin/comunidades`: directorio con búsqueda, filtros dependientes, indicadores, estado vacío y paginación de cinco registros.
 - `/admin/comunidades/nueva`: creación de comunidad de ejemplo.
 - `/admin/comunidades/:id`: detalle y activación/desactivación simulada con confirmación.

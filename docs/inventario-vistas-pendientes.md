@@ -1,5 +1,23 @@
 # Inventario de vistas PLUS y continuación del frontend
 
+> **Administración conectada:** dashboard, listado y expediente de casos usan REST, con publicación, correcciones, asignaciones, seguimiento, cierre y revisión/descarga de evidencias. Ver [integracion-casos-administrativos.md](integracion-casos-administrativos.md). Los problemas y trabajos que no bloquean otros avances se registran en [problemas-integracion.md](problemas-integracion.md).
+
+> **Permisos actualizados:** menú y guards de rutas aplican la [matriz por rol](permisos-navegacion-administrativa.md), incluyendo URLs directas y editores. Usuarios, comunidades y auditoría son exclusivos de administrador. Esto no cierra los pendientes de autorización y despliegue del backend.
+
+> **Contenido inicial inventariado:** [textos, imágenes y guía para la carga editorial](contenido-inicial/preparacion.md) extraídos del frontend. No equivale a aprobación ni importación; noticias/iniciativas públicas mantienen sus datos actuales hasta verificar la carga del backend.
+
+> **Informes y auditoría reciente conectados:** agregados de toda la selección, tabla paginada y CSV del backend; consulta de eventos recientes con filtros locales y detalle restringido. La auditoría no representa un historial exhaustivo. Ver [integracion-informes-auditoria.md](integracion-informes-auditoria.md).
+
+> **Comunidades conectadas:** directorio/ficha, creación, edición y activación/desactivación consultan REST. No incluyen CRUD departamental/municipal ni edición cartográfica. Los catálogos del servidor ya devuelven datos; falta la prueba funcional controlada. Ver [integracion-territorios.md](integracion-territorios.md) y el estado actualizado P02 en [problemas-integracion.md](problemas-integracion.md).
+
+> **Usuarios y roles conectados:** directorio paginado, ficha, catálogo de roles, creación y edición de contacto; acciones separadas de rol único y estado con revisión. El frontend limita las escrituras a administrador sobre otras cuentas; ámbitos y correcciones del servidor P15/P16 pendientes. Ver [integracion-usuarios.md](integracion-usuarios.md).
+
+> **Moderación de comentarios conectada:** cola paginada y filtros reales, ficha, aprobación/rechazo/ocultamiento/retorno a pendiente con confirmación y motivo interno por defecto. El formulario público sigue pendiente; no hay historial específico de decisiones en el contrato actual. Ver [integracion-moderacion-comentarios.md](integracion-moderacion-comentarios.md).
+
+> **Comunicación ciudadana conectada:** mensajes y notificaciones ya consultan REST, con estados de lectura, paginación de avisos y contadores por cuenta. Ver [integracion-mensajes-notificaciones.md](integracion-mensajes-notificaciones.md).
+
+> **Casos ciudadanos conectados:** listado/métricas, radicación, confirmación, expediente, historial, evidencias y aportes usan servicios REST. La carga territorial está disponible; la radicación real sigue pendiente de prueba controlada. Consultar [integracion-casos-ciudadanos.md](integracion-casos-ciudadanos.md) y el estado P02 actualizado. Las filas de demostración siguientes conservan el inventario anterior.
+
 > **Inicio de integración REST:** acceso y perfil ya llaman al backend, con JWT, guards, fotografía, preferencias y catálogos de residencia. Los escenarios de recuperación ahora validan tokens reales. Las filas originales siguientes conservan el inventario de demostración previo; para el alcance integrado y la verificación pendiente en producción consultar [integracion-acceso-perfil.md](integracion-acceso-perfil.md).
 
 Revisión del 9 de noviembre de 2026. Basada en `app.routes.ts`, componentes, navegación, controles pendientes y esquema v1.1. «Vista disponible» significa interfaz Angular con datos de demostración: no equivale a integración, permisos efectivos ni validación visual completados.
@@ -48,6 +66,8 @@ La prioridad organiza implementación de interfaces, no autoriza envíos, public
 - Visibilidad de evidencias, notas internas, correcciones, agrupación de aportes y resultados: interfaces parciales que requieren persistencia definida en la petición al backend.
 
 ## 4. Verificación pendiente común
+
+Se realizó una primera [revisión de navegación y temas en Chrome local](revision-interfaz-accesibilidad.md) con datos sintéticos: menú móvil, teclado/foco, restauración en escritorio y anchos de vistas administrativas/perfil. No sustituye la revisión completa de todas las pantallas ni las pruebas de datos reales descritas a continuación.
 
 Revisión visual en navegador de escritorio/móvil y claro/oscuro, navegación por teclado, foco, errores de formulario y estados vacíos. La compilación y las comprobaciones de lógica realizadas no sustituyen esta revisión. Después de conectar API: cargas, errores HTTP, conflictos, permisos por objeto, archivos y recuperación tras recarga.
 

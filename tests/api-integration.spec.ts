@@ -101,12 +101,12 @@ assert.ok(adminRoute.canActivateChild?.includes(accountGuard));
 assert.ok(citizenRoute.canActivateChild?.includes(accountGuard));
 assert.equal(citizenRoute.data?.['requiresCitizen'],true);
 
-async function verifyPortal(portal:typeof adminRoute, allowed:boolean) {
+async function verifyPortal(portal:typeof adminRoute, allowed:boolean|((path:string)=>boolean)) {
   for(const child of portal.children!) {
     // Child metadata must not erase the enclosing portal's access requirement.
     const snapshot={data:child.data ?? {},pathFromRoot:[{data:{}},{data:portal.data ?? {}},{data:child.data ?? {}}]};
     const result=await firstValueFrom(runInInjectionContext(env,()=>accountGuard(snapshot as never,{url:`/${portal.path}/${child.path}`} as never)) as any);
-    if(allowed)assert.equal(result,true,`${portal.path}/${child.path} should be allowed`);
+    if(typeof allowed==='function'?allowed(child.path??''):allowed)assert.equal(result,true,`${portal.path}/${child.path} should be allowed`);
     else assert.deepEqual(result.commands,['/acceso-denegado'],`${portal.path}/${child.path} should be denied`);
   }
 }
@@ -115,7 +115,8 @@ auth.updateUser({...user,permissions:citizenPermissions});assert.equal(auth.defa
 await verifyPortal(citizenRoute,true);await verifyPortal(adminRoute,false);
 for(const role of ['representante','moderador']) {
   auth.updateUser({...user,primary_role:role,permissions:adminPermissions});
-  await verifyPortal(adminRoute,true);await verifyPortal(citizenRoute,false);
+  const sections=role==='representante'?['','perfil','casos','informes']:['','perfil','casos','informes','noticias','iniciativas','postulaciones','comentarios'];
+  await verifyPortal(adminRoute,path=>sections.includes(path.split('/')[0]));await verifyPortal(citizenRoute,false);
 }
 auth.updateUser({...user,permissions:adminPermissions}); // Conflicting citizen/admin data fails closed.
 assert.equal(auth.canAdmin(),false);assert.equal(auth.canCitizen(),false);
@@ -181,3 +182,11 @@ auth.clear();staleRequest.flush({access:'stale-access',refresh:'stale-refresh'})
 backend.verify();env.destroy();
 console.log('API integration checks passed: session storage, refresh concurrency/rotation, guards, profile, multipart, catalogs, errors, logout.');
 
+await import('./citizen-cases.spec');
+await import('./citizen-communication.spec');
+await import('./admin-cases.spec');
+await import('./admin-report-audit.spec');
+await import('./admin-comments.spec');
+await import('./admin-territories.spec');
+await import('./admin-users.spec');
+await import('./admin-access.spec');

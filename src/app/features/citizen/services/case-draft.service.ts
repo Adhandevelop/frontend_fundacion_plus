@@ -1,11 +1,14 @@
-import { Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { AuthService } from '../../../core/auth/auth.service';
 import { IntakeViewValue } from '../intake/intake-view.model';
 
 @Injectable({providedIn: 'root'})
 export class CaseDraftService {
-  readonly draft = signal<{value: IntakeViewValue; files: readonly File[]} | null>(null);
+  private readonly auth = inject(AuthService);
+  private readonly state = signal<{owner:string; value: IntakeViewValue; files: readonly File[]} | null>(null);
+  readonly draft = computed(() => this.state()?.owner === this.auth.user()?.id_usuario ? this.state() : null);
   save(value: IntakeViewValue, files: readonly File[]) {
-    this.draft.set({value: {...value}, files: [...files]});
+    this.state.set({owner:this.auth.user()?.id_usuario ?? '',value: {...value}, files: [...files]});
   }
-  clear() {this.draft.set(null);}
+  clear() {this.state.set(null);}
 }

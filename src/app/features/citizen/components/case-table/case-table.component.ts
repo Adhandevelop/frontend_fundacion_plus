@@ -1,31 +1,41 @@
-import { Component, computed, inject, signal } from '@angular/core';
+﻿import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { CASES_DEMO, CitizenCaseDemo } from '../../data/cases.demo';
-import { CaseWorkspaceDemoService } from '../../../cases/workspace/services/case-workspace-demo.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { catchError, debounceTime, distinctUntilChanged, finalize, of, startWith, Subject, switchMap } from 'rxjs';
+import { CitizenCasesApiService } from '../../services/citizen-cases-api.service';
+import { CasePage, CaseState, caseStateLabel } from '../../services/citizen-cases.models';
+import { apiErrorMessage } from '../../../../core/api/api-error';
 
-@Component({selector: 'plus-citizen-case-table', standalone: true, imports: [RouterLink], templateUrl: './case-table.component.html'})
+@Component({selector:'plus-citizen-case-table',standalone:true,imports:[RouterLink,DatePipe],templateUrl:'./case-table.component.html'})
 export class CitizenCaseTableComponent {
-  readonly demos = inject(CaseWorkspaceDemoService);
-  readonly query = signal('');
-  readonly status = signal('');
-  readonly kind = signal('');
-  readonly page = signal(1);
-  readonly pageSize = 5;
-  readonly selected = signal<CitizenCaseDemo | null>(null);
-  readonly message = signal('');
-  readonly statuses = ['En proceso', 'Pendiente de revisión', 'Resuelto', 'Requiere información'];
-  readonly filtered = computed(() => CASES_DEMO.filter(item => {
-    const text = this.normalize(`${item.code} ${item.title} ${item.territory}`);
-    return text.includes(this.normalize(this.query().trim())) && (!this.status() || item.status === this.status()) && (!this.kind() || item.kind === this.kind());
-  }));
-  readonly pages = computed(() => Math.max(1, Math.ceil(this.filtered().length / this.pageSize)));
-  readonly rows = computed(() => this.filtered().slice((this.page() - 1) * this.pageSize, this.page() * this.pageSize));
-  filter(field: 'query' | 'status' | 'kind', value: string) {this[field].set(value); this.page.set(1); this.selected.set(null);}
-  navigate(delta: number) {this.page.update(value => Math.min(this.pages(), Math.max(1, value + delta)));}
-  statusClass(status: string) {
-    return {'En proceso': 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-200', 'Pendiente de revisión': 'bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200', 'Resuelto': 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200', 'Requiere información': 'bg-orange-100 text-orange-900 dark:bg-orange-950 dark:text-orange-200'}[status];
+  private readonly api=inject(CitizenCasesApiService);
+  private readonly destroy=inject(DestroyRef);
+  private readonly refresh=new Subject<void>();
+  private readonly searches=new Subject<string>();
+  readonly query=signal('');
+  readonly status=signal('');
+  readonly publication=signal('');
+  readonly page=signal(1);
+  readonly pageSize=5;
+  readonly loading=signal(true);
+  readonly error=signal('');
+  readonly stateError=signal('');
+  readonly states=signal<CaseState[]>([]);
+  readonly result=signal<CasePage>({count:0,next:null,previous:null,results:[]});
+  readonly pages=computed(()=>Math.max(1,Math.ceil(this.result().count/this.pageSize)));
+  readonly label=caseStateLabel;
+  constructor(){
+    this.searches.pipe(debounceTime(250),distinctUntilChanged(),takeUntilDestroyed(this.destroy)).subscribe(()=>{this.page.set(1);this.reload();});
+    this.refresh.pipe(startWith(undefined),switchMap(()=>{
+      this.loading.set(true);this.error.set('');
+      return this.api.list({page:this.page(),page_size:this.pageSize,search:this.query().trim(),estado:this.status(),estado_publicacion:this.publication()}).pipe(catchError(error=>{this.error.set(apiErrorMessage(error));return of(null);}),finalize(()=>this.loading.set(false)));
+    }),takeUntilDestroyed(this.destroy)).subscribe(value=>{if(value)this.result.set(value);});
+    this.loadStates();
   }
-  open(item: CitizenCaseDemo) {this.selected.set(item); this.message.set('');}
-  information() {this.message.set('El envío de información adicional no está disponible en la demostración.');}
-  private normalize(value: string) {return value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');}
+  loadStates(){this.stateError.set('');this.api.states().pipe(takeUntilDestroyed(this.destroy)).subscribe({next:states=>this.states.set(states),error:error=>this.stateError.set(apiErrorMessage(error))});}
+  filter(field:'query'|'status'|'publication',value:string){this[field].set(value);if(field==='query')this.searches.next(value);else{this.page.set(1);this.reload();}}
+  reload(){this.refresh.next();}
+  navigate(delta:number){this.page.update(value=>Math.max(1,Math.min(this.pages(),value+delta)));this.reload();}
+  statusClass(value:string){return ({pendiente:'bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200',en_revision:'bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200',en_proceso:'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-200',resuelto:'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200',cerrado:'bg-slate-200 text-slate-800 dark:bg-slate-800 dark:text-slate-200'} as Record<string,string>)[value] ?? '';}
 }

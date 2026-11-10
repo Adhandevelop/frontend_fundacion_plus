@@ -9,8 +9,6 @@
         <div class="flex flex-wrap gap-3 text-body-sm"><span class="dossier-chip">Gestión: <strong>{{workflow().management}}</strong></span><span class="dossier-chip">Publicación: <strong>{{workflow().moderation}}</strong></span><span class="dossier-chip">Responsable: {{workflow().assignee}}</span></div>
         <p class="text-body-sm opacity-80">Simulación compartida entre las vistas de este caso. Se pierde al recargar y no modifica la ficha pública, usuarios ni expedientes reales.</p>
         <div class="flex flex-wrap gap-3">
-          @if(audience === 'citizen'){<a [routerLink]="['/admin/casos',record.code]" class="dossier-button">Ver simulación administrativa</a>}
-          @if(audience === 'admin' && citizenAvailable()){<a [routerLink]="['/ciudadano/casos',record.code]" class="dossier-button">Ver simulación ciudadana</a>}
           @if(audience === 'admin'){<a routerLink="/admin/auditoria" [queryParams]="{caso:record.code}" class="dossier-button">Consultar auditoría local</a>}
           @if(audience === 'admin'){<a routerLink="/admin/comentarios" [queryParams]="{caso:record.code}" class="dossier-button">Moderar comentarios de ejemplo</a>}
           @if(record.code === 'PLUS-2025-084'){<a routerLink="/casos/PLUS-2025-084" class="dossier-button">Ficha pública de ejemplo</a>}

@@ -2,6 +2,8 @@
 
 ## Vistas y organización
 
+> Documento histórico de la demostración. Las rutas administrativas ya se sustituyeron por REST: consultar [integracion-moderacion-comentarios.md](integracion-moderacion-comentarios.md) para el comportamiento vigente. El historial local y la vista previa ficticia descritos aquí no se presentan en esas rutas.
+
 - `/admin/comentarios`: cola con búsqueda, caso, estado, indicadores, paginación de cinco filas y estado vacío.
 - `/admin/comentarios/:id`: texto recibido, decisiones, motivo interno, vista previa pública e historial local.
 - `?caso=<radicado>` filtra la cola desde un expediente administrativo.

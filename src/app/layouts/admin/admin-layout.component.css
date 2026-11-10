@@ -56,3 +56,11 @@
 .admin-shell plus-proposals-list,.admin-shell plus-proposal-detail{display:block;min-width:0;}
 .admin-shell plus-comments-list,.admin-shell plus-comment-detail{display:block;min-width:0;}
 @media(max-width:640px){.admin-shell h1{font-size:24px!important;line-height:32px!important;}.admin-shell .admin-data-table{min-width:1000px;}}
+.admin-shell plus-admin-case-detail,.admin-shell plus-admin-case-summary{display:block;min-width:0;}
+.admin-shell .admin-field .ng-invalid.ng-touched{border-color:#dc2626;outline:1px solid #dc2626;}
+.admin-shell plus-admin-user-editor,.admin-shell plus-admin-user-detail,.admin-shell plus-roles-reference{display:block;min-width:0;}
+.admin-shell .admin-field input,.admin-shell .admin-field select,.admin-shell .admin-field textarea{font-size:16px;}
+:where(.admin-shell .admin-button,.admin-shell .admin-primary){display:inline-flex;align-items:center;justify-content:center;}
+.admin-shell .admin-button,.admin-shell .admin-primary{min-height:44px;text-align:center;}
+.dark .admin-shell .admin-field .ng-invalid.ng-touched{border-color:#fca5a5;outline-color:#fca5a5;}
+@media(max-width:640px){.admin-shell .admin-panel{overflow-wrap:anywhere;}}

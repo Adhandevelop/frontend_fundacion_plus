@@ -1,0 +1,1141 @@
+{
+  "format": "plus-public-content-review",
+  "version": 1,
+  "purpose": "Editorial inventory; not an API payload or executable database seed.",
+  "publication_allowed": false,
+  "totals": {
+    "news_catalog": 7,
+    "initiative_catalog": 4,
+    "home_news": 3,
+    "home_initiative_panels": 4,
+    "unique_image_urls": 19,
+    "template_sources": 11
+  },
+  "source_data": [
+    {
+      "source": "src/app/features/news/data/news.demo.ts",
+      "sha256": "8289bcea31f512412c1aa517691bb12a1e09f02bf7b2dec6f7d52c4f9b4f51e2"
+    },
+    {
+      "source": "src/app/features/initiatives/data/initiatives.demo.ts",
+      "sha256": "579366b1443c0eb65f73af09e80975b10150f95ceb2dadfff5ff556cd33b6994"
+    }
+  ],
+  "news_catalog": [
+    {
+      "review_key": "news:publicacion-0",
+      "source": "src/app/features/news/data/news.demo.ts",
+      "source_id": "publicacion-0",
+      "approval": "pending",
+      "publication_allowed": false,
+      "title": "Luis Alberto Muñoz Granada lidera mesa técnica interinstitucional para seguimiento a compromisos viales y de salud en el Atrato",
+      "summary": "En el marco del mandato cívico y las competencias conferidas por la Ley 850 de 2003, la Corporación Pluralismo Social articuló un espacio de interlocución vinculante entre comités comunitarios de base, delegados de ministerios y contratistas ejecutores. Durante la jornada se establecieron cronogramas de entrega con penalidades contractuales y verificación satelital de avances.",
+      "category_label": "Actividades de Representación",
+      "date_label": "18 de Febrero de 2025",
+      "featured_in_design": true,
+      "display_order": 0,
+      "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCXBDSJe05exet7bTIy_rj083HnCNmvQj5ciwQ57zGVgGHldKahqK7pbhRlTw-7Ws0Eofu74IkHzaEyG-8qIwP8fVztRkg5XLXiDAQKtaaS7LkulVod7DSTFQkrNM5i2s4j-_cru67YriEvVPxJCspWXPWiYs_0aU7iXSvev8Cw1eqZ0k2u2ywg0SlRNDXy0sd77JQY_76CwKDDubxSRHjlp_I2WJ1PiJEJnYf7IDJw",
+      "missing": [
+        "approved_full_article",
+        "confirmed_publication_datetime",
+        "approved_category_mapping",
+        "authorized_media"
+      ]
+    },
+    {
+      "review_key": "news:publicacion-1",
+      "source": "src/app/features/news/data/news.demo.ts",
+      "source_id": "publicacion-1",
+      "approval": "pending",
+      "publication_allowed": false,
+      "title": "Veeduría ciudadana verifica avance del 78% en obras de acueducto rural en Carmen del Darién",
+      "summary": "Equipo de campo de PLUS constató la instalación de tanques desarenadores y redes primarias para más de 3.200 habitantes ribereños, exigiendo acelerar el cronograma del sistema de filtrado.",
+      "category_label": "Veeduría Territorial",
+      "date_label": "15 Feb 2025",
+      "featured_in_design": false,
+      "display_order": 1,
+      "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuD86iEs24EuTQ8SKP4Gz081_5c2zo4kF5Y6oUFMUMlQ2Bv3dsR-yQDcVo1B-yJ0qMhnIoyhaCd36ua5P_x-u-wQGye0tHi6Q7fEUroEWgeBJP1KLz3OlpRyh3pR1D1zzRBi0YF-g8Uw0-SHYFcXJH1apuKTB0JVAl0CYfztu7QwJCgkqH8tcfddlRemJJA7YKosptpEH-442nUDti30lmq52rCqwML1qjLdtwVj6Jjj",
+      "missing": [
+        "approved_full_article",
+        "confirmed_publication_datetime",
+        "approved_category_mapping",
+        "authorized_media"
+      ]
+    },
+    {
+      "review_key": "news:publicacion-2",
+      "source": "src/app/features/news/data/news.demo.ts",
+      "source_id": "publicacion-2",
+      "approval": "pending",
+      "publication_allowed": false,
+      "title": "Luis Alberto Muñoz Granada participa en el Encuentro Regional de Veedurías y Transparencia Pública",
+      "summary": "Durante el panel central, el representante de PLUS expuso la metodología de georreferenciación de recursos del OCAD PAZ y los retos de seguridad para los líderes de control social territorial.",
+      "category_label": "Actividades de Representación",
+      "date_label": "12 Feb 2025",
+      "featured_in_design": false,
+      "display_order": 2,
+      "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuAKTpwFFyb_YM5NiKZ0Akiby1RiIBc99OUOsAcOzD75pe7FiuTY6iQCrINoRRopGOi04yK4o1KRb677H5MPtIHosvWDQnuAnS_RjKYm6u7LmwCZfrhGphUKHDzShRNA74PSQVMwIKbu0yfF4zXC4z_FS9X6sqJWquuw23okSH_BeA0ZX_SvNB9or_vwc3uuBB8SMkrFATMjbwhzKOBEoFjAvQqWDd4S21eqx-Gnqmfb",
+      "missing": [
+        "approved_full_article",
+        "confirmed_publication_datetime",
+        "approved_category_mapping",
+        "authorized_media"
+      ]
+    },
+    {
+      "review_key": "news:publicacion-3",
+      "source": "src/app/features/news/data/news.demo.ts",
+      "source_id": "publicacion-3",
+      "approval": "pending",
+      "publication_allowed": false,
+      "title": "PLUS radica informe de alertas tempranas ante la Procuraduría y Defensoría por obras inconclusas",
+      "summary": "El documento alerta sobre un detrimento potencial superior a $14.000 millones en tres proyectos viales que registran suspensión injustificada y falta de interventoría efectiva.",
+      "category_label": "Alerta Temprana",
+      "date_label": "08 Feb 2025",
+      "featured_in_design": false,
+      "display_order": 3,
+      "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuDhK4A-OhcffnEiZg5CgNqmNi05MeU7sudRmIVrBg_uYYXmbBJWRoVLIwZ7fRaZx1Gc528kU6h03luH0A7HV1bVw-YVcz5TE5dDULAz6PtEY0WRerfkD1mq-8XPBWfeagBC9zLtIx2mnhAD6aGN_Psx7fcFQ96gM9GSXvTTntFOO3LMELkSLD-DEqiUkujmwALK_24m7372HjvQlo8gagQ9hMvDIfmyrF7oVCevdWQM",
+      "missing": [
+        "approved_full_article",
+        "confirmed_publication_datetime",
+        "approved_category_mapping",
+        "authorized_media"
+      ]
+    },
+    {
+      "review_key": "news:publicacion-4",
+      "source": "src/app/features/news/data/news.demo.ts",
+      "source_id": "publicacion-4",
+      "approval": "pending",
+      "publication_allowed": false,
+      "title": "Jornada de capacitación a líderes comunales en mecanismos de control social bajo la Ley 850",
+      "summary": "Más de 60 delegados de Juntas de Acción Comunal recibieron herramientas prácticas para el acceso a la plataforma SECOP II y redacción de derechos de petición en contratación comunitaria.",
+      "category_label": "Formación Ciudadana",
+      "date_label": "04 Feb 2025",
+      "featured_in_design": false,
+      "display_order": 4,
+      "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCyN9nJPHSrxedq3eS9mvY6OPpUcblZ9Xs7ldCPxbNnVmxB1Pl9RtkdrVXcq71xx_w2YBY64VriorU3BEjUInSc_qFBmiDllLFTgeX2avKL8VIMwBr-RapR8r2yfB01pGKniGRs4eV2vctrMAI9aYC0jwmJobhDOdkmYzEDp8zqzYMdKopHjbmHEI00RT4Nh4c8tCnsZVXZH85agfrtwOsYFiJuwjsZCdygmC58rCV6",
+      "missing": [
+        "approved_full_article",
+        "confirmed_publication_datetime",
+        "approved_category_mapping",
+        "authorized_media"
+      ]
+    },
+    {
+      "review_key": "news:publicacion-5",
+      "source": "src/app/features/news/data/news.demo.ts",
+      "source_id": "publicacion-5",
+      "approval": "pending",
+      "publication_allowed": false,
+      "title": "Seguimiento a la restitución de derechos y proyectos productivos en cuencas comunitarias",
+      "summary": "Evaluación sobre el cumplimiento de la Sentencia T-622 que reconoce al Río Atrato como sujeto de derechos, revisando desembolsos de proyectos de sustitución de actividades extractivas.",
+      "category_label": "Derechos Colectivos",
+      "date_label": "29 Ene 2025",
+      "featured_in_design": false,
+      "display_order": 5,
+      "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCffOmMr7vuZWCPEO_hwLHwN5i7uPTKKQuiPW-UBXUZynIdwA8xqRdrD0NTXxmJ7R1v5Gtf_1qJxfHbuqKUwYNpb76utA4E8wYlbrks4iQr4JYnAYIgj-5inBhpcH7ug77XsSapKko5mdb3hS1YrIIR1B61Pz-XArwsnlWOtYv_sXpUAd-khKzuJMCgo2Nmyvxw24d0d06K8MSWVpFYUxhi8aSfbuibO6LDMZfs94iP",
+      "missing": [
+        "approved_full_article",
+        "confirmed_publication_datetime",
+        "approved_category_mapping",
+        "authorized_media"
+      ]
+    },
+    {
+      "review_key": "news:publicacion-6",
+      "source": "src/app/features/news/data/news.demo.ts",
+      "source_id": "publicacion-6",
+      "approval": "pending",
+      "publication_allowed": false,
+      "title": "Balance de gestión semestral: Más de 34 casos acompañados en el Chocó y Urabá antioqueño",
+      "summary": "PLUS publica su matriz semestral de resultados con un 91% de efectividad en mesas de conciliación y la recuperación de cronogramas en 12 centros educativos rurales.",
+      "category_label": "Rendición de Cuentas",
+      "date_label": "24 Ene 2025",
+      "featured_in_design": false,
+      "display_order": 6,
+      "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuBEl6xMerP9eISC1BuoLezEM7Je8fOGseyZ4kVzg9OLWg88K0RVHkFE8Hv6wZrPvL0hH3x9eSHdRlH0staEeQpCZKACddDYgmCnKgEBXE41JpABmcAKM4bcbqe9WNk5ORDwJoUtxoyPvAKMLVqNRzv9nR2ZQHFpewxhBE_onV8Lhcgciga1bN-zF_Xxpxi8NyGb_2lNy_4NY8s_UimDcQCV3VyytdRrjfwYbOLVf3hQ",
+      "missing": [
+        "approved_full_article",
+        "confirmed_publication_datetime",
+        "approved_category_mapping",
+        "authorized_media"
+      ]
+    }
+  ],
+  "initiative_catalog": [
+    {
+      "review_key": "initiative:dulcemania",
+      "source": "src/app/features/initiatives/data/initiatives.demo.ts",
+      "source_id": "dulcemania",
+      "approval": "pending",
+      "publication_allowed": false,
+      "title": "Dulcemanía: Alegría, Niñez y Escucha Territorial",
+      "summary": "Celebración infantil, escucha comunitaria y diagnóstico participativo en barrios y veredas.",
+      "category_label": "Infancia y Niñez (Dulcemanía)",
+      "period_label": "Octubre de cada año",
+      "year_label": "2025",
+      "impact_label": "Datos de impacto del ejemplo",
+      "coverage_label": "Territorios del diseño",
+      "featured_in_design": true,
+      "image_url": "https://lh3.googleusercontent.com/aida/AEtjO1XzkATqgB3Hq11KMmzEzZFbRBsv2Mg3xAGdZ-Gf6AsLSYJ4HJuDLvU30ssVsUkvqMF7kLvjtaVdE-xPI_cusz3BrDMhTUrN4Xcht4I4pV8qMWmk8-c0qxdwsFP3eOCZTkel0Nk18mblVP4x-RyV7LCjcz86zhqSSZwACuWX7rEEl3tXDCqKCqCfOl2EzbyWjoETUqlrEmnuiQE9atTT-xS8U6KX6Mv85l4TtYotyW8R",
+      "missing": [
+        "approved_program_description",
+        "approved_edition_data",
+        "confirmed_metrics_and_coverage",
+        "authorized_media"
+      ]
+    },
+    {
+      "review_key": "initiative:navidad",
+      "source": "src/app/features/initiatives/data/initiatives.demo.ts",
+      "source_id": "navidad",
+      "approval": "pending",
+      "publication_allowed": false,
+      "title": "Novenas Navideñas y Encuentro Comunitario",
+      "summary": "Espacio de balance comunitario de fin de año, compartir de buñuelos tradicionales, villancicos y entrega de obsequios didácticos enfocados en paz barrial.",
+      "category_label": "Navidad y Novenas Comunitarias",
+      "period_label": "Diciembre",
+      "year_label": "2025",
+      "impact_label": "Beneficiarios: ~1.200 personas",
+      "coverage_label": "12 sectores",
+      "featured_in_design": false,
+      "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuBeJ_SdNAHigk0TH_-7UR_vDlxf0c53ntwch3nMsQHWSHtVSRXla_lGTsypSalwelpMaqWNTcrU6PCauGfPk9-72sYW_HiRn-lVumbk35Ikpugrs3C_eL69xgUMhCycavaJBYNI_EgWJJp2YqNP1994FP3yjrIsn5vzzV0NZs4NAoFFUt-KHceAgK1oTfGn2ErZwUx7Jv0izncqCk4yAAiH62mqN99dtoDw0F5ezxaa",
+      "missing": [
+        "approved_program_description",
+        "approved_edition_data",
+        "confirmed_metrics_and_coverage",
+        "authorized_media"
+      ]
+    },
+    {
+      "review_key": "initiative:educacion",
+      "source": "src/app/features/initiatives/data/initiatives.demo.ts",
+      "source_id": "educacion",
+      "approval": "pending",
+      "publication_allowed": false,
+      "title": "Jornadas de Útiles y Regreso a Clases con Dignidad",
+      "summary": "Entrega de morrales, cuadernos y talleres de lectura infantil para prevenir la deserción escolar temprana en familias con extrema vulnerabilidad económica.",
+      "category_label": "Educación y Regreso a Clases",
+      "period_label": "Enero - Febrero",
+      "year_label": "2025",
+      "impact_label": "Kits entregados: 920 escolares",
+      "coverage_label": "8 veredas",
+      "featured_in_design": false,
+      "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuBfUJXvIFACj38Jfr_I9Y3HTNr1VxxlPYvxplqBKCDZYOg_KbKqy16fZS01-EKtcEpYzqLVFWbe7nnwuUXguIUDE867nlDo4NPMIwvm5XY23RiFFGWPZG5l6m8TE9ud1-PKfENFxwA1CT4hYeNzJVsleRBLSw2EbBN0YMEWXrBfkPrDJ0t2JShy7hrmElSlU72tqUz7dqNTyWN1mZfWfdJ3l4aLEvN7CHNVQsAHddP1",
+      "missing": [
+        "approved_program_description",
+        "approved_edition_data",
+        "confirmed_metrics_and_coverage",
+        "authorized_media"
+      ]
+    },
+    {
+      "review_key": "initiative:deporte",
+      "source": "src/app/features/initiatives/data/initiatives.demo.ts",
+      "source_id": "deporte",
+      "approval": "pending",
+      "publication_allowed": false,
+      "title": "Torneos Relámpago y Lúdica para Jóvenes",
+      "summary": "Apropiación de escenarios deportivos mediante microfútbol barrial, talleres de mediación comunitaria y diálogo para alejar a la juventud de circuitos de violencia.",
+      "category_label": "Deporte y Convivencia Juvenil",
+      "period_label": "Junio - Julio",
+      "year_label": "2025",
+      "impact_label": "Jóvenes activos: 640 participantes",
+      "coverage_label": "16 equipos",
+      "featured_in_design": false,
+      "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuASjTbf-5JJWB4uirLdYdSOi-MRwGJz_lFLPfOiGrzqc7Wht0uZvMdDuCIwbauPCemSKbgcFJPjL2jYphO8HFogRExB2S2G7TxhMwjcw8MsxJSy69rgQBIbJIKjpbcPRLmWoIkrUoYROiFOwSBLCR4wmGG1_KgUAZkCzRVVUkpqrJW2wddj9HEuisLJB-UbMyrWYyxcTWiOn1Nn_uP9oC1ak2KMjkHcRGki0yCs8WX-",
+      "missing": [
+        "approved_program_description",
+        "approved_edition_data",
+        "confirmed_metrics_and_coverage",
+        "authorized_media"
+      ]
+    }
+  ],
+  "home_news": [
+    {
+      "review_key": "home-news:0",
+      "source": "src/app/features/home/components/news/news.component.html",
+      "approval": "pending",
+      "publication_allowed": false,
+      "title": "Instalación de la Veeduría Veredal para el Acueducto Comunitario",
+      "summary": "Más de 70 familias se articularon con la personería y PLUS para garantizar la supervisión técnica de la nueva bocatoma rural.",
+      "source_text": "Veeduría 02 de Febrero, 2025 Instalación de la Veeduría Veredal para el Acueducto Comunitario Más de 70 familias se articularon con la personería y PLUS para garantizar la supervisión técnica de la nueva bocatoma rural. Leer más",
+      "images": [
+        {
+          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuAoW35Bjt73fRE5pEHL8YbEwS4aart8iWWc21lZOFv3g-4X-HWrtLzwbrZXFIMIX8NvJwHEhoAE1zGdMhNKBvOU4tkQ3YU670wPcN985LZFEOz3GZsFVfLK99BTSY8XtvFvADTiejRWs4OBCOmkhMVAxhOqyTu1M6GF69GX1dPDgkrVhegXdbVMfbb26q8TlDmIpF4TQ_N4dR9pt5CnKE9tq848Db-J1ws-eP0hOrAqUbzoRxkRx1NSAA",
+          "alt": "Fotograf?a ilustrativa del dise?o de PLUS"
+        }
+      ],
+      "merge_into": null
+    },
+    {
+      "review_key": "home-news:1",
+      "source": "src/app/features/home/components/news/news.component.html",
+      "approval": "pending",
+      "publication_allowed": false,
+      "title": "Informe de auditoría ciudadana sobre puentes peatonales",
+      "summary": "Se entregó el pliego de hallazgos a los entes de control territorial sobre las obras suspendidas en la subregión de Urabá.",
+      "source_text": "Proyectos 28 de Enero, 2025 Informe de auditoría ciudadana sobre puentes peatonales Se entregó el pliego de hallazgos a los entes de control territorial sobre las obras suspendidas en la subregión de Urabá. Leer más",
+      "images": [
+        {
+          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuC5-SaH91j-c1BM29WhesA0IzGOmZmwO7S4oEYRoI1CyDhs3F1aHLukWi9Hydza0-BWD9bb0wxpwVRgwS4MACz9FBDsKpipislGFdAoPJmOkVrGIY93wI9SsASsNodegY2JCLwCxtPhzHkMQgCrdgqti-rXb1C1zajRuPvVcbRtSikR_juVt-McMJ_qH-aTF2x1Q48Q5PxAWA1_TeBN8mUqNgAfoYwOvrJBi7arzy7XAtY-an9JG_U2ng",
+          "alt": "Fotograf?a ilustrativa del dise?o de PLUS"
+        }
+      ],
+      "merge_into": null
+    },
+    {
+      "review_key": "home-news:2",
+      "source": "src/app/features/home/components/news/news.component.html",
+      "approval": "pending",
+      "publication_allowed": false,
+      "title": "Capacitación en derechos de petición y acceso a la información",
+      "summary": "Líderes comunales fortalecieron competencias de radicación electrónica frente a entidades estatales y empresas concesionarias.",
+      "source_text": "Talleres 19 de Enero, 2025 Capacitación en derechos de petición y acceso a la información Líderes comunales fortalecieron competencias de radicación electrónica frente a entidades estatales y empresas concesionarias. Leer más",
+      "images": [
+        {
+          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuD5rQRZyEJGBW8LEQi8wAvj29pyxjX1CEeqdTWu99TukLiIHVnE8hcLWo8pF3alwdgiPjNyc-kL8acf6cYLUqa1lcMeMfWAag8BAWR8NVZlfALwxySJw4H-cK3Juk0tEghC49fHUr5z4he_FGzl0J0hOSKTSMwiQsogWW2eoiLay_wqcifjcYHU80JVLPLwYY2iezFH2QxavUe7ySGA-ZmYwvMOAMaCGKxqlAU36cH3HS4Nem0t0C6AKg",
+          "alt": "Fotograf?a ilustrativa del dise?o de PLUS"
+        }
+      ],
+      "merge_into": null
+    }
+  ],
+  "home_initiative_panels": [
+    {
+      "review_key": "home-initiative-panel-0",
+      "source": "src/app/features/home/components/initiatives/initiatives.component.html",
+      "approval": "pending",
+      "publication_allowed": false,
+      "title": "Dulcemanía y Presencia Barrial: Alegría, Niñez y Escucha Ciudadana",
+      "source_text": "Temporada Octubre • Celebración & Diálogo Veredal Dulcemanía y Presencia Barrial: Alegría, Niñez y Escucha Ciudadana En PLUS creemos que la veeduría y el control ciudadano se fortalecen cuando caminamos de la mano con las comunidades. A través de la iniciativa especial de Halloween «Dulcemanía» , nuestro equipo visitó diversos sectores barriales compartiendo dulces, juegos recreativos y actividades lúdicas con cientos de niñas y niños, al tiempo que dialogamos abiertamente con madres cabezas de hogar y líderes comunitarios sobre deficiencias en servicios esenciales, falta de espacios recreativos e infraestructura local. +800 Niñas y niños Beneficiados en las jornadas 5 Barrios y sectores Comunitarios visitados Actividades lúdicas Y diálogo directo familiar Diagnóstico temprano De necesidades barriales “El control social y la veeduría no solo se ejercen en despachos y auditorías; nacen compartiendo con la infancia, entendiendo las realidades de cada esquina y construyendo esperanza desde el afecto comunitario.” Ver memoria fotográfica Proponer evento en mi barrio Jornada comunitaria Dulcemanía · Celebración de Halloween y escucha activa En Territorio",
+      "images": [
+        {
+          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCYYDB-_ytplVDgqPeGJbCIOgbXN4GG-Y7XuIdgxHdAQup0kJ0Auun1g-14lrGjtDZ58DC-qdrbRfOSffhaOjUqimBKbyCvS3cOLyEfnoIRUPTyuM-wy1buplDgpWlYm4v2Opg6NeRG-GXpUEhak24_MiHhMDh0KQY6F5igkq8oYv2jaEg8T0QiZsE2YgmuRgDJcFIG5s8W3qvegDLFgnCgn4v0jyywjMV5VwXVSUzg",
+          "alt": "Jornada comunitaria Dulcemanía en Colombia con voluntarias de PLUS entregando dulces a niñas y niños sonrientes"
+        }
+      ],
+      "merge_into": null
+    },
+    {
+      "review_key": "home-initiative-panel-1",
+      "source": "src/app/features/home/components/initiatives/initiatives.component.html",
+      "approval": "pending",
+      "publication_allowed": false,
+      "title": "Novenas Navideñas y Olla Comunitaria en Territorio",
+      "source_text": "Temporada Diciembre • Solidaridad & Unión Vecinal Novenas Navideñas y Olla Comunitaria en Territorio Durante el mes de diciembre, PLUS llega a los sectores más vulnerables de nuestras cuencas y periferias urbanas con las tradicionales novenas navideñas comunitarias. Entregamos kits de regalos didácticos para la infancia, compartimos el tradicional sancocho y buñuelos comunitarios, y generamos un espacio de fraternidad donde las familias formulan pactos de convivencia y priorizan sus peticiones comunitarias ante alcaldías y gobernaciones. +1.200 Regalos Entregados en 9 veredas Ollas comunitarias Encuentros gastronómicos Pactos de convivencia Resolución pacífica local 9 Días continuos Presencia en barrios críticos “La Navidad comunitaria nos recuerda que el verdadero sentido del pluralismo social es compartir el alimento, renovar la esperanza y garantizar que ninguna vereda quede olvidada en fin de año.” Ver balance navideño Vincular donaciones navideñas Novenas y Navidad Comunitaria · Compartir solidario y diálogo vecinal Diciembre",
+      "images": [
+        {
+          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuAoW35Bjt73fRE5pEHL8YbEwS4aart8iWWc21lZOFv3g-4X-HWrtLzwbrZXFIMIX8NvJwHEhoAE1zGdMhNKBvOU4tkQ3YU670wPcN985LZFEOz3GZsFVfLK99BTSY8XtvFvADTiejRWs4OBCOmkhMVAxhOqyTu1M6GF69GX1dPDgkrVhegXdbVMfbb26q8TlDmIpF4TQ_N4dR9pt5CnKE9tq848Db-J1ws-eP0hOrAqUbzoRxkRx1NSAA",
+          "alt": "Celebración comunitaria decembrina de novenas en salón comunitario de Colombia con familias reunidas"
+        }
+      ],
+      "merge_into": null
+    },
+    {
+      "review_key": "home-initiative-panel-2",
+      "source": "src/app/features/home/components/initiatives/initiatives.component.html",
+      "approval": "pending",
+      "publication_allowed": false,
+      "title": "Kits Escolares y Regreso Digno a Clases en Cuencas Fluviales",
+      "source_text": "Temporada Enero - Febrero • Educación & Equidad Rural Kits Escolares y Regreso Digno a Clases en Cuencas Fluviales Garantizar la permanencia escolar es la base del futuro comunitario. Cada inicio de año, la Corporación PLUS distribuye paquetes completos de útiles escolares, morrales y material didáctico a escuelas rurales y ribereñas del Chocó y el Pacífico. De forma simultánea, levantamos actas de veeduría sobre el estado físico de aulas, baterías sanitarias y el inicio oportuno del Programa de Alimentación Escolar (PAE). 1.500 Kits Escolares Entregados directamente a niños 18 Sedes educativas Monitoreadas en infraestructura Veeduría al PAE Inspección de calidad nutricional Refuerzo lector Talleres pedagógicos veredales “Un cuaderno y un lápiz en las manos de un niño en la cuenca del Atrato no solo abren horizontes de aprendizaje: son la mayor garantía de defensa del territorio contra la exclusión histórica.” Ver informe educativo Postular sede educativa rural Jornadas Escolares · Kits de útiles y verificación técnica de sedes educativas Enero - Febrero",
+      "images": [
+        {
+          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuD5rQRZyEJGBW8LEQi8wAvj29pyxjX1CEeqdTWu99TukLiIHVnE8hcLWo8pF3alwdgiPjNyc-kL8acf6cYLUqa1lcMeMfWAag8BAWR8NVZlfALwxySJw4H-cK3Juk0tEghC49fHUr5z4he_FGzl0J0hOSKTSMwiQsogWW2eoiLay_wqcifjcYHU80JVLPLwYY2iezFH2QxavUe7ySGA-ZmYwvMOAMaCGKxqlAU36cH3HS4Nem0t0C6AKg",
+          "alt": "Taller pedagógico y entrega de materiales didácticos comunitarios con jóvenes y líderes"
+        }
+      ],
+      "merge_into": null
+    },
+    {
+      "review_key": "home-initiative-panel-3",
+      "source": "src/app/features/home/components/initiatives/initiatives.component.html",
+      "approval": "pending",
+      "publication_allowed": false,
+      "title": "Torneos por la Convivencia y Lúdica Juvenil en los Barrios",
+      "source_text": "Temporada Permanente • Juventud, Deporte & Paz Torneos por la Convivencia y Lúdica Juvenil en los Barrios Promovemos campeonatos de microfútbol, voleibol y festivales de danza afrocolombiana e indígena como herramientas de protección integral frente a violencias urbanas. Aprovechamos cada torneo deportivo para capacitar a los capitanes y comités juveniles en resolución pacífica de conflictos comunitarios y formulación de proyectos para la mejora de polideportivos públicos. +640 Jóvenes Participantes en torneos de barrio 12 Polideportivos Recuperados con veeduría técnica Muestras culturales Danza, chirimía y música local Juego limpio & paz Cero incidentes de violencia “El balón y la cancha son territorios sagrados de paz donde las juventudes aprenden respeto, trabajo en equipo y el valor de cuidar lo público como patrimonio de toda la comunidad.” Ver galería del torneo Inscribir equipo juvenil Encuentros Deportivos y Lúdica · Juventudes unidas por la convivencia barrial Todo el Año",
+      "images": [
+        {
+          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuC5-SaH91j-c1BM29WhesA0IzGOmZmwO7S4oEYRoI1CyDhs3F1aHLukWi9Hydza0-BWD9bb0wxpwVRgwS4MACz9FBDsKpipislGFdAoPJmOkVrGIY93wI9SsASsNodegY2JCLwCxtPhzHkMQgCrdgqti-rXb1C1zajRuPvVcbRtSikR_juVt-McMJ_qH-aTF2x1Q48Q5PxAWA1_TeBN8mUqNgAfoYwOvrJBi7arzy7XAtY-an9JG_U2ng",
+          "alt": "Inspección técnica ciudadana y diálogo con líderes en espacio recreativo comunitario"
+        }
+      ],
+      "merge_into": null
+    }
+  ],
+  "media": [
+    {
+      "review_key": "image:447e646307f62c02",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCXBDSJe05exet7bTIy_rj083HnCNmvQj5ciwQ57zGVgGHldKahqK7pbhRlTw-7Ws0Eofu74IkHzaEyG-8qIwP8fVztRkg5XLXiDAQKtaaS7LkulVod7DSTFQkrNM5i2s4j-_cru67YriEvVPxJCspWXPWiYs_0aU7iXSvev8Cw1eqZ0k2u2ywg0SlRNDXy0sd77JQY_76CwKDDubxSRHjlp_I2WJ1PiJEJnYf7IDJw",
+      "approval": "pending",
+      "publication_allowed": false,
+      "rights": "unverified",
+      "references": [
+        {
+          "source": "news:publicacion-0",
+          "alt": null
+        },
+        {
+          "source": "src/app/features/news/components/featured/featured.component.html",
+          "alt": "Fotografía de referencia de PLUS"
+        }
+      ]
+    },
+    {
+      "review_key": "image:0cd419c46e6a557a",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuD86iEs24EuTQ8SKP4Gz081_5c2zo4kF5Y6oUFMUMlQ2Bv3dsR-yQDcVo1B-yJ0qMhnIoyhaCd36ua5P_x-u-wQGye0tHi6Q7fEUroEWgeBJP1KLz3OlpRyh3pR1D1zzRBi0YF-g8Uw0-SHYFcXJH1apuKTB0JVAl0CYfztu7QwJCgkqH8tcfddlRemJJA7YKosptpEH-442nUDti30lmq52rCqwML1qjLdtwVj6Jjj",
+      "approval": "pending",
+      "publication_allowed": false,
+      "rights": "unverified",
+      "references": [
+        {
+          "source": "news:publicacion-1",
+          "alt": null
+        }
+      ]
+    },
+    {
+      "review_key": "image:a3b22264c266557a",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuAKTpwFFyb_YM5NiKZ0Akiby1RiIBc99OUOsAcOzD75pe7FiuTY6iQCrINoRRopGOi04yK4o1KRb677H5MPtIHosvWDQnuAnS_RjKYm6u7LmwCZfrhGphUKHDzShRNA74PSQVMwIKbu0yfF4zXC4z_FS9X6sqJWquuw23okSH_BeA0ZX_SvNB9or_vwc3uuBB8SMkrFATMjbwhzKOBEoFjAvQqWDd4S21eqx-Gnqmfb",
+      "approval": "pending",
+      "publication_allowed": false,
+      "rights": "unverified",
+      "references": [
+        {
+          "source": "news:publicacion-2",
+          "alt": null
+        }
+      ]
+    },
+    {
+      "review_key": "image:7bbfabdc05f822e3",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuDhK4A-OhcffnEiZg5CgNqmNi05MeU7sudRmIVrBg_uYYXmbBJWRoVLIwZ7fRaZx1Gc528kU6h03luH0A7HV1bVw-YVcz5TE5dDULAz6PtEY0WRerfkD1mq-8XPBWfeagBC9zLtIx2mnhAD6aGN_Psx7fcFQ96gM9GSXvTTntFOO3LMELkSLD-DEqiUkujmwALK_24m7372HjvQlo8gagQ9hMvDIfmyrF7oVCevdWQM",
+      "approval": "pending",
+      "publication_allowed": false,
+      "rights": "unverified",
+      "references": [
+        {
+          "source": "news:publicacion-3",
+          "alt": null
+        }
+      ]
+    },
+    {
+      "review_key": "image:166af1aad90dbe8b",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCyN9nJPHSrxedq3eS9mvY6OPpUcblZ9Xs7ldCPxbNnVmxB1Pl9RtkdrVXcq71xx_w2YBY64VriorU3BEjUInSc_qFBmiDllLFTgeX2avKL8VIMwBr-RapR8r2yfB01pGKniGRs4eV2vctrMAI9aYC0jwmJobhDOdkmYzEDp8zqzYMdKopHjbmHEI00RT4Nh4c8tCnsZVXZH85agfrtwOsYFiJuwjsZCdygmC58rCV6",
+      "approval": "pending",
+      "publication_allowed": false,
+      "rights": "unverified",
+      "references": [
+        {
+          "source": "news:publicacion-4",
+          "alt": null
+        }
+      ]
+    },
+    {
+      "review_key": "image:eb95a591bd4d2c6e",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCffOmMr7vuZWCPEO_hwLHwN5i7uPTKKQuiPW-UBXUZynIdwA8xqRdrD0NTXxmJ7R1v5Gtf_1qJxfHbuqKUwYNpb76utA4E8wYlbrks4iQr4JYnAYIgj-5inBhpcH7ug77XsSapKko5mdb3hS1YrIIR1B61Pz-XArwsnlWOtYv_sXpUAd-khKzuJMCgo2Nmyvxw24d0d06K8MSWVpFYUxhi8aSfbuibO6LDMZfs94iP",
+      "approval": "pending",
+      "publication_allowed": false,
+      "rights": "unverified",
+      "references": [
+        {
+          "source": "news:publicacion-5",
+          "alt": null
+        }
+      ]
+    },
+    {
+      "review_key": "image:319804cc05af4d80",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuBEl6xMerP9eISC1BuoLezEM7Je8fOGseyZ4kVzg9OLWg88K0RVHkFE8Hv6wZrPvL0hH3x9eSHdRlH0staEeQpCZKACddDYgmCnKgEBXE41JpABmcAKM4bcbqe9WNk5ORDwJoUtxoyPvAKMLVqNRzv9nR2ZQHFpewxhBE_onV8Lhcgciga1bN-zF_Xxpxi8NyGb_2lNy_4NY8s_UimDcQCV3VyytdRrjfwYbOLVf3hQ",
+      "approval": "pending",
+      "publication_allowed": false,
+      "rights": "unverified",
+      "references": [
+        {
+          "source": "news:publicacion-6",
+          "alt": null
+        }
+      ]
+    },
+    {
+      "review_key": "image:e6d1257c45410e57",
+      "url": "https://lh3.googleusercontent.com/aida/AEtjO1XzkATqgB3Hq11KMmzEzZFbRBsv2Mg3xAGdZ-Gf6AsLSYJ4HJuDLvU30ssVsUkvqMF7kLvjtaVdE-xPI_cusz3BrDMhTUrN4Xcht4I4pV8qMWmk8-c0qxdwsFP3eOCZTkel0Nk18mblVP4x-RyV7LCjcz86zhqSSZwACuWX7rEEl3tXDCqKCqCfOl2EzbyWjoETUqlrEmnuiQE9atTT-xS8U6KX6Mv85l4TtYotyW8R",
+      "approval": "pending",
+      "publication_allowed": false,
+      "rights": "unverified",
+      "references": [
+        {
+          "source": "initiative:dulcemania",
+          "alt": null
+        },
+        {
+          "source": "src/app/features/initiatives/components/featured/featured.component.html",
+          "alt": "Jornada comunitaria Dulcemanía realizada por la Corporación PLUS en barrio de ladera popular"
+        }
+      ]
+    },
+    {
+      "review_key": "image:0c3e92fbee32cfd0",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuBeJ_SdNAHigk0TH_-7UR_vDlxf0c53ntwch3nMsQHWSHtVSRXla_lGTsypSalwelpMaqWNTcrU6PCauGfPk9-72sYW_HiRn-lVumbk35Ikpugrs3C_eL69xgUMhCycavaJBYNI_EgWJJp2YqNP1994FP3yjrIsn5vzzV0NZs4NAoFFUt-KHceAgK1oTfGn2ErZwUx7Jv0izncqCk4yAAiH62mqN99dtoDw0F5ezxaa",
+      "approval": "pending",
+      "publication_allowed": false,
+      "rights": "unverified",
+      "references": [
+        {
+          "source": "initiative:navidad",
+          "alt": null
+        }
+      ]
+    },
+    {
+      "review_key": "image:d55ab202f42a9a91",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuBfUJXvIFACj38Jfr_I9Y3HTNr1VxxlPYvxplqBKCDZYOg_KbKqy16fZS01-EKtcEpYzqLVFWbe7nnwuUXguIUDE867nlDo4NPMIwvm5XY23RiFFGWPZG5l6m8TE9ud1-PKfENFxwA1CT4hYeNzJVsleRBLSw2EbBN0YMEWXrBfkPrDJ0t2JShy7hrmElSlU72tqUz7dqNTyWN1mZfWfdJ3l4aLEvN7CHNVQsAHddP1",
+      "approval": "pending",
+      "publication_allowed": false,
+      "rights": "unverified",
+      "references": [
+        {
+          "source": "initiative:educacion",
+          "alt": null
+        }
+      ]
+    },
+    {
+      "review_key": "image:dcc025ae335179fd",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuASjTbf-5JJWB4uirLdYdSOi-MRwGJz_lFLPfOiGrzqc7Wht0uZvMdDuCIwbauPCemSKbgcFJPjL2jYphO8HFogRExB2S2G7TxhMwjcw8MsxJSy69rgQBIbJIKjpbcPRLmWoIkrUoYROiFOwSBLCR4wmGG1_KgUAZkCzRVVUkpqrJW2wddj9HEuisLJB-UbMyrWYyxcTWiOn1Nn_uP9oC1ak2KMjkHcRGki0yCs8WX-",
+      "approval": "pending",
+      "publication_allowed": false,
+      "rights": "unverified",
+      "references": [
+        {
+          "source": "initiative:deporte",
+          "alt": null
+        }
+      ]
+    },
+    {
+      "review_key": "image:ec66b59bd696eb28",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuBCS2fXF3HDf6N5Stnk_rfCNBxwKT4FbyEqW21NXfgFUmcdnS36LYFzK6ahM832utrAEferDTwZpYYXBmt_ajVWkMxAitg18OS-0WJDcikj9UOYDyD7sZOQwOE5qfNCfLsbRhIietMq052yVzJ9tDz5lCS77UNHYOidvExYshoIGIOgJqKFLqfwSH8JhPbRNoCg6WkHTYJ-acg9p0F_R0iDNd4PE2_LVySRaavwQ8oA",
+      "approval": "pending",
+      "publication_allowed": false,
+      "rights": "unverified",
+      "references": [
+        {
+          "source": "src/app/features/news/components/community/community.component.html",
+          "alt": "Fotografía de referencia de PLUS"
+        }
+      ]
+    },
+    {
+      "review_key": "image:310eed69b68488a7",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCbsSmLLr2pOw6n0RvCZpkJgBIiWohfY4a9kcm2Wl00v-u7wEYBQA2E1rD91gFDZUbHPYFT_qVEE4yp-P6T5Zjs6TiZtdMKERCDLQYQOwWjiKA3oru1qm_jg0T7pfZR7o2jhXN8qFIdlMh-NDY6yvRMNS6PgjheexalknKrRMCSDEF2VVr6L5R_CdUlsVE1bsJGJuNmCyNwLVX2Mxqnoxs1SmjQhyj-eaNN-vS-rPd6",
+      "approval": "pending",
+      "publication_allowed": false,
+      "rights": "unverified",
+      "references": [
+        {
+          "source": "src/app/features/initiatives/components/featured/featured.component.html",
+          "alt": "Imagen de referencia de una iniciativa comunitaria de PLUS"
+        }
+      ]
+    },
+    {
+      "review_key": "image:6db1a9a6fd10a94e",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuDtfFdnIsKwO9YvqaPyrHhdMP_el2-U5ZNb5ppfasWeX8m3WblVs7lXSU6X2ckm16RiEG9burFxkysqFW0DzhE2Oj1L-MApmYAYPGOt9G-z6P5hlNhq0kT9HIk-ijyfXzy5Y6rmgqRszt2sN3B4eu629p49_0c6Lmev3MXiAGRr42nSqKvluvKSkm7rh6eF2QxtY4BsQSqCCcpd8JrQd2hjmXM70uat3WvaqJhSdzjn",
+      "approval": "pending",
+      "publication_allowed": false,
+      "rights": "unverified",
+      "references": [
+        {
+          "source": "src/app/features/initiatives/components/featured/featured.component.html",
+          "alt": "Imagen de referencia de una iniciativa comunitaria de PLUS"
+        }
+      ]
+    },
+    {
+      "review_key": "image:617607de1cdcc222",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCXGShhnXBdZN5aQICc_fYti0Wljm4h7_A_pBQdz-UrXZiWalzACVsNK0dpy7GuRTd6nxU-LbdVLKJskH1nUcdWihVW2MjQhjZBlNLR2C-79ubAD98mR7tRGb2jhC0iS3nm5rOrcfYqxBMgDAUTrsPDsQcMNjQ4Z8MSZiK97T4kLem6UkwnzVBRQcjZjQBF4gK5Zmbj7IcT73kIIOYffApKPalcyFPbw70N0xeXx2ps",
+      "approval": "pending",
+      "publication_allowed": false,
+      "rights": "unverified",
+      "references": [
+        {
+          "source": "src/app/features/initiatives/components/featured/featured.component.html",
+          "alt": "Imagen de referencia de una iniciativa comunitaria de PLUS"
+        }
+      ]
+    },
+    {
+      "review_key": "image:b22a34d1e0a7dd53",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuAoW35Bjt73fRE5pEHL8YbEwS4aart8iWWc21lZOFv3g-4X-HWrtLzwbrZXFIMIX8NvJwHEhoAE1zGdMhNKBvOU4tkQ3YU670wPcN985LZFEOz3GZsFVfLK99BTSY8XtvFvADTiejRWs4OBCOmkhMVAxhOqyTu1M6GF69GX1dPDgkrVhegXdbVMfbb26q8TlDmIpF4TQ_N4dR9pt5CnKE9tq848Db-J1ws-eP0hOrAqUbzoRxkRx1NSAA",
+      "approval": "pending",
+      "publication_allowed": false,
+      "rights": "unverified",
+      "references": [
+        {
+          "source": "src/app/features/home/components/news/news.component.html",
+          "alt": "Fotograf?a ilustrativa del dise?o de PLUS"
+        },
+        {
+          "source": "src/app/features/home/components/initiatives/initiatives.component.html",
+          "alt": "Celebración comunitaria decembrina de novenas en salón comunitario de Colombia con familias reunidas"
+        }
+      ]
+    },
+    {
+      "review_key": "image:009620ba0cf70f18",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuC5-SaH91j-c1BM29WhesA0IzGOmZmwO7S4oEYRoI1CyDhs3F1aHLukWi9Hydza0-BWD9bb0wxpwVRgwS4MACz9FBDsKpipislGFdAoPJmOkVrGIY93wI9SsASsNodegY2JCLwCxtPhzHkMQgCrdgqti-rXb1C1zajRuPvVcbRtSikR_juVt-McMJ_qH-aTF2x1Q48Q5PxAWA1_TeBN8mUqNgAfoYwOvrJBi7arzy7XAtY-an9JG_U2ng",
+      "approval": "pending",
+      "publication_allowed": false,
+      "rights": "unverified",
+      "references": [
+        {
+          "source": "src/app/features/home/components/news/news.component.html",
+          "alt": "Fotograf?a ilustrativa del dise?o de PLUS"
+        },
+        {
+          "source": "src/app/features/home/components/initiatives/initiatives.component.html",
+          "alt": "Inspección técnica ciudadana y diálogo con líderes en espacio recreativo comunitario"
+        }
+      ]
+    },
+    {
+      "review_key": "image:272fbdac7b593d20",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuD5rQRZyEJGBW8LEQi8wAvj29pyxjX1CEeqdTWu99TukLiIHVnE8hcLWo8pF3alwdgiPjNyc-kL8acf6cYLUqa1lcMeMfWAag8BAWR8NVZlfALwxySJw4H-cK3Juk0tEghC49fHUr5z4he_FGzl0J0hOSKTSMwiQsogWW2eoiLay_wqcifjcYHU80JVLPLwYY2iezFH2QxavUe7ySGA-ZmYwvMOAMaCGKxqlAU36cH3HS4Nem0t0C6AKg",
+      "approval": "pending",
+      "publication_allowed": false,
+      "rights": "unverified",
+      "references": [
+        {
+          "source": "src/app/features/home/components/news/news.component.html",
+          "alt": "Fotograf?a ilustrativa del dise?o de PLUS"
+        },
+        {
+          "source": "src/app/features/home/components/initiatives/initiatives.component.html",
+          "alt": "Taller pedagógico y entrega de materiales didácticos comunitarios con jóvenes y líderes"
+        }
+      ]
+    },
+    {
+      "review_key": "image:c7b2804f90d413ba",
+      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCYYDB-_ytplVDgqPeGJbCIOgbXN4GG-Y7XuIdgxHdAQup0kJ0Auun1g-14lrGjtDZ58DC-qdrbRfOSffhaOjUqimBKbyCvS3cOLyEfnoIRUPTyuM-wy1buplDgpWlYm4v2Opg6NeRG-GXpUEhak24_MiHhMDh0KQY6F5igkq8oYv2jaEg8T0QiZsE2YgmuRgDJcFIG5s8W3qvegDLFgnCgn4v0jyywjMV5VwXVSUzg",
+      "approval": "pending",
+      "publication_allowed": false,
+      "rights": "unverified",
+      "references": [
+        {
+          "source": "src/app/features/home/components/initiatives/initiatives.component.html",
+          "alt": "Jornada comunitaria Dulcemanía en Colombia con voluntarias de PLUS entregando dulces a niñas y niños sonrientes"
+        }
+      ]
+    }
+  ],
+  "source_snapshots": [
+    {
+      "source": "src/app/features/news/components/card/news-card.component.html",
+      "sha256": "b7028a1a4affdffd5f4b0ddf98db0a270790bd94d7add6fb809219d6592adf27",
+      "static_text_fragments": [
+        "Ver resumen",
+        "arrow_forward"
+      ],
+      "images": []
+    },
+    {
+      "source": "src/app/features/news/components/community/community.component.html",
+      "sha256": "42fd9c6f0d9d4d0a337aaceef4ef2d499c5c80529b137f8c94df2180231eabba",
+      "static_text_fragments": [
+        "Representante Legal & Vocero Oficial",
+        "Luis Alberto Muñoz Granada",
+        "Defensor de derechos territoriales, especialista en gestión pública y coordinador general de comisiones de veeduría en el Chocó biogeográfico.",
+        "«El control social no es un acto de confrontación, sino el puente democrático que garantiza que cada peso destinado a las comunidades ribereñas se convierta en dignidad, agua potable y justicia social.»",
+        "Misiones en Terreno 2025",
+        "Actualizado: Febrero 2025",
+        "Ruta de Incidencia Directa y Audiencias Ciudadanas",
+        "Cronología de las asambleas territoriales encabezadas personalmente por Luis Alberto Muñoz Granada en articulación con consejos comunitarios y resguardos indígenas.",
+        "location_on",
+        "Quibdó, Chocó",
+        "Ene 2025",
+        "Mesa de Seguimiento a Regalías y Obras de Mitigación",
+        "Instalación de la comisión mixta con la Contraloría General para auditar la inversión de recursos en muros de contención sobre el río Atrato.",
+        "location_on",
+        "Riosucio, Bajo Atrato",
+        "Ene 2025",
+        "Verificación de Servicios Médicos Fluviales",
+        "Revisión en muelle del despacho de brigadas de salud preventiva y dotación de botiquines de emergencia para cuencas alejadas.",
+        "location_on",
+        "Vigía del Fuerte, Antioquia",
+        "Feb 2025",
+        "Diálogo Interétnico con Consejos Comunitarios",
+        "Construcción de la agenda de salvaguarda cultural y veeduría conjunta al plan de etnodesarrollo subregional.",
+        "location_on",
+        "Bojayá (Bellavista)",
+        "Feb 2025",
+        "Revisión de Albergues y Proyectos de Memoria",
+        "Monitoreo a los compromisos de reparación integral y veeduría al mantenimiento de la infraestructura comunitaria de memoria histórica.",
+        "handshake",
+        "¿Requiere acompañamiento de veeduría en su municipio?",
+        "Solicite la presencia del equipo de veeduría o una audiencia con el Representante Legal.",
+        "Radicar solicitud territorial",
+        "arrow_forward",
+        "broadcast_on_personal",
+        "COMUNICACIÓN INSTITUCIONAL",
+        "Canales oficiales de difusión y transmisiones en vivo",
+        "Siga en tiempo real las audiencias públicas, declaraciones de prensa de Luis Alberto Muñoz Granada y los pronunciamientos de control social a través de nuestras redes verificadas.",
+        "𝕏",
+        "@PLUSPluralismo",
+        "Alertas y comunicados 24/7",
+        "open_in_new",
+        "smart_display",
+        "Canal Oficial PLUS",
+        "Audiencias en vivo y debates",
+        "open_in_new",
+        "f",
+        "Corporación PLUS",
+        "Comunidad y transmisiones",
+        "open_in_new",
+        "in",
+        "PLUS Corporación",
+        "Informes institucionales",
+        "open_in_new",
+        "verified_user",
+        "Todos los pronunciamientos oficiales llevan la firma digital del despacho de Representación Legal.",
+        "Suscripción Cívica Gratuita",
+        "Boletín Mensual de Transparencia y Veeduría PLUS",
+        "Reciba en su correo electrónico el compilado mensual de contratos auditados, alertas de obras inconclusas y la agenda territorial de Luis Alberto Muñoz Granada.",
+        "Nombre completo o entidad",
+        "Correo electrónico institucional o personal",
+        "Acepto la política de Tratamiento de Datos Personales conforme a la Ley 1581 de 2012 y el Estatuto Institucional de PLUS.",
+        "mark_email_read",
+        "Suscribirme al Boletín Informativo",
+        "Formulario de demostración. No se envían suscripciones ni se almacenan datos."
+      ],
+      "images": [
+        {
+          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuBCS2fXF3HDf6N5Stnk_rfCNBxwKT4FbyEqW21NXfgFUmcdnS36LYFzK6ahM832utrAEferDTwZpYYXBmt_ajVWkMxAitg18OS-0WJDcikj9UOYDyD7sZOQwOE5qfNCfLsbRhIietMq052yVzJ9tDz5lCS77UNHYOidvExYshoIGIOgJqKFLqfwSH8JhPbRNoCg6WkHTYJ-acg9p0F_R0iDNd4PE2_LVySRaavwQ8oA",
+          "alt": "Fotografía de referencia de PLUS"
+        }
+      ]
+    },
+    {
+      "source": "src/app/features/news/components/featured/featured.component.html",
+      "sha256": "617156cc758852b17f2319f247f75b6e2f58ba1aad943c23a374ad5fc5e2149d",
+      "static_text_fragments": [
+        "Actividades de Representación",
+        "Territorio Atrato",
+        "Registro Fotográfico Oficial: Subregión del Medio y Bajo Atrato",
+        "Archivo PLUS 2025",
+        "calendar_today",
+        "18 de Febrero de 2025",
+        "•",
+        "schedule",
+        "5 min de lectura",
+        "•",
+        "Despacho Legal",
+        "Luis Alberto Muñoz Granada lidera mesa técnica interinstitucional para seguimiento a compromisos viales y de salud en el Atrato",
+        "En el marco del mandato cívico y las competencias conferidas por la Ley 850 de 2003, la Corporación Pluralismo Social articuló un espacio de interlocución vinculante entre comités comunitarios de base, delegados de ministerios y contratistas ejecutores. Durante la jornada se establecieron cronogramas de entrega con penalidades contractuales y verificación satelital de avances.",
+        "check_circle",
+        "Inspección directa a 4 frentes de obra en corredores fluviales críticos.",
+        "check_circle",
+        "Acta de compromiso firmada con veedurías étnicas y autoridades locales.",
+        "Ver resumen de ejemplo",
+        "arrow_forward",
+        "download",
+        "Descargar comunicado en PDF"
+      ],
+      "images": [
+        {
+          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCXBDSJe05exet7bTIy_rj083HnCNmvQj5ciwQ57zGVgGHldKahqK7pbhRlTw-7Ws0Eofu74IkHzaEyG-8qIwP8fVztRkg5XLXiDAQKtaaS7LkulVod7DSTFQkrNM5i2s4j-_cru67YriEvVPxJCspWXPWiYs_0aU7iXSvev8Cw1eqZ0k2u2ywg0SlRNDXy0sd77JQY_76CwKDDubxSRHjlp_I2WJ1PiJEJnYf7IDJw",
+          "alt": "Fotografía de referencia de PLUS"
+        }
+      ]
+    },
+    {
+      "source": "src/app/features/news/news-page.component.html",
+      "sha256": "272d368b2b69ab94c57bc139c8d8e413fb58700f88e949a7619658437553d250",
+      "static_text_fragments": [
+        "Boletín de Prensa & Registro Territorial Oficial",
+        "•",
+        "Veeduría Ciudadana Ley 850 de 2003",
+        "Noticias y actividades de PLUS",
+        "Monitoreo de transparencia en contratación estatal, acompañamiento directo en territorio y reportes periódicos de la gestión liderada por el Representante Legal",
+        "Luis Alberto Muñoz Granada",
+        "en las subregiones de Colombia.",
+        "142",
+        "Alertas Emitidas (2025)",
+        "34",
+        "Mesas de Trabajo Activas",
+        "Buscar publicaciones",
+        "search",
+        "Ordenar:",
+        "Más recientes",
+        "Más antiguas",
+        "Crónicas, Reportes y Avances Territoriales",
+        "Publicaciones de ejemplo del diseño.",
+        "Anterior",
+        "Siguiente"
+      ],
+      "images": []
+    },
+    {
+      "source": "src/app/features/initiatives/components/card/initiative-card.component.html",
+      "sha256": "a85db057207d676fcb3ba839cdf9b9f07c8fe0e24acd183104e43157a24ca71b",
+      "static_text_fragments": [
+        "photo_library",
+        "Explorar memoria y fotos"
+      ],
+      "images": []
+    },
+    {
+      "source": "src/app/features/initiatives/components/featured/featured.component.html",
+      "sha256": "ceb200d8288bac9927970bb5f1554b1862c8b3f5eeaa74504264c267cb64476b",
+      "static_text_fragments": [
+        "verified",
+        "Dinámica Insignia Anual",
+        "Jornada Territorial de Halloween y Escucha Cívica",
+        "event",
+        "Octubre de cada año",
+        "Dulcemanía: Alegría, Niñez y Escucha Territorial",
+        "Transformando la celebración infantil en un canal directo de veeduría y diagnóstico participativo en las laderas y comunas.",
+        "photo_camera",
+        "Registro Fotográfico de Campo #Dulcemanía2024",
+        "— Entrega lúdica de sorpresas, disfraces infantiles y carpa de recepción comunitaria.",
+        "policy",
+        "Sello Veeduría Ley 850",
+        "local_library",
+        "Origen y metodología de la dinámica",
+        "Dulcemanía nació como una respuesta solidaria a las brechas de acceso recreativo en sectores periféricos. Lo que comenzó como una entrega de dulces y comparsas temáticas en Halloween se consolidó institucionalmente como nuestra herramienta más eficaz de",
+        "escucha territorial no invasiva",
+        ".",
+        "Mientras los niños y niñas disfrutan de pinta-caritas, shows de títeres y juguetes didácticos en placas polideportivas y andenes, las madres comunitarias, abuelos y líderes de juntas de acción comunal conversan abiertamente con nuestros veedores. En este ambiente de confianza comunitaria se identifican fallas en el suministro de agua potable, parques infantiles clausurados por deterioro, riesgos geológicos desatendidos y demoras en el transporte escolar.",
+        "«El juego y el afecto derriban barreras institucionales. No esperamos a que la comunidad baje al centro cívico a poner una queja; subimos a sus canchas y callejones para proteger sus derechos colectivos.»",
+        "— Coordinación de Veeduría Territorial PLUS",
+        "Registros complementarios de la jornada",
+        "zoom_in",
+        "zoom_in",
+        "zoom_in",
+        "assessment",
+        "Ficha Técnica de Impacto",
+        "Corte 2024",
+        "Cobertura Territorial Priorizada",
+        "La Aurora",
+        "Vallejuelos",
+        "Moravia",
+        "Santo Domingo",
+        "San Antonio",
+        "850",
+        "Niños y niñas participantes",
+        "42",
+        "Líderes comunales articulados",
+        "18",
+        "Peticiones cívicas radicadas",
+        "Demandas Vecinales Canalizadas a Auditoría",
+        "water_drop",
+        "Continuidad de acueducto veredal",
+        "3 veredas con cortes de más de 48 horas. Veeduría abierta ante EPM.",
+        "park",
+        "Recuperación de zonas de juego",
+        "2 parques infantiles con mallas rotas y columpios colapsados en La Aurora.",
+        "shield",
+        "Luminarias públicas apagadas",
+        "Solicitud de intervención prioritaria de alumbrado público en Vallejuelos.",
+        "download",
+        "Descargar Ficha Metodológica Completa (PDF)",
+        "Ver imagen de la jornada"
+      ],
+      "images": [
+        {
+          "url": "https://lh3.googleusercontent.com/aida/AEtjO1XzkATqgB3Hq11KMmzEzZFbRBsv2Mg3xAGdZ-Gf6AsLSYJ4HJuDLvU30ssVsUkvqMF7kLvjtaVdE-xPI_cusz3BrDMhTUrN4Xcht4I4pV8qMWmk8-c0qxdwsFP3eOCZTkel0Nk18mblVP4x-RyV7LCjcz86zhqSSZwACuWX7rEEl3tXDCqKCqCfOl2EzbyWjoETUqlrEmnuiQE9atTT-xS8U6KX6Mv85l4TtYotyW8R",
+          "alt": "Jornada comunitaria Dulcemanía realizada por la Corporación PLUS en barrio de ladera popular"
+        },
+        {
+          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCbsSmLLr2pOw6n0RvCZpkJgBIiWohfY4a9kcm2Wl00v-u7wEYBQA2E1rD91gFDZUbHPYFT_qVEE4yp-P6T5Zjs6TiZtdMKERCDLQYQOwWjiKA3oru1qm_jg0T7pfZR7o2jhXN8qFIdlMh-NDY6yvRMNS6PgjheexalknKrRMCSDEF2VVr6L5R_CdUlsVE1bsJGJuNmCyNwLVX2Mxqnoxs1SmjQhyj-eaNN-vS-rPd6",
+          "alt": "Imagen de referencia de una iniciativa comunitaria de PLUS"
+        },
+        {
+          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuDtfFdnIsKwO9YvqaPyrHhdMP_el2-U5ZNb5ppfasWeX8m3WblVs7lXSU6X2ckm16RiEG9burFxkysqFW0DzhE2Oj1L-MApmYAYPGOt9G-z6P5hlNhq0kT9HIk-ijyfXzy5Y6rmgqRszt2sN3B4eu629p49_0c6Lmev3MXiAGRr42nSqKvluvKSkm7rh6eF2QxtY4BsQSqCCcpd8JrQd2hjmXM70uat3WvaqJhSdzjn",
+          "alt": "Imagen de referencia de una iniciativa comunitaria de PLUS"
+        },
+        {
+          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCXGShhnXBdZN5aQICc_fYti0Wljm4h7_A_pBQdz-UrXZiWalzACVsNK0dpy7GuRTd6nxU-LbdVLKJskH1nUcdWihVW2MjQhjZBlNLR2C-79ubAD98mR7tRGb2jhC0iS3nm5rOrcfYqxBMgDAUTrsPDsQcMNjQ4Z8MSZiK97T4kLem6UkwnzVBRQcjZjQBF4gK5Zmbj7IcT73kIIOYffApKPalcyFPbw70N0xeXx2ps",
+          "alt": "Imagen de referencia de una iniciativa comunitaria de PLUS"
+        }
+      ]
+    },
+    {
+      "source": "src/app/features/initiatives/components/hero/hero.component.html",
+      "sha256": "fbfb2ff1c6f0515f71ee03b0785464c109d0a17e8788a263c0fa38fdf9bffd78",
+      "static_text_fragments": [
+        "diversity_3",
+        "Presencia Territorial & Afecto Comunitario",
+        "Iniciativas Comunitarias y Dinámicas Barriales",
+        "La veeduría y el control ciudadano se construyen de la mano con las comunidades. Acompañamos a la infancia, a las madres cabeza de familia y a las juventudes con actividades pedagógicas, recreativas y diagnósticos tempranos en sus propios territorios.",
+        "4",
+        "Grandes iniciativas anuales",
+        "+3.850",
+        "Personas beneficiadas",
+        "28",
+        "Barrios y veredas visitados",
+        "100%",
+        "Autogestión y veeduría cívica"
+      ],
+      "images": []
+    },
+    {
+      "source": "src/app/features/initiatives/components/participation/participation.component.html",
+      "sha256": "491bcd66cab3700f2dba4bd618e1c65bd3bc23af3f5e9d057cd3a0eb1fc88e24",
+      "static_text_fragments": [
+        "volunteer_activism",
+        "Convocatoria Abierta 2025",
+        "¿Quieres que PLUS lleve estas dinámicas a tu barrio o vereda?",
+        "Si eres presidente de Junta de Acción Comunal (JAC), líder barrial, madre comunitaria o integrante de un colectivo juvenil, postula tu sector para las próximas jornadas de niñez, novenas o brigadas comunitarias.",
+        "check_circle",
+        "100% gratuito sin intermediación política",
+        "check_circle",
+        "Acompañamiento legal y veeduría en el territorio",
+        "check_circle",
+        "Articulación institucional bajo Ley 850 de 2003",
+        "Formulario Rápido de Postulación Barrial",
+        "Diligencia los datos del enlace comunitario para coordinar visita previa.",
+        "Nombre completo del líder o enlace *",
+        "Teléfono o WhatsApp de contacto *",
+        "Municipio, Comuna y Barrio/Vereda *",
+        "Dinámica que deseas priorizar *",
+        "Dulcemanía (Niñez y Veeduría en Halloween)",
+        "Novenas Navideñas Comunitarias",
+        "Jornada de Útiles y Regreso a Clases",
+        "Torneo Relámpago y Juventudes",
+        "Brigada Integral de Diagnóstico Cívico",
+        "Título de la postulación *",
+        "Hasta 200 caracteres. Usa datos ficticios para explorar este formulario.",
+        "Breve descripción de la necesidad del sector *",
+        "Aceptación de demostración. El aviso de privacidad y su versión deben confirmarse antes de activar postulaciones reales.",
+        "Usaré datos ficticios y confirmo la aceptación de este ejemplo. Esta casilla no registra un consentimiento real.",
+        "lock",
+        "Demostración: los datos no se envían ni guardan.",
+        "send",
+        "Validar postulación de ejemplo"
+      ],
+      "images": []
+    },
+    {
+      "source": "src/app/features/initiatives/initiatives-page.component.html",
+      "sha256": "9dba0c116a9a2f0e3c50c16c6ee31855769c73448fd9558e69ce21c9a4b87130",
+      "static_text_fragments": [
+        "Todas las Dinámicas",
+        "Infancia y Niñez (Dulcemanía)",
+        "Navidad y Novenas Comunitarias",
+        "Educación y Regreso a Clases",
+        "Deporte y Convivencia Juvenil",
+        "Edición 2025",
+        "Edición 2024",
+        "Histórico Territorial",
+        "search",
+        "Ciclo anual de acompañamiento",
+        "Otras dinámicas en territorio"
+      ],
+      "images": []
+    },
+    {
+      "source": "src/app/features/home/components/news/news.component.html",
+      "sha256": "009728ac529262596490a6c996c10c396054da121a7819a26d14060392d53e9d",
+      "static_text_fragments": [
+        "Actualidad & Comunicados",
+        "Noticias y Actividades Territoriales",
+        "Ver todas",
+        "chevron_right",
+        "Veeduría",
+        "02 de Febrero, 2025",
+        "Instalación de la Veeduría Veredal para el Acueducto Comunitario",
+        "Más de 70 familias se articularon con la personería y PLUS para garantizar la supervisión técnica de la nueva bocatoma rural.",
+        "Leer más",
+        "arrow_forward",
+        "Proyectos",
+        "28 de Enero, 2025",
+        "Informe de auditoría ciudadana sobre puentes peatonales",
+        "Se entregó el pliego de hallazgos a los entes de control territorial sobre las obras suspendidas en la subregión de Urabá.",
+        "Leer más",
+        "arrow_forward",
+        "Talleres",
+        "19 de Enero, 2025",
+        "Capacitación en derechos de petición y acceso a la información",
+        "Líderes comunales fortalecieron competencias de radicación electrónica frente a entidades estatales y empresas concesionarias.",
+        "Leer más",
+        "arrow_forward",
+        "Canales Oficiales",
+        "Redes Institucionales",
+        "P",
+        "Corporación PLUS",
+        "@PluralismoSocialPlus",
+        "campaign",
+        "ÚLTIMO PRONUNCIAMIENTO",
+        "\"La veeduría no es confrontación: es el ejercicio constitucional para asegurar que cada peso destinado a la salud, las vías y la educación llegue efectivamente al bienestar del pueblo.\"",
+        "— Luis Alberto Muñoz Granada, Representante Legal",
+        "public",
+        "Facebook",
+        "photo_camera",
+        "Instagram",
+        "tag",
+        "X (Twitter)",
+        "smart_display",
+        "YouTube",
+        "chat",
+        "Canal Comunitario de WhatsApp",
+        "Seguir en redes oficiales"
+      ],
+      "images": [
+        {
+          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuAoW35Bjt73fRE5pEHL8YbEwS4aart8iWWc21lZOFv3g-4X-HWrtLzwbrZXFIMIX8NvJwHEhoAE1zGdMhNKBvOU4tkQ3YU670wPcN985LZFEOz3GZsFVfLK99BTSY8XtvFvADTiejRWs4OBCOmkhMVAxhOqyTu1M6GF69GX1dPDgkrVhegXdbVMfbb26q8TlDmIpF4TQ_N4dR9pt5CnKE9tq848Db-J1ws-eP0hOrAqUbzoRxkRx1NSAA",
+          "alt": "Fotograf?a ilustrativa del dise?o de PLUS"
+        },
+        {
+          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuC5-SaH91j-c1BM29WhesA0IzGOmZmwO7S4oEYRoI1CyDhs3F1aHLukWi9Hydza0-BWD9bb0wxpwVRgwS4MACz9FBDsKpipislGFdAoPJmOkVrGIY93wI9SsASsNodegY2JCLwCxtPhzHkMQgCrdgqti-rXb1C1zajRuPvVcbRtSikR_juVt-McMJ_qH-aTF2x1Q48Q5PxAWA1_TeBN8mUqNgAfoYwOvrJBi7arzy7XAtY-an9JG_U2ng",
+          "alt": "Fotograf?a ilustrativa del dise?o de PLUS"
+        },
+        {
+          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuD5rQRZyEJGBW8LEQi8wAvj29pyxjX1CEeqdTWu99TukLiIHVnE8hcLWo8pF3alwdgiPjNyc-kL8acf6cYLUqa1lcMeMfWAag8BAWR8NVZlfALwxySJw4H-cK3Juk0tEghC49fHUr5z4he_FGzl0J0hOSKTSMwiQsogWW2eoiLay_wqcifjcYHU80JVLPLwYY2iezFH2QxavUe7ySGA-ZmYwvMOAMaCGKxqlAU36cH3HS4Nem0t0C6AKg",
+          "alt": "Fotograf?a ilustrativa del dise?o de PLUS"
+        }
+      ]
+    },
+    {
+      "source": "src/app/features/home/components/initiatives/initiatives.component.html",
+      "sha256": "b00b81fed424cf59d05fea13de42a1b2b44f391e1a1839f2e7fac79c2f0e0b25",
+      "static_text_fragments": [
+        "celebration",
+        "Iniciativas y Encuentros Comunitarios • Presencia Territorial Todo el Año",
+        "Presencia Barrial y Liderazgo Humano en el Territorio",
+        "PLUS articula durante todo el año diversas dinámicas sociales, culturales y pedagógicas en barrios populares y veredas. Combinamos alegría, escucha activa ciudadana y el diagnóstico temprano de necesidades públicas indispensables.",
+        "arrow_back",
+        "arrow_forward",
+        "1. Dulcemanía (Halloween & Niñez)",
+        "2. Novenas y Navidad Comunitaria",
+        "3. Jornadas de Útiles y Regreso a Clases",
+        "4. Encuentros Deportivos y Lúdica Juvenil",
+        "Temporada Octubre • Celebración & Diálogo Veredal",
+        "Dulcemanía y Presencia Barrial:",
+        "Alegría, Niñez",
+        "y Escucha Ciudadana",
+        "En PLUS creemos que la veeduría y el control ciudadano se fortalecen cuando caminamos de la mano con las comunidades. A través de la iniciativa especial de Halloween",
+        "«Dulcemanía»",
+        ", nuestro equipo visitó diversos sectores barriales compartiendo dulces, juegos recreativos y actividades lúdicas con cientos de niñas y niños, al tiempo que dialogamos abiertamente con madres cabezas de hogar y líderes comunitarios sobre deficiencias en servicios esenciales, falta de espacios recreativos e infraestructura local.",
+        "sentiment_very_satisfied",
+        "+800 Niñas y niños",
+        "Beneficiados en las jornadas",
+        "holiday_village",
+        "5 Barrios y sectores",
+        "Comunitarios visitados",
+        "diversity_3",
+        "Actividades lúdicas",
+        "Y diálogo directo familiar",
+        "assignment_turned_in",
+        "Diagnóstico temprano",
+        "De necesidades barriales",
+        "“El control social y la veeduría no solo se ejercen en despachos y auditorías; nacen compartiendo con la infancia, entendiendo las realidades de cada esquina y construyendo esperanza desde el afecto comunitario.”",
+        "collections_bookmark",
+        "Ver memoria fotográfica",
+        "campaign",
+        "Proponer evento en mi barrio",
+        "photo_camera",
+        "Jornada comunitaria Dulcemanía · Celebración de Halloween y escucha activa",
+        "En Territorio",
+        "Temporada Diciembre • Solidaridad & Unión Vecinal",
+        "Novenas Navideñas y",
+        "Olla Comunitaria",
+        "en Territorio",
+        "Durante el mes de diciembre, PLUS llega a los sectores más vulnerables de nuestras cuencas y periferias urbanas con las tradicionales novenas navideñas comunitarias. Entregamos kits de regalos didácticos para la infancia, compartimos el tradicional sancocho y buñuelos comunitarios, y generamos un espacio de fraternidad donde las familias formulan pactos de convivencia y priorizan sus peticiones comunitarias ante alcaldías y gobernaciones.",
+        "card_giftcard",
+        "+1.200 Regalos",
+        "Entregados en 9 veredas",
+        "soup_kitchen",
+        "Ollas comunitarias",
+        "Encuentros gastronómicos",
+        "handshake",
+        "Pactos de convivencia",
+        "Resolución pacífica local",
+        "event_available",
+        "9 Días continuos",
+        "Presencia en barrios críticos",
+        "“La Navidad comunitaria nos recuerda que el verdadero sentido del pluralismo social es compartir el alimento, renovar la esperanza y garantizar que ninguna vereda quede olvidada en fin de año.”",
+        "collections_bookmark",
+        "Ver balance navideño",
+        "volunteer_activism",
+        "Vincular donaciones navideñas",
+        "festival",
+        "Novenas y Navidad Comunitaria · Compartir solidario y diálogo vecinal",
+        "Diciembre",
+        "Temporada Enero - Febrero • Educación & Equidad Rural",
+        "Kits Escolares y",
+        "Regreso Digno a Clases",
+        "en Cuencas Fluviales",
+        "Garantizar la permanencia escolar es la base del futuro comunitario. Cada inicio de año, la Corporación PLUS distribuye paquetes completos de útiles escolares, morrales y material didáctico a escuelas rurales y ribereñas del Chocó y el Pacífico. De forma simultánea, levantamos actas de veeduría sobre el estado físico de aulas, baterías sanitarias y el inicio oportuno del Programa de Alimentación Escolar (PAE).",
+        "backpack",
+        "1.500 Kits Escolares",
+        "Entregados directamente a niños",
+        "school",
+        "18 Sedes educativas",
+        "Monitoreadas en infraestructura",
+        "restaurant",
+        "Veeduría al PAE",
+        "Inspección de calidad nutricional",
+        "menu_book",
+        "Refuerzo lector",
+        "Talleres pedagógicos veredales",
+        "“Un cuaderno y un lápiz en las manos de un niño en la cuenca del Atrato no solo abren horizontes de aprendizaje: son la mayor garantía de defensa del territorio contra la exclusión histórica.”",
+        "collections_bookmark",
+        "Ver informe educativo",
+        "menu_book",
+        "Postular sede educativa rural",
+        "school",
+        "Jornadas Escolares · Kits de útiles y verificación técnica de sedes educativas",
+        "Enero - Febrero",
+        "Temporada Permanente • Juventud, Deporte & Paz",
+        "Torneos por la Convivencia y",
+        "Lúdica Juvenil",
+        "en los Barrios",
+        "Promovemos campeonatos de microfútbol, voleibol y festivales de danza afrocolombiana e indígena como herramientas de protección integral frente a violencias urbanas. Aprovechamos cada torneo deportivo para capacitar a los capitanes y comités juveniles en resolución pacífica de conflictos comunitarios y formulación de proyectos para la mejora de polideportivos públicos.",
+        "sports_soccer",
+        "+640 Jóvenes",
+        "Participantes en torneos de barrio",
+        "stadium",
+        "12 Polideportivos",
+        "Recuperados con veeduría técnica",
+        "theater_comedy",
+        "Muestras culturales",
+        "Danza, chirimía y música local",
+        "military_tech",
+        "Juego limpio & paz",
+        "Cero incidentes de violencia",
+        "“El balón y la cancha son territorios sagrados de paz donde las juventudes aprenden respeto, trabajo en equipo y el valor de cuidar lo público como patrimonio de toda la comunidad.”",
+        "collections_bookmark",
+        "Ver galería del torneo",
+        "sports",
+        "Inscribir equipo juvenil",
+        "sports_soccer",
+        "Encuentros Deportivos y Lúdica · Juventudes unidas por la convivencia barrial",
+        "Todo el Año"
+      ],
+      "images": [
+        {
+          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCYYDB-_ytplVDgqPeGJbCIOgbXN4GG-Y7XuIdgxHdAQup0kJ0Auun1g-14lrGjtDZ58DC-qdrbRfOSffhaOjUqimBKbyCvS3cOLyEfnoIRUPTyuM-wy1buplDgpWlYm4v2Opg6NeRG-GXpUEhak24_MiHhMDh0KQY6F5igkq8oYv2jaEg8T0QiZsE2YgmuRgDJcFIG5s8W3qvegDLFgnCgn4v0jyywjMV5VwXVSUzg",
+          "alt": "Jornada comunitaria Dulcemanía en Colombia con voluntarias de PLUS entregando dulces a niñas y niños sonrientes"
+        },
+        {
+          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuAoW35Bjt73fRE5pEHL8YbEwS4aart8iWWc21lZOFv3g-4X-HWrtLzwbrZXFIMIX8NvJwHEhoAE1zGdMhNKBvOU4tkQ3YU670wPcN985LZFEOz3GZsFVfLK99BTSY8XtvFvADTiejRWs4OBCOmkhMVAxhOqyTu1M6GF69GX1dPDgkrVhegXdbVMfbb26q8TlDmIpF4TQ_N4dR9pt5CnKE9tq848Db-J1ws-eP0hOrAqUbzoRxkRx1NSAA",
+          "alt": "Celebración comunitaria decembrina de novenas en salón comunitario de Colombia con familias reunidas"
+        },
+        {
+          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuD5rQRZyEJGBW8LEQi8wAvj29pyxjX1CEeqdTWu99TukLiIHVnE8hcLWo8pF3alwdgiPjNyc-kL8acf6cYLUqa1lcMeMfWAag8BAWR8NVZlfALwxySJw4H-cK3Juk0tEghC49fHUr5z4he_FGzl0J0hOSKTSMwiQsogWW2eoiLay_wqcifjcYHU80JVLPLwYY2iezFH2QxavUe7ySGA-ZmYwvMOAMaCGKxqlAU36cH3HS4Nem0t0C6AKg",
+          "alt": "Taller pedagógico y entrega de materiales didácticos comunitarios con jóvenes y líderes"
+        },
+        {
+          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuC5-SaH91j-c1BM29WhesA0IzGOmZmwO7S4oEYRoI1CyDhs3F1aHLukWi9Hydza0-BWD9bb0wxpwVRgwS4MACz9FBDsKpipislGFdAoPJmOkVrGIY93wI9SsASsNodegY2JCLwCxtPhzHkMQgCrdgqti-rXb1C1zajRuPvVcbRtSikR_juVt-McMJ_qH-aTF2x1Q48Q5PxAWA1_TeBN8mUqNgAfoYwOvrJBi7arzy7XAtY-an9JG_U2ng",
+          "alt": "Inspección técnica ciudadana y diálogo con líderes en espacio recreativo comunitario"
+        }
+      ]
+    }
+  ]
+}

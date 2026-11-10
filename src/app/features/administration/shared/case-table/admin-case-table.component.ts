@@ -1,48 +1,56 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+﻿import { Component, computed, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ADMIN_CASES_DEMO, DASHBOARD_CASES_DEMO, AdminCaseDemo } from '../../data/admin-cases.demo';
-import { CaseWorkspaceDemoService } from '../../../cases/workspace/services/case-workspace-demo.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { catchError, debounceTime, distinctUntilChanged, finalize, of, Subject, switchMap } from 'rxjs';
+import { AdminCasesApiService } from '../../cases/admin-cases-api.service';
+import { AdminCasePage } from '../../cases/admin-cases.models';
+import { CitizenCasesApiService } from '../../../citizen/services/citizen-cases-api.service';
+import { CaseState, CaseType, caseStateLabel } from '../../../citizen/services/citizen-cases.models';
+import { AccountApiService, Department, Municipality } from '../../../../core/api/account-api.service';
+import { apiErrorMessage } from '../../../../core/api/api-error';
 
-@Component({selector: 'plus-admin-case-table', standalone: true, imports: [ReactiveFormsModule, RouterLink], templateUrl: './admin-case-table.component.html'})
-export class AdminCaseTableComponent {
-  readonly demos = inject(CaseWorkspaceDemoService);
-  readonly compact = input(false);
-  readonly query = signal('');
-  readonly territory = signal('');
-  readonly basin = signal('');
-  readonly category = signal('');
-  readonly state = signal('');
-  readonly assignee = signal('');
-  readonly page = signal(1);
-  readonly selected = signal<AdminCaseDemo | null>(null);
-  readonly message = signal('');
-  readonly records = computed(() => this.compact() ? DASHBOARD_CASES_DEMO : ADMIN_CASES_DEMO);
-  readonly columns = computed(() => this.compact() ? ['Código', 'Título del expediente', 'Jurisdicción', 'Estado', 'Término de ejemplo', 'Acciones'] : ['Código', 'Título y territorio', 'Categoría', 'Radicado', 'Estado', 'Responsable', 'Acción']);
-  readonly territories = computed(() => [...new Set(this.records().map(row => row.territory))]);
-  readonly basins = computed(() => [...new Set(this.records().map(row => row.territory.match(/\((Cuenca[^)]+)\)/i)?.[1]).filter((value): value is string => Boolean(value)))]);
-  readonly categories = computed(() => [...new Set(this.records().map(row => row.category))]);
-  readonly states = computed(() => [...new Set(this.records().map(row => row.status))]);
-  readonly assignees = [...new Set(ADMIN_CASES_DEMO.map(row => row.assignee))];
-  readonly filtered = computed(() => this.records().filter(row =>
-    this.normalize(`${row.code} ${row.title} ${row.territory}`).includes(this.normalize(this.query().trim())) &&
-    (!this.territory() || row.territory === this.territory()) && (!this.basin() || row.territory.includes(this.basin())) && (!this.category() || row.category === this.category()) &&
-    (!this.state() || row.status === this.state()) && (!this.assignee() || row.assignee === this.assignee())));
-  readonly pageSize = computed(() => this.compact() ? 4 : 5);
-  readonly pages = computed(() => Math.max(1, Math.ceil(this.filtered().length / this.pageSize())));
-  readonly visible = computed(() => this.filtered().slice((this.page() - 1) * this.pageSize(), this.page() * this.pageSize()));
-  private readonly builder = inject(FormBuilder).nonNullable;
-  readonly review = this.builder.group({assignee: ['', Validators.required], note: ['', Validators.maxLength(2000)]});
-  change(key: 'query' | 'territory' | 'basin' | 'category' | 'state' | 'assignee', value: string) {this[key].set(value); this.page.set(1); this.selected.set(null);}
-  reset() {this.query.set(''); this.territory.set(''); this.basin.set(''); this.category.set(''); this.state.set(''); this.assignee.set(''); this.page.set(1); this.selected.set(null); this.message.set('');}
-  navigate(delta: number) {this.page.update(value => Math.min(this.pages(), Math.max(1, value + delta)));}
-  open(row: AdminCaseDemo) {this.selected.set(row); this.review.reset({assignee: this.assignees.includes(row.assignee) ? row.assignee : '', note: ''}); this.message.set('');}
-  validateReview() {this.review.markAllAsTouched(); this.message.set(this.review.invalid ? 'Revisa el responsable y la longitud de la nota.' : 'Revisión de ejemplo validada. No se ha asignado ni modificado el caso.');}
-  statusClass(status: string) {
-    if (/resuelto/i.test(status)) return 'bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200';
-    if (/requiere/i.test(status)) return 'bg-orange-100 text-orange-900 dark:bg-orange-950 dark:text-orange-200';
-    if (/pendiente|revisión/i.test(status)) return 'bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200';
-    return 'bg-sky-100 text-sky-900 dark:bg-sky-950 dark:text-sky-200';
+@Component({selector:'plus-admin-case-table',standalone:true,imports:[DatePipe,RouterLink],templateUrl:'./admin-case-table.component.html'})
+export class AdminCaseTableComponent implements OnInit {
+  private readonly api=inject(AdminCasesApiService);
+  private readonly catalogs=inject(CitizenCasesApiService);
+  private readonly territories=inject(AccountApiService);
+  private readonly destroy=inject(DestroyRef);
+  private readonly refresh=new Subject<void>();
+  private readonly searches=new Subject<string>();
+  private territoryRevision=0;
+  readonly compact=input(false);
+  readonly query=signal('');readonly state=signal('');readonly priority=signal('');readonly publication=signal('');readonly category=signal('');readonly department=signal('');readonly municipality=signal('');
+  readonly states=signal<CaseState[]>([]);readonly types=signal<CaseType[]>([]);readonly departments=signal<Department[]>([]);readonly municipalities=signal<Municipality[]>([]);
+  readonly page=signal(1);readonly pageSize=computed(()=>this.compact()?5:10);
+  readonly result=signal<AdminCasePage>({count:0,next:null,previous:null,results:[]});
+  readonly pages=computed(()=>Math.max(1,Math.ceil(this.result().count/this.pageSize())));
+  readonly loading=signal(true);readonly error=signal('');readonly catalogError=signal('');
+  readonly label=caseStateLabel;
+  constructor(){
+    this.searches.pipe(debounceTime(250),distinctUntilChanged(),takeUntilDestroyed(this.destroy)).subscribe(()=>{this.page.set(1);this.reload();});
+    this.refresh.pipe(switchMap(()=>{
+      this.loading.set(true);this.error.set('');
+      return this.api.list({page:this.page(),page_size:this.pageSize(),search:this.query().trim(),estado:this.state(),prioridad:this.priority(),estado_publicacion:this.publication(),id_tipo_caso:this.category(),id_departamento:this.department(),id_municipio:this.municipality()}).pipe(catchError(error=>{this.error.set(apiErrorMessage(error));return of(null);}),finalize(()=>this.loading.set(false)));
+    }),takeUntilDestroyed(this.destroy)).subscribe(value=>{if(value)this.result.set(value);});
   }
-  private normalize(value: string) {return value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');}
+  ngOnInit(){this.reload();this.loadCatalogs();}
+  loadCatalogs(){
+    this.catalogError.set('');
+    this.catalogs.states().pipe(takeUntilDestroyed(this.destroy)).subscribe({next:value=>this.states.set(value),error:error=>this.catalogError.set(apiErrorMessage(error))});
+    this.catalogs.types().pipe(takeUntilDestroyed(this.destroy)).subscribe({next:value=>this.types.set(value),error:error=>this.catalogError.set(apiErrorMessage(error))});
+    this.territories.departments().pipe(takeUntilDestroyed(this.destroy)).subscribe({next:value=>this.departments.set(value),error:error=>this.catalogError.set(apiErrorMessage(error))});
+  }
+  change(key:'query'|'state'|'priority'|'publication'|'category'|'department'|'municipality',value:string){
+    this[key].set(value);this.page.set(1);
+    if(key==='query'){this.searches.next(value);return;}
+    if(key==='department'){
+      const revision=++this.territoryRevision;this.municipality.set('');this.municipalities.set([]);
+      if(value)this.territories.municipalities(value).pipe(takeUntilDestroyed(this.destroy)).subscribe({next:items=>{if(revision===this.territoryRevision)this.municipalities.set(items);},error:error=>{if(revision===this.territoryRevision)this.catalogError.set(apiErrorMessage(error));}});
+    }
+    this.reload();
+  }
+  reset(){++this.territoryRevision;this.query.set('');this.state.set('');this.priority.set('');this.publication.set('');this.category.set('');this.department.set('');this.municipality.set('');this.municipalities.set([]);this.page.set(1);this.reload();}
+  reload(){this.refresh.next();}
+  navigate(delta:number){if(this.loading())return;this.page.update(value=>Math.max(1,Math.min(this.pages(),value+delta)));this.reload();}
 }

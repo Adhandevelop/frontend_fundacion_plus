@@ -89,6 +89,8 @@ No se solicitó ningún envío real ni se cambiaron contraseñas durante esta re
 
 ## Módulos que conservan demostración
 
-Casos, radicación, mensajes, notificaciones y administración siguen usando servicios locales y se identifican como demostración. La sesión real no transforma sus datos de ejemplo en expedientes reales. Los contadores ficticios de mensajes/notificaciones se retiraron de la navegación del perfil conectado.
+La [integración de casos ciudadanos](integracion-casos-ciudadanos.md) ya conecta listado, métricas, radicación, expediente, evidencias y aportes. [Mensajes y notificaciones ciudadanos](integracion-mensajes-notificaciones.md) también usan REST y sus contadores reales se muestran en la navegación. El [dashboard y los casos administrativos](integracion-casos-administrativos.md) ya usan REST. Los demás módulos administrativos siguen usando servicios locales y se identifican como demostración.
+
+El registro [problemas-integracion.md](problemas-integracion.md) recoge las diferencias y pendientes. P01 señala que la exclusión de portales del frontend aún debe trasladarse a los permisos de los recursos ciudadanos de Django; la navegación protegida no sustituye ese control del servidor.
 
 Noticias e iniciativas públicas conservan su contenido actual. Antes de sustituir sus consultas se debe inventariar el contenido, validar textos/cifras/fotos y preparar una carga inicial repetible con el backend. No se han creado noticias/iniciativas ni datos de demostración en producción.

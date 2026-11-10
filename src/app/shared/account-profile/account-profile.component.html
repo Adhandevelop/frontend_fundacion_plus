@@ -6,7 +6,7 @@
   <div class="grid xl:grid-cols-[280px_minmax(0,1fr)] gap-5 items-start" [attr.aria-busy]="pending()">
     <aside class="cit-panel border rounded-xl p-5 space-y-5">
       <h2 class="text-title-md">Imagen del perfil</h2>
-      @if(auth.user()?.perfil?.foto_url;as image){<img [src]="image" alt="Fotografía de tu perfil" class="w-28 h-28 rounded-full object-cover border border-slate-400/40">} @else {<div class="w-28 h-28 rounded-full bg-yellow-400/20 flex items-center justify-center" role="img" aria-label="Perfil sin fotografía"><span class="material-symbols-outlined text-[48px]" aria-hidden="true">person</span></div>}
+      @if(auth.user()?.perfil?.foto_url;as image){<img [src]="image" alt="Fotografía de tu perfil" class="w-28 h-28 rounded-full object-cover border border-slate-400/40">} @else {<div class="w-28 h-28 rounded-full bg-yellow-400/20 flex items-center justify-center" role="img" aria-label="Perfil sin fotografía"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg></div>}
       <label class="cit-field">Actualizar fotografía<input type="file" accept="image/jpeg,image/png,image/webp" [disabled]="pending()" (change)="selectPhoto($event)" aria-describedby="profile-photo-help"></label>
       <p id="profile-photo-help" class="text-label-sm">JPG, PNG o WEBP, hasta 15 MB. Se guarda al seleccionarla.</p>
       <button type="button" class="cit-button" [disabled]="pending() || !auth.user()?.perfil?.foto_url" (click)="removePhoto()">Quitar fotografía</button>

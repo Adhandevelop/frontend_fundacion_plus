@@ -1,32 +1,26 @@
 ﻿<div class="admin-shell">
-  <aside class="admin-panel fixed inset-y-0 left-0 w-64 border-r z-50 p-4 flex flex-col justify-between gap-6 overflow-y-auto lg:flex" [class.hidden]="!menu()">
+  <a href="#admin-content" class="plus-skip-link" (click)="content.focus()">Saltar al contenido</a>
+  <aside id="admin-navigation" tabindex="-1" aria-label="Menú administrativo" [plusResponsiveNavigation]="menu()" [navigationBackground]="background" (navigationClose)="menu.set(false)" class="admin-panel fixed inset-y-0 left-0 w-64 max-w-[calc(100vw-3rem)] border-r z-50 p-4 flex flex-col justify-between gap-6 overflow-y-auto lg:flex" [class.hidden]="!menu()">
     <div>
+      <button type="button" class="admin-button mb-4 lg:hidden" (click)="menu.set(false)">Cerrar menú</button>
       <a routerLink="/admin" class="flex items-center gap-3 pb-5 border-b border-slate-400/30"><span class="bg-primary-container text-black p-2 rounded-lg font-bold">P+</span><span><strong class="block text-title-md">PLUS Central Operativa</strong><span class="text-label-sm">Gestión y control territorial</span></span></a>
       <h2 class="text-label-sm uppercase tracking-wider mt-5 mb-3">Administración general</h2>
       <nav aria-label="Navegación administrativa" class="grid gap-2" (click)="menu.set(false)">
-        <a routerLink="/admin" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" [routerLinkActiveOptions]="{exact:true}" class="rounded-lg px-3 py-3 flex gap-3 items-center"><span class="material-symbols-outlined" aria-hidden="true">dashboard</span>Dashboard general</a>
-        <a routerLink="/admin/casos" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" class="rounded-lg px-3 py-3 flex gap-3 items-center"><span class="material-symbols-outlined" aria-hidden="true">folder_shared</span>Gestión de casos</a>
-        <a routerLink="/mapa" class="rounded-lg px-3 py-3 flex gap-3 items-center"><span class="material-symbols-outlined" aria-hidden="true">map</span>Mapa público</a>
-        <a routerLink="/admin/informes" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" class="rounded-lg px-3 py-3 flex gap-3 items-center"><span class="material-symbols-outlined" aria-hidden="true">bar_chart</span>Informes de casos</a>
-        <a routerLink="/admin/auditoria" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" class="rounded-lg px-3 py-3 flex gap-3 items-center"><span class="material-symbols-outlined" aria-hidden="true">history</span>Auditoría</a>
-        <a routerLink="/admin/usuarios" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" class="rounded-lg px-3 py-3 flex gap-3 items-center"><span class="material-symbols-outlined" aria-hidden="true">manage_accounts</span>Usuarios y permisos</a>
-        <a routerLink="/admin/comunidades" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" class="rounded-lg px-3 py-3 flex gap-3 items-center"><span class="material-symbols-outlined" aria-hidden="true">location_city</span>Comunidades y territorios</a>
-        <a routerLink="/admin/noticias" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" class="rounded-lg px-3 py-3 flex gap-3 items-center"><span class="material-symbols-outlined" aria-hidden="true">newspaper</span>Noticias</a>
-        <a routerLink="/admin/iniciativas" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" class="rounded-lg px-3 py-3 flex gap-3 items-center"><span class="material-symbols-outlined" aria-hidden="true">volunteer_activism</span>Iniciativas y ediciones</a>
-        <a routerLink="/admin/postulaciones" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" class="rounded-lg px-3 py-3 flex gap-3 items-center"><span class="material-symbols-outlined" aria-hidden="true">inbox</span>Postulaciones</a>
-        <a routerLink="/admin/comentarios" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" class="rounded-lg px-3 py-3 flex gap-3 items-center"><span class="material-symbols-outlined" aria-hidden="true">forum</span>Moderación de comentarios</a>
+        @for(item of navigation();track item.path){
+          <a [routerLink]="item.path" ariaCurrentWhenActive="page" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" [routerLinkActiveOptions]="{exact:item.exact}" class="rounded-lg px-3 py-3 flex gap-3 items-center"><plus-navigation-icon [name]="item.icon"/>{{item.label}}</a>
+        }
       </nav>
     </div>
-    <div class="border-t border-slate-400/30 pt-4 space-y-3 text-body-sm"><p>{{auth.user()?.full_name}} · {{auth.user()?.rol_nombre}}</p><a routerLink="/" class="inline-flex admin-button">Volver al portal</a><a routerLink="/admin/perfil" routerLinkActive="bg-primary-container/15" class="inline-flex admin-button" (click)="menu.set(false)">Mi perfil</a><button type="button" class="admin-button" [disabled]="auth.busy()" (click)="auth.logout()">Cerrar sesión</button><p role="status">{{auth.logoutError()}}</p></div>
+    <div class="border-t border-slate-400/30 pt-4 space-y-3 text-body-sm"><p>{{auth.user()?.full_name}} · {{auth.user()?.rol_nombre}}</p><a routerLink="/" class="inline-flex admin-button">Volver al portal</a><a routerLink="/admin/perfil" ariaCurrentWhenActive="page" routerLinkActive="bg-primary-container/15" class="inline-flex admin-button" (click)="menu.set(false)">Mi perfil</a><button type="button" class="admin-button" [disabled]="auth.busy()" (click)="auth.logout()">Cerrar sesión</button><p role="status">{{auth.logoutError()}}</p></div>
   </aside>
   @if(menu()) {<button type="button" aria-label="Cerrar menú administrativo" class="fixed inset-0 bg-black/50 z-40 lg:hidden" (click)="menu.set(false)"></button>}
-  <div class="lg:ml-64 min-w-0">
+  <div #background class="lg:ml-64 min-w-0">
     <header class="admin-panel sticky top-0 z-30 border-b px-4 lg:px-6 h-16 flex items-center justify-between gap-3">
-      <div class="flex gap-3 items-center min-w-0"><button type="button" class="lg:hidden admin-button" aria-controls="admin-content" [attr.aria-expanded]="menu()" (click)="menu.set(!menu())">Menú</button><span class="text-title-sm truncate">PLUS / Despacho territorial</span><span class="hidden xl:inline text-label-sm rounded border border-slate-400/40 px-3 py-1">Nodo Chocó y Urabá · Ejemplo</span></div>
-      <div class="flex gap-3 items-center"><button type="button" class="admin-button flex items-center" (click)="theme.toggle()" [attr.aria-pressed]="theme.dark()" aria-label="Cambiar tema de color"><span class="material-symbols-outlined" aria-hidden="true">{{theme.dark() ? 'light_mode' : 'dark_mode'}}</span></button><span class="text-label-sm hidden sm:inline">Administración · Demo</span></div>
+      <div class="flex gap-3 items-center min-w-0"><button type="button" class="lg:hidden admin-button shrink-0" aria-controls="admin-navigation" [attr.aria-expanded]="menu()" (click)="menu.set(!menu())">Menú</button><span class="text-title-sm truncate">PLUS / Despacho territorial</span></div>
+      <div class="flex gap-3 items-center shrink-0"><button type="button" class="admin-button flex items-center" (click)="theme.toggle()" [attr.aria-pressed]="theme.dark()" aria-label="Cambiar tema de color"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false">@if(theme.dark()){<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/>}@else{<path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z"/>}</svg></button><span class="text-label-sm hidden sm:inline">Administración</span></div>
     </header>
-    <p class="bg-primary-container/15 px-4 py-2 text-body-sm text-center">Sesión autenticada. Los módulos administrativos todavía usan datos de demostración; no modifican expedientes reales.</p>
-    <main id="admin-content"><router-outlet/></main>
+    <p class="bg-primary-container/15 px-4 py-2 text-body-sm text-center">Casos, informes, comunidades, usuarios y comentarios conectados; auditoría reciente disponible. Noticias, iniciativas y postulaciones administrativas continúan en demostración.</p>
+    <main #content id="admin-content" tabindex="-1"><router-outlet (activate)="content.focus()"/></main>
     <footer class="px-6 py-5 text-body-sm border-t border-slate-400/30">PLUS · Corporación Pluralismo Social</footer>
   </div>
 </div>
