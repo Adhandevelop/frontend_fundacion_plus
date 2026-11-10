@@ -22,8 +22,8 @@ const signedIn=firstValueFrom(auth.login('local@example.invalid','test-only',fal
 env.get(HttpTestingController).expectOne('/api/v1/auth/login/').flush({user,tokens:{access:'local-access',refresh:'local-refresh'}});await signedIn;
 const expected:Record<string,string[]>={
   administrador:Object.keys(ADMIN_SECTION_ROLES),
-  moderador:['dashboard','cases','reports','profile','news','initiatives','proposals','comments'],
-  representante:['dashboard','cases','reports','profile'],
+  moderador:['dashboard','cases','reports','profile','map','news','initiatives','proposals','comments'],
+  representante:['dashboard','cases','reports','profile','map'],
   ciudadano:[],unknown:[],
 };
 for(const [role,sections] of Object.entries(expected)){

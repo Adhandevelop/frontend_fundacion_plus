@@ -10,7 +10,7 @@ interface AdminNavigationItem {path:string;label:string;icon:string;section:Admi
 const NAVIGATION:AdminNavigationItem[]=[
   {path:'/admin',label:'Dashboard general',icon:'dashboard',section:'dashboard',exact:true},
   {path:'/admin/casos',label:'Gestión de casos',icon:'folder_shared',section:'cases',exact:false},
-  {path:'/mapa',label:'Mapa público',icon:'map',section:null,exact:false},
+  {path:'/admin/mapa',label:'Mapa de casos',icon:'map',section:'map',exact:false},
   {path:'/admin/informes',label:'Informes de casos',icon:'bar_chart',section:'reports',exact:false},
   {path:'/admin/auditoria',label:'Auditoría',icon:'history',section:'audit',exact:false},
   {path:'/admin/usuarios',label:'Usuarios y permisos',icon:'manage_accounts',section:'users',exact:false},

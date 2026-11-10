@@ -5,4 +5,5 @@ import { RouterLink } from '@angular/router';
 export class MapCasePreviewComponent {
 readonly dismiss = output<void>();
 readonly dismissible = input(true);
+readonly caseRoute = input('/casos/PLUS-2025-084');
 }

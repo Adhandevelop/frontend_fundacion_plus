@@ -11,6 +11,7 @@ export const routes: Routes = [
     data: {requiresAdmin: true},
     loadComponent: () => import('./layouts/admin/admin-layout.component').then(m => m.AdminLayoutComponent),
     children: [
+      {path: 'mapa', title: 'Mapa de casos administrativo · PLUS', data: {adminSection: 'map', mapContext: 'admin'}, loadComponent: () => import('./features/map/public-map.component').then(m => m.PublicMapComponent)},
       {path:'formularios/nuevo',data:{adminSection:'forms'},title:'Crear formulario de ejemplo · PLUS',loadComponent:()=>import('./features/administration/forms/form-editor.component').then(m=>m.FormEditorComponent)},
       {path:'formularios/:id/editar',data:{adminSection:'forms'},title:'Editar formulario de ejemplo · PLUS',loadComponent:()=>import('./features/administration/forms/form-editor.component').then(m=>m.FormEditorComponent)},
       {path:'formularios/:id/vista-previa',data:{adminSection:'forms'},title:'Vista previa del formulario · PLUS',loadComponent:()=>import('./features/administration/forms/form-preview.component').then(m=>m.FormPreviewComponent)},
@@ -62,6 +63,7 @@ export const routes: Routes = [
     data: {requiresCitizen: true},
     component: CitizenLayoutComponent,
     children: [
+      {path: 'mapa', title: 'Mapa de casos ciudadano · PLUS', data: {mapContext: 'citizen'}, loadComponent: () => import('./features/map/public-map.component').then(m => m.PublicMapComponent)},
       {path: 'casos/nuevo', title: 'Radicar un caso · PLUS', loadComponent: () => import('./features/citizen/intake/case-intake.component').then(m => m.CaseIntakeComponent)},
       {path: 'casos/confirmacion', title: 'Caso radicado · PLUS', loadComponent: () => import('./features/citizen/intake/confirmation/case-confirmation.component').then(m => m.CaseConfirmationComponent)},
       {path: 'casos/:radicado', title: 'Detalle de mi caso · PLUS', loadComponent: () => import('./features/citizen/cases/citizen-case-detail.component').then(m => m.CitizenCaseDetailComponent)},
@@ -80,7 +82,7 @@ export const routes: Routes = [
     component: PublicLayoutComponent,
     children: [
       {path: '', pathMatch: 'full', title: 'PLUS · Corporación Pluralismo Social', loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent)},
-      {path: 'mapa', title: 'Mapa de casos comunitarios · PLUS', loadComponent: () => import('./features/map/public-map.component').then(m => m.PublicMapComponent)},
+      {path: 'mapa', title: 'Mapa de casos comunitarios · PLUS', data: {mapContext: 'public'}, loadComponent: () => import('./features/map/public-map.component').then(m => m.PublicMapComponent)},
       {path:'formularios/:slug',title:'Formulario de demostración · PLUS',loadComponent:()=>import('./features/forms/public-form.component').then(m=>m.PublicFormComponent)},
       {path: 'noticias', title: 'Noticias y actividades · PLUS', loadComponent: () => import('./features/news/news-page.component').then(m => m.NewsPageComponent)},
       {path: 'iniciativas', title: 'Iniciativas comunitarias · PLUS', loadComponent: () => import('./features/initiatives/initiatives-page.component').then(m => m.InitiativesPageComponent)},

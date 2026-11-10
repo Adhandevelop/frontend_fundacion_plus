@@ -34,13 +34,13 @@
 </button>
 </div>
 
-<a routerLink="/ciudadano/casos/nuevo" class="inline-flex items-center gap-2 px-4 py-2 mp-bg-primary-container hover:bg-yellow-400 mp-text-neutral-950 text-title-sm font-title-sm font-bold rounded-lg shadow-sm transition-transform active:scale-95">
+<a [routerLink]="primaryRoute" class="inline-flex items-center gap-2 px-4 py-2 mp-bg-primary-container hover:bg-yellow-400 mp-text-neutral-950 text-title-sm font-title-sm font-bold rounded-lg shadow-sm transition-transform active:scale-95">
 <span class="material-symbols-outlined text-[20px]">add_circle</span>
-<span>+ Registrar nuevo caso</span></a>
+<span>{{primaryLabel}}</span></a>
 </div>
 </div>
 </section>
-<div class="max-w-7xl mx-auto px-margin md:px-margin-desktop text-body-sm py-3" role="note">Vista de demostración · Mapa ilustrativo, casos e indicadores de ejemplo. La búsqueda filtra el caso de ejemplo en Vista Lista. Los filtros territoriales se conectarán con la API.</div><div class="w-full max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-md grid grid-cols-12 gap-space-md"><aside class="col-span-12 lg:col-span-4 map-filter-shell p-space-md rounded-xl border"><plus-map-filters/></aside><div class="col-span-12 lg:col-span-8 min-w-0">@if(view() === 'map') {<plus-map-canvas/>} @else {<section aria-label="Lista de casos de demostración" class="map-list min-h-[500px] rounded-xl border p-2"><p class="p-4 text-body-sm">1 caso de ejemplo · Resultados de demostración</p>@if(matchesSearch()) {<plus-map-case-preview [dismissible]="false"/>} @else {<p class="p-4" role="status">No hay coincidencias en el caso de ejemplo.</p>}</section>}</div></div>
+<div class="max-w-7xl mx-auto px-margin md:px-margin-desktop text-body-sm py-3" role="note">Vista de demostración · Mapa ilustrativo, casos e indicadores de ejemplo. La búsqueda filtra el caso de ejemplo en Vista Lista. Los filtros territoriales se conectarán con la API.</div><div class="w-full max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-md grid grid-cols-12 gap-space-md"><aside class="col-span-12 lg:col-span-4 map-filter-shell p-space-md rounded-xl border"><plus-map-filters/></aside><div class="col-span-12 lg:col-span-8 min-w-0">@if(view() === 'map') {<plus-map-canvas [caseRoute]="caseRoute"/>} @else {<section aria-label="Lista de casos de demostración" class="map-list min-h-[500px] rounded-xl border p-2"><p class="p-4 text-body-sm">1 caso de ejemplo · Resultados de demostración</p>@if(matchesSearch()) {<plus-map-case-preview [dismissible]="false" [caseRoute]="caseRoute"/>} @else {<p class="p-4" role="status">No hay coincidencias en el caso de ejemplo.</p>}</section>}</div></div>
 <section class="border-t mp-border-outline-variant-40 mp-bg-surface-container-low py-6">
 <div class="w-full max-w-7xl mx-auto px-margin md:px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-4">
 

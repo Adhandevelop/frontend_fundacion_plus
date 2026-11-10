@@ -177,8 +177,8 @@ try{
   await evaluate(`document.querySelector('[aria-label="Cambiar tema de color"]').click()`);await snapshot('form-citizen-answer-dark-mobile');
   assert.equal(apiCalls.some(call=>call.path.includes('/forms/') || call.path.includes('/formularios/')),false);
   for(const [currentRole,allowed] of [
-    ['moderador',['/admin','/admin/casos','/mapa','/admin/informes','/admin/noticias','/admin/iniciativas','/admin/postulaciones','/admin/comentarios']],
-    ['representante',['/admin','/admin/casos','/mapa','/admin/informes']],
+    ['moderador',['/admin','/admin/casos','/admin/mapa','/admin/informes','/admin/noticias','/admin/iniciativas','/admin/postulaciones','/admin/comentarios']],
+    ['representante',['/admin','/admin/casos','/admin/mapa','/admin/informes']],
   ]){
     await visit('/admin/casos',currentRole);
     assert.deepEqual(await evaluate(`Array.from(document.querySelectorAll('nav[aria-label="Navegación administrativa"] a')).map(link=>link.getAttribute('href'))`),allowed);

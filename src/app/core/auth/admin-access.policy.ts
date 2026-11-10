@@ -6,7 +6,7 @@ const INTERNAL = ['administrador', 'moderador', 'representante'];
 const EDITORIAL = ['administrador', 'moderador'];
 const ADMIN_ONLY = ['administrador'];
 export const ADMIN_SECTION_ROLES = {
-  dashboard: INTERNAL, cases: INTERNAL, reports: INTERNAL, profile: INTERNAL,
+  dashboard: INTERNAL, cases: INTERNAL, reports: INTERNAL, profile: INTERNAL, map: INTERNAL,
   users: ADMIN_ONLY, roles: ADMIN_ONLY, territories: ADMIN_ONLY, audit: ADMIN_ONLY,
   // Newly requested UI prototype; no forms API permission contract has been implemented here.
   forms: ADMIN_ONLY,
