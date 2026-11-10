@@ -61,7 +61,7 @@ No se han inventado URLs ni payloads para esas operaciones. Los modelos de demos
 
 ## Mapas y otros límites
 
-La referencia visual acordada para cartografía es un mapa base real estilo OpenStreetMap, con atribución. Este bloque no añade aún una pregunta de ubicación ni sustituye los mapas ilustrativos existentes. El campo de ubicación y su dato geográfico deben definirse antes de incorporarlos al constructor. Tampoco se incluyen archivos, lógica condicional, programación de fechas ni exportación de respuestas en esta primera demostración.
+La cartografía pública ya utiliza un mapa base real de OpenStreetMap con atribución, centrado en Villavicencio y con encuadre general aproximado del Meta. Este bloque no añade todavía una pregunta de ubicación al constructor de formularios. El campo de ubicación y su dato geográfico deben definirse antes de incorporarlos. Tampoco se incluyen archivos, lógica condicional, programación de fechas ni exportación de respuestas en esta primera demostración.
 
 ## Verificación
 

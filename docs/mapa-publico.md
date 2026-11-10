@@ -1,11 +1,13 @@
-# Mapa público
+# Mapa territorial
 
-Ruta: `/mapa`. Se carga de forma diferida y comparte el encabezado, el pie y el tema persistente del portal público.
+Rutas: `/mapa`, `/ciudadano/mapa` y `/admin/mapa`. Las tres cargan de forma diferida el mismo componente, pero conservan el layout, la navegación y los permisos del contexto actual.
 
-Los HTML de Stitch en claro y oscuro se integran en una única vista con estilos limitados a `.public-map-page`. La estructura se divide en filtros, lienzo ilustrativo y ficha de caso reutilizable en mapa y lista.
+El lienzo utiliza Leaflet 1.9.4 y los mosaicos estándar de OpenStreetMap. Abre centrado en Villavicencio, Meta, y ofrece controles para regresar a Villavicencio o mostrar un encuadre general aproximado del departamento. Este encuadre no pretende representar el límite administrativo oficial. La atribución de OpenStreetMap permanece visible.
 
-La vista incluye controles reactivos para territorio, naturaleza, categorías, estados y fechas. Restablecer restaura los valores iniciales del diseño; aplicar valida el orden de las fechas e informa que la consulta está pendiente de la API. No envía peticiones ni inventa contratos del backend.
+No se precargan ni descargan mosaicos para uso sin conexión. La URL del proveedor está concentrada en el componente para permitir sustituirla si el tráfico o las condiciones operativas requieren otro servicio. La disponibilidad del servidor público de mosaicos es de mejor esfuerzo y no tiene SLA.
 
-La lista permite buscar por el texto del único caso de ejemplo. El mapa es el SVG del diseño, con cambio de paleta, acercamiento de la ilustración y apertura/cierre de la ficha. No representa cartografía real ni coordenadas verificadas. Los indicadores y marcadores son demostrativos. Las acciones de registro, PDF, detalle completo y capas permanecen desactivadas hasta disponer de sus pantallas o integraciones.
+No se muestran marcadores, coordenadas, conteos ni indicadores ficticios. La lista permanece vacía hasta que el backend entregue casos con ubicación autorizada para publicación. Los filtros muestran Meta y varios municipios como presentación local, pero todavía no realizan peticiones.
 
-Comprobación: `npm run build`. Para revisar visualmente, ejecutar `npm start`, visitar `/mapa`, alternar el tema desde el encabezado y comprobar escritorio y móvil. La compilación no sustituye la revisión visual en un navegador.
+La integración futura debe proporcionar una geometría GeoJSON o coordenadas verificadas, visibilidad pública explícita y alcance territorial. No se deben derivar ni inventar coordenadas a partir del texto de un caso.
+
+Comprobaciones realizadas: `npm run build`, `npm run test:api` y revisión visual local en Chrome de `/mapa` a 1440 × 1200 píxeles.

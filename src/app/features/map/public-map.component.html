@@ -6,11 +6,11 @@
 <div class="flex items-center gap-space-xs mb-1">
 <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-label-sm font-label-sm mp-bg-surface-container-high border mp-border-outline-variant-60 mp-text-on-surface font-medium">
 <span class="w-1.5 h-1.5 rounded-full mp-bg-primary-container"></span>
-            Sistema SIG Ciudadano · Ley 850 de 2003
+            Exploración territorial · Meta
           </span>
-<span class="text-label-sm font-label-sm mp-text-secondary">Actualizado: Febrero 2025</span>
+<span class="text-label-sm font-label-sm mp-text-secondary">Cartografía interactiva</span>
 </div>
-<h1 class="text-headline-md font-headline-md mp-text-on-surface font-bold tracking-tight">Mapa de Casos Comunitarios</h1>
+<h1 class="text-headline-md font-headline-md mp-text-on-surface font-bold tracking-tight">Mapa comunitario de Villavicencio y el Meta</h1>
 <p class="text-body-sm font-body-sm mp-text-secondary max-w-3xl mt-0.5">
           Exploración territorial georreferenciada de problemáticas y proyectos comunitarios en seguimiento y veeduría ciudadana. Solo casos verificados y aprobados para publicación.
         </p>
@@ -20,7 +20,7 @@
 
 <div class="relative w-full sm:w-72">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 mp-text-secondary text-[20px]">search</span>
-<input aria-label="Buscar en la lista de demostración" [value]="search()" (input)="search.set($any($event.target).value)" class="w-full pl-10 pr-3 py-2 text-body-sm font-body-sm mp-bg-surface-container border mp-border-outline-variant-70 mp-text-on-surface mp-placeholder-text-neutral-500 rounded-lg focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary-container/40 transition-all" placeholder="Buscar caso, radicado o vereda..." type="text">
+<input aria-label="Buscar en la lista de casos" [value]="search()" (input)="search.set($any($event.target).value)" class="w-full pl-10 pr-3 py-2 text-body-sm font-body-sm mp-bg-surface-container border mp-border-outline-variant-70 mp-text-on-surface mp-placeholder-text-neutral-500 rounded-lg focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary-container/40 transition-all" placeholder="Buscar caso, radicado o municipio..." type="text">
 </div>
 
 <div class="inline-flex rounded-lg mp-bg-surface-container-low p-1 border mp-border-outline-variant-60" role="group">
@@ -40,39 +40,39 @@
 </div>
 </div>
 </section>
-<div class="max-w-7xl mx-auto px-margin md:px-margin-desktop text-body-sm py-3" role="note">Vista de demostración · Mapa ilustrativo, casos e indicadores de ejemplo. La búsqueda filtra el caso de ejemplo en Vista Lista. Los filtros territoriales se conectarán con la API.</div><div class="w-full max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-md grid grid-cols-12 gap-space-md"><aside class="col-span-12 lg:col-span-4 map-filter-shell p-space-md rounded-xl border"><plus-map-filters/></aside><div class="col-span-12 lg:col-span-8 min-w-0">@if(view() === 'map') {<plus-map-canvas [caseRoute]="caseRoute"/>} @else {<section aria-label="Lista de casos de demostración" class="map-list min-h-[500px] rounded-xl border p-2"><p class="p-4 text-body-sm">1 caso de ejemplo · Resultados de demostración</p>@if(matchesSearch()) {<plus-map-case-preview [dismissible]="false" [caseRoute]="caseRoute"/>} @else {<p class="p-4" role="status">No hay coincidencias en el caso de ejemplo.</p>}</section>}</div></div>
+<div class="max-w-7xl mx-auto px-margin md:px-margin-desktop text-body-sm py-3" role="note">Cartografía real de OpenStreetMap centrada en Villavicencio y disponible para explorar el Meta. Los casos y filtros se conectarán con la API; no se muestran ubicaciones ficticias.</div><div class="w-full max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-md grid grid-cols-12 gap-space-md"><aside class="col-span-12 lg:col-span-4 map-filter-shell p-space-md rounded-xl border"><plus-map-filters/></aside><div class="col-span-12 lg:col-span-8 min-w-0">@if(view() === 'map') {<plus-map-canvas/>} @else {<section aria-label="Lista de casos" class="map-list min-h-[500px] rounded-xl border p-6"><h2 class="text-title-md font-bold">Casos publicados</h2><p class="mt-3 text-body-sm" role="status">Todavía no hay casos georreferenciados cargados desde el backend. La búsqueda y los filtros estarán disponibles cuando la API entregue ubicaciones autorizadas para publicación.</p></section>}</div></div>
 <section class="border-t mp-border-outline-variant-40 mp-bg-surface-container-low py-6">
 <div class="w-full max-w-7xl mx-auto px-margin md:px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-4">
 
 <div class="p-4 rounded-xl border mp-border-outline-variant-60 mp-bg-surface-container flex items-center gap-4 shadow-sm">
 <div class="w-1.5 h-10 mp-bg-primary-container rounded-full"></div>
 <div>
-<span class="text-headline-sm font-headline-sm mp-text-on-surface font-bold">142</span>
-<p class="text-body-sm font-body-sm mp-text-secondary">Casos totales georreferenciados</p>
+<span class="text-headline-sm font-headline-sm mp-text-on-surface font-bold">Villavicencio</span>
+<p class="text-body-sm font-body-sm mp-text-secondary">Centro inicial del mapa</p>
 </div>
 </div>
 
 <div class="p-4 rounded-xl border mp-border-outline-variant-60 mp-bg-surface-container flex items-center gap-4 shadow-sm">
 <div class="w-1.5 h-10 mp-bg-primary-container rounded-full"></div>
 <div>
-<span class="text-headline-sm font-headline-sm mp-text-on-surface font-bold">$18.420 M</span>
-<p class="text-body-sm font-body-sm mp-text-secondary">Recursos públicos bajo veeduría</p>
+<span class="text-headline-sm font-headline-sm mp-text-on-surface font-bold">Meta</span>
+<p class="text-body-sm font-body-sm mp-text-secondary">Cobertura territorial explorable</p>
 </div>
 </div>
 
 <div class="p-4 rounded-xl border mp-border-outline-variant-60 mp-bg-surface-container flex items-center gap-4 shadow-sm">
 <div class="w-1.5 h-10 mp-bg-primary-container rounded-full"></div>
 <div>
-<span class="text-headline-sm font-headline-sm mp-text-on-surface font-bold">48 Veredas</span>
-<p class="text-body-sm font-body-sm mp-text-secondary">Comunidades organizadas en red</p>
+<span class="text-headline-sm font-headline-sm mp-text-on-surface font-bold">OpenStreetMap</span>
+<p class="text-body-sm font-body-sm mp-text-secondary">Cartografía abierta e interactiva</p>
 </div>
 </div>
 
 <div class="p-4 rounded-xl border mp-border-outline-variant-60 mp-bg-surface-container flex items-center gap-4 shadow-sm">
 <div class="w-1.5 h-10 mp-bg-primary-container rounded-full"></div>
 <div>
-<span class="text-headline-sm font-headline-sm mp-text-on-surface font-bold">100% Público</span>
-<p class="text-body-sm font-body-sm mp-text-secondary">Datos abiertos y descargables</p>
+<span class="text-headline-sm font-headline-sm mp-text-on-surface font-bold">Sin datos ficticios</span>
+<p class="text-body-sm font-body-sm mp-text-secondary">Casos pendientes de la API</p>
 </div>
 </div>
 </div>

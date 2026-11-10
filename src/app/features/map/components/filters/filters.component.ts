@@ -10,13 +10,13 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 export class MapFiltersComponent {
   private readonly builder = inject(FormBuilder).nonNullable;
   readonly form = this.builder.group({
-    department: "Chocó (Veeduría Especial Río Atrato)",
-    municipality: "Riosucio (Subcuenca Cacarica y Jiguamiandó)",
-    community: 'Vereda El Porvenir',
-    kind: 'problem',
+    department: 'Meta',
+    municipality: 'Villavicencio',
+    community: '',
+    kind: 'all',
     roads: true, water: true, health: false, education: true, environment: false,
     active: true, review: true, resolved: false,
-    from: '2024-01-01', to: '2025-02-08',
+    from: '', to: '',
   });
   readonly message = signal('');
   selectedCategories() {

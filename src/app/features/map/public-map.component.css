@@ -94,7 +94,12 @@
 .dark .public-map-page {background:#171717;color:#fafafa;}
 .public-map-page .map-filter-shell,.public-map-page .map-list {background:#fff;border-color:#cbd5e1;}
 .dark .public-map-page .map-filter-shell,.dark .public-map-page .map-list {background:#121212;border-color:#3f3f46;}
-.public-map-page plus-map-canvas,.public-map-page plus-map-filters,.public-map-page plus-map-case-preview {display:block;}
+.public-map-page plus-map-canvas,.public-map-page plus-map-filters {display:block;}
+.public-map-page .plus-leaflet-map {height:720px;width:100%;background:#e2e8f0;z-index:0;}
+.public-map-page .plus-map-label {border:1px solid #0f172a;border-radius:.5rem;background:#fff;color:#0f172a;font-weight:700;box-shadow:0 4px 12px rgb(15 23 42 / .2);}
+.public-map-page .leaflet-control-attribution {background:rgb(255 255 255 / .92);color:#334155;font-size:11px;}
+.public-map-page .leaflet-control-attribution a {color:#075985;text-decoration:underline;}
+.public-map-page .leaflet-control-zoom a {color:#0f172a;background:#fff;}
 .public-map-page input,.public-map-page select {accent-color:#eab308;}
 .public-map-page .custom-scroll {scrollbar-width:thin;scrollbar-color:#94a3b8 transparent;}
 .public-map-page .map-grid-pattern {background-image:radial-gradient(circle,#94a3b8 1px,transparent 1px);background-size:28px 28px;}
@@ -106,4 +111,4 @@
 .public-map-page label:has(input[type="radio"]) {background:transparent;border-color:#cbd5e1;}
 .dark .public-map-page label:has(input[type="radio"]) {border-color:#3f3f46;}
 .public-map-page label:has(input[type="radio"]:checked) {background:rgb(250 204 21 / .1);border-color:#facc15;}
-@media(max-width:640px){.public-map-page h1{font-size:24px!important;line-height:32px!important;}.public-map-page plus-map-case-preview > div{margin:1rem;width:calc(100% - 2rem);transform:none;}.public-map-page plus-map-canvas > section > div:first-child ~ div:nth-child(2) {gap:.5rem;}.public-map-page .custom-scroll{max-height:420px;}}
+@media(max-width:640px){.public-map-page h1{font-size:24px!important;line-height:32px!important;}.public-map-page .plus-leaflet-map{height:560px;}.public-map-page plus-map-canvas > section > div:first-child ~ div:nth-child(2) {gap:.5rem;}.public-map-page .custom-scroll{max-height:420px;}}
