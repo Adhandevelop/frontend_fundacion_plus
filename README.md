@@ -23,7 +23,7 @@ Mientras se corrigen esos pendientes, se avanzó con [navegación móvil, teclad
 
 Los formularios de acceso y los editores de usuarios/comunidades muestran resúmenes de errores enlazados a los campos, con validación cruzada de contraseñas accesible. La revisión local no crea cuentas, solicita correos ni restablece contraseñas reales.
 
-La [nueva matriz de navegación administrativa](docs/permisos-navegacion-administrativa.md) se aplica al menú y a las rutas directas: usuarios/roles, comunidades y auditoría son exclusivos de administrador; moderación y contenidos editoriales admiten administrador/moderador. Representantes mantienen casos, informes y perfil administrativo.
+El [estado consolidado de integración](docs/estado-integracion-frontend-backend.md) separa lo conectado, lo demostrativo y lo que todavía necesita el backend. La [matriz de navegación administrativa](docs/permisos-navegacion-administrativa.md) se aplica al menú y a las rutas directas: usuarios/roles, comunidades y auditoría son exclusivos de administrador; moderación y contenidos editoriales admiten administrador/moderador. Representantes mantienen casos, informes, mapa y perfil administrativo.
 
 El nuevo [módulo de formularios de demostración](docs/formularios-demostracion.md) incluye listado/editor administrativo, vista previa, formulario público y respuestas administrativas/ciudadanas. Usa datos temporales: no crea cuentas ni envía correos. Ejemplo público: `/formularios/solicitud-comunitaria-demo`.
 
