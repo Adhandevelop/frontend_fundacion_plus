@@ -1,0 +1,47 @@
+import assert from 'node:assert/strict';
+import { createEnvironmentInjector, PLATFORM_ID, runInInjectionContext, ɵINJECTOR_SCOPE } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
+import { Router } from '@angular/router';
+import { AuthService } from '../src/app/core/auth/auth.service';
+import { FormsDemoService } from '../src/app/shared/dynamic-forms/forms-demo.service';
+import { copyForm, formProblems, submissionProblems } from '../src/app/shared/dynamic-forms/forms-demo.models';
+import { FormRunnerComponent } from '../src/app/shared/dynamic-forms/form-runner.component';
+import { AccountUser } from '../src/app/core/auth/auth.models';
+
+const env=createEnvironmentInjector([{provide:PLATFORM_ID,useValue:'browser'},{provide:ɵINJECTOR_SCOPE,useValue:'root'},provideHttpClient(),provideHttpClientTesting(),{provide:Router,useValue:{}},AuthService,FormsDemoService],undefined as never);
+const auth=env.get(AuthService),store=env.get(FormsDemoService);
+const account:AccountUser={id_usuario:'admin-a',primary_role:'administrador',rol_nombre:'administrador',permissions:{all:['*']},estado:'activo',nombres:'Cuenta',apellidos:'Prueba',full_name:'Cuenta Prueba',correo:'local@example.invalid',telefono:null,perfil:null,preferencias:null};
+auth.updateUser(account);
+const source=store.adminForm('demo-form-community')!;
+assert.equal(store.forms().length,3);assert.equal(store.publicForm('borrador-demo'),null);
+const invalid=store.save({...copyForm(source),id:'',title:' '},0);assert.ok('error'in invalid);
+const added=store.save({...copyForm(source),id:'',title:'Formulario local de prueba'},0);assert.ok('id'in added);if(!('id'in added))throw new Error('Missing draft');
+const created=store.adminForm(added.id)!;assert.equal(created.state,'borrador');assert.equal(created.owner,account.id_usuario);
+assert.equal(store.publicForm(created.slug),null);assert.equal(store.transition(created.id,0,'publicado'),false);assert.equal(store.transition(created.id,created.revision,'publicado'),true);
+assert.ok('error'in store.save({...created,title:'No editar publicado'},created.revision));
+const schema=store.publicForm(created.slug)!;
+assert.ok(formProblems({...schema,questions:[{...schema.questions[0],options:['Igual','igual']}]}).length);
+assert.ok(formProblems({...schema,questions:[{...schema.questions[0],id:'email'}]}).length);
+const input={identity:{names:'Persona',surnames:'Prueba',document:'00000000',email:'persona@example.invalid',phone:'0000000000'},answers:{subject:'Orientación comunitaria',description:'Texto sintético',availability:''},consent:true};
+assert.deepEqual(submissionProblems(schema,input),[]);
+assert.ok(submissionProblems(schema,{...input,answers:{...input.answers,subject:'No existe'}}).length);
+assert.ok(submissionProblems(schema,{...input,answers:{...input.answers,availability:'2026-02-31'}}).length);
+assert.equal(store.submit(created.slug,{...input,consent:false}),null);
+// Anonymous submissions cannot be claimed by a subsequent login with the same email.
+auth.clear();const anonymous=store.submit(created.slug,input)!;assert.equal(anonymous.owner,null);assert.equal(anonymous.activation,'pendiente_demo');
+auth.updateUser({...account,id_usuario:'citizen-a',primary_role:'ciudadano',permissions:{casos:['ver_propios']},correo:input.identity.email});
+assert.equal(store.citizenResponses().some(row=>row.id===anonymous.id),false);
+const owned=store.submit(created.slug,input)!;assert.equal(owned.owner,'citizen-a');assert.equal(owned.activation,'sesion_ciudadana_demo');assert.equal(store.citizenResponses().some(row=>row.id===owned.id),true);
+input.answers.description='No debe cambiar el snapshot';assert.equal(owned.answers['description'],'Texto sintético');
+auth.updateUser({...account,id_usuario:'citizen-b',primary_role:'ciudadano',permissions:{casos:['ver_propios']}});assert.equal(store.citizenResponses().some(row=>row.id===owned.id),false);assert.equal(store.forms().length,0);
+auth.updateUser({...account,id_usuario:'admin-b'});assert.equal(store.adminForm(created.id),null);assert.deepEqual(store.adminResponses(created.id),[]);
+auth.updateUser(account);assert.equal(store.adminResponses(created.id).length,2);
+const closed=store.adminForm(created.id)!;assert.equal(store.transition(closed.id,closed.revision,'cerrado'),true);assert.equal(store.submit(created.slug,input),null);assert.equal(owned.form.state,'publicado');
+const cloned=store.copy(created.id);assert.ok('id'in cloned);if('id'in cloned)assert.equal(store.adminForm(cloned.id)?.state,'borrador');
+auth.updateUser({...account,primary_role:'moderador'});assert.equal(store.canManage(),false);assert.equal(store.transition(source.id,source.revision,'cerrado'),false);
+// All five question types run locally. Preview never emits; a public double click emits once.
+const runner=runInInjectionContext(env,()=>new FormRunnerComponent());runner.schema={...schema,collectDocument:false,questions:[{id:'short',type:'texto',label:'Texto',required:true,options:[]},{id:'long',type:'parrafo',label:'Párrafo',required:false,options:[]},{id:'single',type:'unica',label:'Única',required:true,options:['A','B']},{id:'multi',type:'multiple',label:'Múltiple',required:true,options:['A','B']},{id:'date',type:'fecha',label:'Fecha',required:true,options:[]}]};runner.preview=true;runner.ngOnChanges();let emits=0;runner.submitted.subscribe(()=>emits++);
+runner.send();assert.ok(runner.issues().length);runner.form.patchValue({names:'Persona',surnames:'Prueba',email:'persona@example.invalid',phone:'0000000000',short:'Texto',single:'A',date:'2026-11-09',consent:'yes'});runner.multiple('multi','A');runner.multiple('multi','B');runner.multiple('multi','A');assert.deepEqual(runner.form.controls['multi'].value,['B']);assert.deepEqual(runner.issues(),[]);runner.send();assert.equal(emits,0);runner.preview=false;runner.send();runner.send();assert.equal(emits,1);
+env.get(HttpTestingController).expectNone(()=>true);env.destroy();
+console.log('Dynamic form demo checks passed: builder validation, revisions, immutable submitted schemas, owner isolation, anonymous pending status, preview and duplicate-submit protection without HTTP.');

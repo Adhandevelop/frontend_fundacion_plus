@@ -30,6 +30,14 @@ main[tabindex="-1"]:focus {outline:none;}
 .dark .plus-form-errors {background:#24191c;color:#fecaca;border-color:#fca5a5;}
 .plus-field-error {color:#b91c1c;font-size:13px;}
 .dark .plus-field-error {color:#fca5a5;}
+.plus-form-panel {padding:1.5rem;background:#fff;color:#0f172a;border:1px solid #cbd5e1;border-radius:.75rem;}
+.dark .plus-form-panel {background:#1a1e29;color:#f8fafc;border-color:#475569;}
+.plus-form-input {display:block;width:100%;min-width:0;padding:.7rem;border:1px solid #94a3b8;border-radius:.5rem;background:#fff;color:#0f172a;font-size:16px;}
+.dark .plus-form-input {background:#121418;color:#f8fafc;border-color:#64748b;}
+.plus-form-input[aria-invalid=true] {border-color:#b91c1c;}
+.dark .plus-form-input[aria-invalid=true] {border-color:#fca5a5;}
+.plus-form-primary {display:inline-flex;justify-content:center;align-items:center;min-height:44px;padding:.6rem 1rem;border-radius:.5rem;background:#facc15;color:#0f172a;font-weight:600;font-size:14px;}
+plus-admin-forms,plus-form-editor,plus-form-preview,plus-form-responses,plus-public-form,plus-citizen-forms {display:block;min-width:0;}
 .carousel-tab-btn[aria-selected="true"] {@apply bg-primary-container text-on-primary-fixed border-transparent shadow-sm;}
 .carousel-dot-btn[aria-pressed="true"] {@apply w-8 bg-primary-container;}
 @media (max-width:640px) {h1 {font-size:30px!important;line-height:38px!important;} #mapa-casos [data-location] > .absolute.z-30 {left:1rem;right:1rem;width:auto;}}

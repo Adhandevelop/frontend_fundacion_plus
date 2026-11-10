@@ -190,3 +190,4 @@ await import('./admin-comments.spec');
 await import('./admin-territories.spec');
 await import('./admin-users.spec');
 await import('./admin-access.spec');
+await import('./forms-demo.spec');

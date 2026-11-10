@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 const PATHS:Record<string,string>={
+  description:'M5 3h10l4 4v14H5z M15 3v5h4 M8 12h8 M8 16h8',
   dashboard:'M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z',
   folder_shared:'M3 6h7l2 2h9v12H3z M3 6V4h7l2 2 M9 13h6 M9 16h6',
   map:'M3 5l6-2 6 2 6-2v16l-6 2-6-2-6 2z M9 3v16 M15 5v16',

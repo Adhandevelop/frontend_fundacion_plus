@@ -6,6 +6,8 @@
 
 > **Contenido inicial inventariado:** [textos, imágenes y guía para la carga editorial](contenido-inicial/preparacion.md) extraídos del frontend. No equivale a aprobación ni importación; noticias/iniciativas públicas mantienen sus datos actuales hasta verificar la carga del backend.
 
+> **Formularios dinámicos en demostración:** listado/editor, vista previa, formulario público, confirmación y seguimiento ciudadano implementados con almacenamiento temporal. No crean cuentas ni envían correos; contrato backend y campo de ubicación pendientes. Ver [formularios-demostracion.md](formularios-demostracion.md).
+
 > **Informes y auditoría reciente conectados:** agregados de toda la selección, tabla paginada y CSV del backend; consulta de eventos recientes con filtros locales y detalle restringido. La auditoría no representa un historial exhaustivo. Ver [integracion-informes-auditoria.md](integracion-informes-auditoria.md).
 
 > **Comunidades conectadas:** directorio/ficha, creación, edición y activación/desactivación consultan REST. No incluyen CRUD departamental/municipal ni edición cartográfica. Los catálogos del servidor ya devuelven datos; falta la prueba funcional controlada. Ver [integracion-territorios.md](integracion-territorios.md) y el estado actualizado P02 en [problemas-integracion.md](problemas-integracion.md).

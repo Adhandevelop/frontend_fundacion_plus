@@ -8,6 +8,8 @@ const ADMIN_ONLY = ['administrador'];
 export const ADMIN_SECTION_ROLES = {
   dashboard: INTERNAL, cases: INTERNAL, reports: INTERNAL, profile: INTERNAL,
   users: ADMIN_ONLY, roles: ADMIN_ONLY, territories: ADMIN_ONLY, audit: ADMIN_ONLY,
+  // Newly requested UI prototype; no forms API permission contract has been implemented here.
+  forms: ADMIN_ONLY,
   news: EDITORIAL, initiatives: EDITORIAL, proposals: EDITORIAL, comments: EDITORIAL,
 } as const;
 export type AdminSection = keyof typeof ADMIN_SECTION_ROLES;

@@ -53,7 +53,7 @@ try{
     }catch(error){failures.push(error.message);await cdp('Fetch.failRequest',{requestId,errorReason:'BlockedByClient'}).catch(()=>{});}
   });
   await cdp('Runtime.enable');await cdp('Page.enable');await cdp('Fetch.enable',{patterns:[{urlPattern:'*',requestStage:'Request'}]});
-  const evaluate=async(expression)=>{const result=await cdp('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(result.exceptionDetails)throw new Error(result.exceptionDetails.text);return result.result.value;};
+  const evaluate=async(expression)=>{const result=await cdp('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(result.exceptionDetails)throw new Error(result.exceptionDetails.exception?.description??result.exceptionDetails.text);return result.result.value;};
   await cdp('Page.addScriptToEvaluateOnNewDocument',{source:`sessionStorage.setItem('plus.session.v1',JSON.stringify({access:'local-test',refresh:'local-test'}));localStorage.removeItem('plus.session.v1');localStorage.setItem('plus-theme','light');`});
   async function visit(route,currentRole='administrador'){
     role=currentRole;await cdp('Page.navigate',{url:origin+route});
@@ -62,7 +62,7 @@ try{
   }
   async function viewport(width){await cdp('Emulation.setDeviceMetricsOverride',{width,height:850,deviceScaleFactor:1,mobile:false});await pause(100);}
   async function snapshot(name){const shot=await cdp('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});await writeFile(path.join(output,name+'.png'),Buffer.from(shot.data,'base64'));}
-  async function widthFits(){assert.ok(await evaluate('document.documentElement.scrollWidth<=innerWidth'),`Unexpected page overflow at ${await evaluate('location.pathname')}`);}
+  async function widthFits(){const fits=await evaluate('document.documentElement.scrollWidth<=innerWidth');if(!fits){await snapshot('overflow-debug');console.log(await evaluate(`Array.from(document.querySelectorAll('body *')).filter(element=>element.getBoundingClientRect().right>innerWidth+1).slice(0,12).map(element=>({tag:element.tagName,id:element.id,classes:element.className,width:element.getBoundingClientRect().width}))`));}assert.ok(fits,`Unexpected page overflow at ${await evaluate('location.pathname')}`);}
   await viewport(360);await visit('/admin/usuarios/nuevo');await widthFits();
   assert.equal(await evaluate(`document.querySelector('main').getBoundingClientRect().width>0`),true);
   await evaluate(`document.querySelector('[aria-controls="admin-navigation"]').focus();document.querySelector('[aria-controls="admin-navigation"]').click()`);await pause(150);
@@ -146,6 +146,36 @@ try{
       await evaluate(`document.querySelector('button[aria-controls="register-password"]').click()`);await snapshot('register-validation-dark-mobile');
     }
   }
+  await visit('/admin/formularios');await widthFits();
+  assert.equal(await evaluate(`document.querySelectorAll('plus-admin-forms article').length`),3);
+  await visit('/admin/formularios/nuevo');await widthFits();
+  await evaluate(`{const title=document.querySelector('#builder-title');title.value='Encuesta local';title.dispatchEvent(new Event('input',{bubbles:true}));Array.from(document.querySelectorAll('button')).find(button=>button.textContent==='Añadir pregunta').click();}`);await pause(80);
+  await evaluate(`{const inputs=document.querySelectorAll('article label.admin-field input');inputs[1].value='Elige tus intereses';inputs[1].dispatchEvent(new Event('input',{bubbles:true}));const type=document.querySelectorAll('article select')[1];type.value='multiple';type.dispatchEvent(new Event('change',{bubbles:true}));}`);await pause(80);
+  assert.equal(await evaluate(`document.querySelector('article textarea').value.includes(String.fromCharCode(10))`),true);
+  await evaluate(`document.querySelector('button[type="submit"]').click()`);
+  await until(()=>evaluate(`location.pathname.endsWith('/vista-previa') && !!document.querySelector('plus-form-runner')`),'saved form preview');
+  await widthFits();await snapshot('form-builder-preview-mobile');
+  await evaluate(`document.querySelector('plus-form-runner button[type="submit"]').click()`);await pause(100);
+  assert.equal(await evaluate(`document.activeElement.id`),'dynamic-form-errors');
+  await evaluate(`document.querySelector('a[href="/admin/formularios"]').click()`);await until(()=>evaluate(`!!document.querySelector('plus-admin-forms')`),'form list');
+  await evaluate(`document.querySelector('plus-admin-forms article button.admin-primary').click()`);await pause(50);
+  await evaluate(`Array.from(document.querySelectorAll('button')).find(button=>button.textContent==='Confirmar simulación').click()`);await pause(60);
+  await evaluate(`Array.from(document.querySelectorAll('plus-admin-forms article')).find(article=>article.querySelector('h2').textContent==='Encuesta local').querySelector('a[href^="/formularios/"]').click()`);
+  await until(()=>evaluate(`!!document.querySelector('plus-public-form plus-form-runner')`),'public form');await widthFits();
+  async function fillDemoForm(){
+    await evaluate(`{const values={names:'Persona',surnames:'Prueba',document:'00000000',email:'persona@example.invalid',phone:'0000000000'};for(const [name,value] of Object.entries(values)){const field=document.querySelector('#answer-'+name);if(field){field.value=value;field.dispatchEvent(new Event('input',{bubbles:true}));}}for(const text of document.querySelectorAll('plus-form-runner textarea')){text.value='Solicitud ficticia de prueba';text.dispatchEvent(new Event('input',{bubbles:true}));}const radio=document.querySelector('plus-form-runner input[type="radio"]');if(radio)radio.click();for(const checkbox of document.querySelectorAll('plus-form-runner input[type="checkbox"]')){if(!checkbox.checked)checkbox.click();}document.querySelector('plus-form-runner button[type="submit"]').click();}`);
+    await until(()=>evaluate(`!!document.querySelector('#demo-form-receipt')`),'local form receipt');
+  }
+  await fillDemoForm();assert.equal(await evaluate(`document.querySelector('#demo-form-receipt').textContent.includes('No se ha creado una cuenta')`),true);
+  await visit('/formularios/cerrado-demo');assert.equal(await evaluate(`document.querySelector('plus-form-runner')`),null);
+  await visit('/formularios/borrador-demo');assert.equal(await evaluate(`document.querySelector('plus-form-runner')`),null);
+  await visit('/ciudadano/formularios','ciudadano');await widthFits();
+  await evaluate(`document.querySelector('a[href="/formularios/solicitud-comunitaria-demo"]').click()`);await until(()=>evaluate(`!!document.querySelector('plus-public-form plus-form-runner')`),'citizen public form');
+  await fillDemoForm();await evaluate(`document.querySelector('#demo-form-receipt a').click()`);await until(()=>evaluate(`!!document.querySelector('plus-citizen-forms')`),'citizen submissions');
+  assert.equal(await evaluate(`document.querySelectorAll('plus-citizen-forms article').length`),2);
+  await evaluate(`Array.from(document.querySelectorAll('plus-citizen-forms article a')).at(-1).click()`);await until(()=>evaluate(`!!document.querySelector('plus-answer-detail')`),'submission detail');await widthFits();
+  await evaluate(`document.querySelector('[aria-label="Cambiar tema de color"]').click()`);await snapshot('form-citizen-answer-dark-mobile');
+  assert.equal(apiCalls.some(call=>call.path.includes('/forms/') || call.path.includes('/formularios/')),false);
   for(const [currentRole,allowed] of [
     ['moderador',['/admin','/admin/casos','/mapa','/admin/informes','/admin/noticias','/admin/iniciativas','/admin/postulaciones','/admin/comentarios']],
     ['representante',['/admin','/admin/casos','/mapa','/admin/informes']],
@@ -158,6 +188,7 @@ try{
   for(const [currentRole,route,endpoint] of [
     ['moderador','/admin/usuarios/person/editar','/api/v1/admin/users/'],
     ['moderador','/admin/comunidades/nueva','/api/v1/admin/communities/'],
+    ['moderador','/admin/formularios','/api/v1/forms/'],
     ['representante','/admin/comentarios','/api/v1/admin/comments/'],
     ['representante','/admin/auditoria','/api/v1/admin/audit-events/'],
     ['ciudadano','/admin/casos','/api/v1/admin/cases/'],
