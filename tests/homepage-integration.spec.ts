@@ -4,10 +4,11 @@ import { provideHttpClient, withNoXsrfProtection } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from '../src/app/core/api/api.config';
-import { HomepageApiService } from '../src/app/core/api/homepage-api.service';
+import { HomepageApiService, homepageImageUrl } from '../src/app/core/api/homepage-api.service';
 
 const env=createEnvironmentInjector([{provide:PLATFORM_ID,useValue:'browser'},{provide:ɵINJECTOR_SCOPE,useValue:'root'},provideHttpClient(withNoXsrfProtection()),provideHttpClientTesting(),{provide:API_BASE_URL,useValue:'/api/v1'},HomepageApiService],undefined as never);
 const api=env.get(HomepageApiService),backend=env.get(HttpTestingController);
+assert.equal(homepageImageUrl({image_url:'http://fundacionplus.site/media/site/hero/test.jpg?v=1'}),'/api/v1/public/media/site/hero/test.jpg?v=1');assert.equal(homepageImageUrl({image_url:'http://fundacionplus.site/media/old.jpg',api_media_url:'/api/v1/public/media/new.jpg'}),'/api/v1/public/media/new.jpg');
 const publicPromise=firstValueFrom(api.publicHome());
 backend.expectOne('/api/v1/public/home/').flush({institution:{corporation_name:'Corporación PLUS',acronym:'PLUS',image_url:'/media/site/hero/test.jpg',alt_text:'Equipo PLUS'},verified_indicators:{published_cases_count:2,resolved_cases_count:1,active_municipalities_count:4,active_communities_count:5,published_initiatives_count:3,completed_activities_count:6},featured_initiatives:[],recent_news:[],site_settings:{}});
 assert.equal((await publicPromise).verified_indicators.published_cases_count,2);

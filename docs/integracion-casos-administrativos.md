@@ -23,6 +23,7 @@ Se revisaron las vistas/serializers/services locales y se contrastaron lecturas 
 |---|---|
 | Dashboard | GET `/admin/dashboard/`; claves `cases`, `moderation_queues`, `territories`, `content`, `users`. |
 | Listado | GET `/admin/cases/`; `search`, `estado`, `prioridad`, `estado_publicacion`, `id_tipo_caso`, `id_departamento`, `id_municipio`, `page`, `page_size`. |
+| Casos asignados | GET `/admin/cases/?scope=assigned&assigned_to_me=true`; conserva filtros y paginación, pero limita los resultados a la asignación activa del usuario autenticado. |
 | Detalle | GET `/admin/cases/{uuid-o-codigo}/`; DTO con solicitante, historial, seguimientos, evidencias y `allowed_actions`. |
 | Moderación | POST `moderation/`: `estado_publicacion`, `prioridad`, `motivo`. |
 | Corrección | POST `correction-requests/`: `motivo`. |
@@ -61,5 +62,7 @@ Consultas de producción con la cuenta administrativa de prueba autorizada:
 Se cerró la sesión al terminar. No se modificaron casos, asignaciones, publicaciones, seguimientos, resoluciones o evidencias reales; tampoco se crearon usuarios ni se enviaron correos. No hubo un expediente real con el que verificar acciones: las escrituras se probaron con HttpTestingController. Sigue pendiente una prueba operativa autorizada tras cargar territorios y un caso de prueba, y la revisión visual en navegador.
 
 El dashboard administrativo incorpora ahora “Añadir caso” junto a “Gestionar casos”. La ruta `/admin/casos/nuevo` permanece dentro del layout administrativo, carga tipos, estados y la jerarquía territorial, y crea mediante `POST /api/v1/admin/cases/`; al responder redirige al expediente generado. La prueba HTTP confirma el payload, pero aún no se ha ejecutado una creación real en producción.
+
+“Casos asignados” está disponible en `/admin/casos-asignados`, en la navegación lateral y en el dashboard. Utiliza `scope=assigned` y `assigned_to_me=true` para que el filtro se aplique en el servidor. No debe confundirse con el futuro módulo “Mis casos”, que reunirá casos creados y seguidos por el administrador.
 
 Los cambios son locales y requieren subida y despliegue del frontend. Los módulos restantes pueden integrarse mientras el backend atiende los problemas documentados.

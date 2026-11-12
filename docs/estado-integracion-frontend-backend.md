@@ -141,14 +141,16 @@ No hay problemas técnicos activos demostrados en [problemas-integracion.md](pro
 
 La administración también puede registrar expedientes desde el botón amarillo “Añadir caso” del dashboard. El formulario `/admin/casos/nuevo` usa catálogos oficiales y `POST /api/v1/admin/cases/`, sin entrar al módulo ciudadano.
 
+El módulo `/admin/casos-asignados` muestra los expedientes asignados al usuario administrativo autenticado mediante los filtros P09 del backend. Está separado del listado general. El módulo solicitado “Mis casos” —casos creados o seguidos por el administrador— queda pendiente de contrato específico.
+
 ## 5. Próximo trabajo recomendado
 
-1. Probar formularios de extremo a extremo en un entorno controlado y corregir diferencias observadas.
-2. Completar los controles avanzados de validación del constructor.
-3. Aprobar y cargar el contenido editorial inicial.
-4. Probar contra el servidor la carga multipart y los enlaces de confirmación/baja del boletín ya conectados.
-5. Probar responsables, coordenadas de actividades, ficha pública y candidatos paginados contra el servidor desplegado.
-6. Integrar casos georreferenciados en el mapa.
+1. Integrar completamente el mapa con GeoJSON, filtros, marcadores y navegación a los casos reales.
+2. Conectar la ficha pública real de cada caso y la acción de seguirlo.
+3. Probar formularios de extremo a extremo en un entorno controlado y corregir diferencias observadas.
+4. Completar los controles avanzados de validación del constructor.
+5. Aprobar y cargar el contenido editorial inicial.
+6. Probar contra el servidor la carga multipart, responsables, actividades y enlaces del boletín.
 7. Probar el reemplazo real de portada con una cuenta superadministradora controlada.
 8. Repetir revisión responsive, accesibilidad, temas, Docker y Nginx con datos reales.
 

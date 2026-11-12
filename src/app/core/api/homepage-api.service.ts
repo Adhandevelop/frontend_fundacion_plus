@@ -42,6 +42,16 @@ export interface HomepageHero {
   acronym?:string;
 }
 
+export function homepageImageUrl(value:Pick<HomepageInstitution,'api_media_url'|'relative_url'|'image_url'|'url'>|null|undefined):string {
+  const preferred=value?.api_media_url||value?.relative_url||value?.image_url||value?.url||'';
+  if(!preferred)return '';
+  try {
+    const parsed=new URL(preferred,typeof location==='undefined'?'https://fundacionplus.site':location.origin);
+    const path=`${parsed.pathname}${parsed.search}`;
+    return path.startsWith('/media/')?`/api/v1/public/media/${path.slice('/media/'.length)}`:path;
+  } catch {return preferred;}
+}
+
 @Injectable({providedIn:'root'})
 export class HomepageApiService {
   private readonly http=inject(HttpClient);private readonly base=inject(API_BASE_URL);

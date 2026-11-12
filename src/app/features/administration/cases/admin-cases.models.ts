@@ -13,6 +13,7 @@ export interface AdminCasePage {count:number;next:string|null;previous:string|nu
 export interface AdminCaseFilters {
   page:number;page_size:number;search:string;estado:string;prioridad:string;estado_publicacion:string;
   id_departamento:string;id_municipio:string;id_tipo_caso:string;
+  scope?:'assigned';assigned_to_me?:boolean;
 }
 export interface AdminDashboard {
   cases:{total:number;by_estado_publicacion:Record<string,number>;by_estado_operativo:Record<string,number>;by_prioridad:Record<string,number>;open_correction_requests:number};

@@ -1,5 +1,5 @@
 <div class="p-4 sm:p-6 max-w-5xl mx-auto space-y-6">
-  <header><p class="text-label-sm uppercase tracking-wider">Superadministración</p><h1 class="text-headline-md">Fotografía principal de la página</h1><p class="text-body-sm mt-2">Reemplaza la imagen institucional que aparece al inicio. El backend conserva el archivo, actualiza la versión y registra la operación en auditoría.</p></header>
+  <header><p class="text-label-sm uppercase tracking-wider">Configuración de la página</p><h1 class="text-headline-md">Fotografía principal de la página</h1><p class="text-body-sm mt-2">Cambia la imagen institucional que aparece en la página de inicio.</p></header>
   @if(loading()){<p class="admin-panel p-5" role="status">Consultando la fotografía actual…</p>}@else if(error()&&!hero()){<p class="plus-form-errors" role="alert">{{error()}}</p>}@else{
     <form class="admin-panel p-5 sm:p-6 grid lg:grid-cols-2 gap-6" (ngSubmit)="save()">
       <section class="space-y-3" aria-label="Vista previa de la portada">

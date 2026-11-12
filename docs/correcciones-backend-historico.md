@@ -14,7 +14,7 @@ Este documento conserva la trazabilidad de problemas anteriores sin mostrarlos c
 | P06 | Anexos iniciales de casos. | Frontend mantiene la secuencia segura crear caso → subir evidencias. |
 | P07 | Doble envío/concurrencia. | Mitigaciones del frontend activas; formularios dinámicos usan idempotencia. |
 | P08 | Conversaciones generales. | Fuera del flujo activo; mensajes por caso integrados. |
-| P09 | Alcance del dashboard. | Backend añadió `scope=assigned` y `assigned_to_me`; adaptación Angular pendiente. |
+| P09 | Alcance del dashboard. | Backend añadió `scope=assigned` y `assigned_to_me`; Angular lo integra en `/admin/casos-asignados`. Prueba real pendiente. |
 | P10 | Candidatos y ámbitos. | UUID inexistente devuelve 400 y asignación valida ámbito. |
 | P11 | Carga editorial independiente. | Comando idempotente disponible; ejecución pública depende de aprobación editorial. |
 | P12 | Auditoría paginada y filtros. | Corregido e integrado en Angular: paginación real y filtros de fuente, acción, resultado, caso y fechas. Prueba funcional final pendiente. |
