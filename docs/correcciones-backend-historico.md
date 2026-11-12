@@ -2,7 +2,7 @@
 
 Actualizado: 12 de noviembre de 2026.
 
-Este documento conserva la trazabilidad de problemas anteriores sin mostrarlos como errores activos. El backend comunicó P01–P20 implementados y desplegados en el commit `8dca085`, con 35 pruebas correctas, y cerró P21 mediante `54dd730`. Algunas garantías todavía requieren una prueba funcional autenticada desde el frontend; eso no reabre el problema mientras no exista evidencia contraria.
+Este documento conserva la trazabilidad de problemas anteriores sin mostrarlos como errores activos. El backend comunicó P01–P20 implementados y desplegados en el commit `8dca085`, cerró P21 mediante `54dd730` y P22 mediante `d5219f3`, con 37 pruebas correctas. Algunas garantías todavía requieren una prueba funcional autenticada desde el frontend; eso no reabre el problema mientras no exista evidencia contraria.
 
 | Punto | Corrección reportada | Estado actual |
 |---|---|---|
@@ -27,6 +27,7 @@ Este documento conserva la trazabilidad de problemas anteriores sin mostrarlos c
 | P19 | Proyección pública de iniciativas. | Serializer depurado desplegado; verificación con contenido publicado pendiente. |
 | P20 | Iniciativas y subrecursos. | Acciones y auditoría reportadas; publicación/rechazo integrados. La carga binaria se separó como P21. |
 | P21 | Carga multipart editorial transparente. | Corregido en `54dd730`: `ruta_archivo` opcional, `file`/`archivo`, validación de formato y 15 MB, inferencia del tipo, sanitización, portada única y respuesta con URL utilizable por Angular. Integración y prueba funcional del frontend pendientes. |
+| P22 | Filtro y candidatos de vínculos edición–caso. | Corregido en `d5219f3`: filtro server-side por `edicion`, `caso`, tipo y búsqueda; respuesta enriquecida; candidatos aprobados con exclusión automática, búsqueda, filtros, paginación y permiso propio de iniciativas. Angular usa ambos contratos. |
 
 ## Regla para reabrir un punto
 

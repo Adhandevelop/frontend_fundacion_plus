@@ -2,15 +2,15 @@
 
 Actualizado: 12 de noviembre de 2026.
 
-Este documento contiene únicamente problemas técnicos abiertos y comprobados. En este momento **no hay problemas activos reportados al backend**.
+Este documento contiene únicamente problemas técnicos abiertos y comprobados. P22 fue cerrado por el backend en `d5219f3`; permanece activa P23.
 
-Los puntos P01–P21 se conservan en [correcciones-backend-historico.md](correcciones-backend-historico.md). Las funcionalidades que esperan adaptación o pruebas del frontend se registran en [estado-integracion-frontend-backend.md](estado-integracion-frontend-backend.md) y no deben presentarse como errores del backend.
+Los puntos P01–P22 se conservan en [correcciones-backend-historico.md](correcciones-backend-historico.md). Las funcionalidades que esperan adaptación o pruebas del frontend se registran en [estado-integracion-frontend-backend.md](estado-integracion-frontend-backend.md) y no deben presentarse como errores del backend.
 
 ## Resumen activo
 
 | Prioridad | Punto | Problema | Acción requerida |
 |---|---|---|---|
-| — | — | No hay incidencias activas demostradas. | Continuar integración y pruebas funcionales. |
+| Media | P23 | `InitiativeActivity` admite `responsable` y `ubicacion`, pero el contrato no ofrece una consulta de responsables elegibles para una actividad ni define la representación de escritura aceptada para el `Point` PostGIS. Enviar usuarios generales o una cadena geográfica supuesta sería inseguro. | Documentar un selector de responsables elegibles bajo el permiso de iniciativas y el DTO de coordenadas aceptado (`GeoJSON`, longitud/latitud u otro), con validación SRID 4326. |
 
 ## Pendientes que no son errores del backend
 

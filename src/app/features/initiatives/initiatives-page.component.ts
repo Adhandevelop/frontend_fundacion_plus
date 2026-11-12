@@ -1,4 +1,5 @@
 import { Component, computed, DestroyRef, inject, signal, ViewEncapsulation } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin } from 'rxjs';
 import { InitiativesHeroComponent } from './components/hero/hero.component';
@@ -9,7 +10,7 @@ import { INITIATIVES_DEMO, InitiativeDemo } from './data/initiatives.demo';
 import { InitiativesApiService } from './initiatives-api.service';
 import { apiErrorMessage } from '../../core/api/api-error';
 
-@Component({selector:'plus-initiatives-page',standalone:true,imports:[InitiativesHeroComponent,FeaturedInitiativeComponent,InitiativeParticipationComponent,InitiativeCardComponent],templateUrl:'./initiatives-page.component.html',styleUrl:'./initiatives-page.component.css',encapsulation:ViewEncapsulation.None})
+@Component({selector:'plus-initiatives-page',standalone:true,imports:[DatePipe,InitiativesHeroComponent,FeaturedInitiativeComponent,InitiativeParticipationComponent,InitiativeCardComponent],templateUrl:'./initiatives-page.component.html',styleUrl:'./initiatives-page.component.css',encapsulation:ViewEncapsulation.None})
 export class InitiativesPageComponent {
  private readonly api=inject(InitiativesApiService);private readonly destroy=inject(DestroyRef);
  readonly initiatives=signal<readonly InitiativeDemo[]>([]);readonly categories=signal<string[]>([]);readonly query=signal('');readonly category=signal('');readonly year=signal('');readonly selected=signal<InitiativeDemo|null>(null);readonly loading=signal(true);readonly detailLoading=signal(false);readonly fallback=signal(false);readonly error=signal('');

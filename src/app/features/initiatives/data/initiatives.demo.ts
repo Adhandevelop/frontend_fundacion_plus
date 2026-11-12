@@ -1,5 +1,8 @@
 // Local presentation fixtures from the design, not REST contracts.
-export interface InitiativeDemo {id:string;slug?:string;title:string;summary:string;description?:string;image:string;imageAlt?:string;category:string;period:string;impact:string;coverage:string;year:string;years?:string[];featured:boolean;gallery?:{id:string;path:string;alt:string;description:string}[];demo?:boolean;}
+export interface PublicInitiativeMetric {id:string;name:string;value:string;unit:string;measurement:string;cutoff:string;description:string}
+export interface PublicInitiativeActivity {id:string;title:string;description:string;community:string;place:string;start:string;end:string|null;state:string}
+export interface PublicInitiativeEdition {id:string;year:string;name:string;season:string;description:string;start:string;end:string;state:string;metrics:PublicInitiativeMetric[];communities:{id:string;name:string;notes:string}[];activities:PublicInitiativeActivity[];cases:{id:string;code:string;type:string;notes:string}[]}
+export interface InitiativeDemo {id:string;slug?:string;title:string;summary:string;description?:string;image:string;imageAlt?:string;category:string;period:string;impact:string;coverage:string;year:string;years?:string[];featured:boolean;gallery?:{id:string;path:string;alt:string;description:string}[];editions?:PublicInitiativeEdition[];demo?:boolean;}
 export const INITIATIVES_DEMO:readonly InitiativeDemo[]=[
   {
     "id": "dulcemania",

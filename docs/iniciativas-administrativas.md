@@ -28,20 +28,21 @@ La galería general y la galería por edición consultan los medios anidados del
 
 ## Actividades integradas
 
-La agenda por edición, el editor y la ficha consumen `/api/v1/admin/initiative-activities/`. Angular envía la edición por UUID, título, descripción, fechas convertidas desde hora de Bogotá a UTC, lugar y estado. Responsable, comunidad y coordenadas permanecen fuera del payload hasta confirmar sus nombres, elegibilidad, precisión y reglas de exposición.
+La agenda por edición, el editor y la ficha consumen `/api/v1/admin/initiative-activities/`. Angular envía la edición y comunidad opcional por UUID, título, descripción, fechas convertidas desde hora de Bogotá a UTC, lugar y estado. El listado y detalle presentan `responsable_nombre` y `comunidad_nombre`. Responsable y coordenadas permanecen fuera del payload hasta confirmar elegibilidad, formato de escritura, precisión y reglas de exposición.
 
 ## Indicadores integrados
 
 La ficha de edición consulta y administra `/api/v1/admin/initiative-metrics/`. Conserva `valor` como cadena decimal, y permite nombre, unidad, descripción, icono, medición estimada/real, orden y fecha de corte. Crear, editar y eliminar se mantienen asociados al UUID de la edición.
 
+La cobertura territorial consulta y administra `/api/v1/admin/initiative-communities/`. El formulario selecciona una comunidad activa del catálogo administrativo, envía los UUID de edición y comunidad, permite observaciones y exige confirmación antes de retirar el vínculo. No crea comunidades ni altera su geometría desde iniciativas.
+
+Los vínculos con casos consultan `/api/v1/admin/initiative-case-links/?edicion={uuid}` y administran el mismo recurso. La interfaz permite `hallazgo`, `seguimiento`, `resultado` y `otro`, conserva observaciones y usa `/initiative-case-links/candidates/?edicion={uuid}` para recibir casos aprobados todavía no vinculados. El selector incorpora búsqueda y paginación server-side; no depende de `/admin/cases/` ni de sus permisos.
+
 ## Aún demostrativo
 
-- Cobertura/comunidades y observaciones.
-- Responsable, comunidad y ubicación de actividades.
-- Vínculos con casos.
-- Bandeja y decisión administrativa de postulaciones.
+- Responsable y ubicación geográfica editable de actividades.
 
-Las pantallas existentes de estos subrecursos siguen usando servicios locales. No deben interpretarse como datos guardados ni como publicación institucional.
+Estos campos todavía no se presentan como datos guardados ni como publicación institucional hasta completar su conexión.
 
 ## Estado del backend
 

@@ -66,13 +66,16 @@ Este es el registro consolidado del frontend Angular. “Integrado” significa 
 - Búsqueda, categoría y edición filtran la colección recibida; al abrir un programa se consulta el detalle por `slug` y se muestran descripción, portada y galería pública.
 - Si la colección está vacía o la consulta falla, los cuatro mockups se conservan como respaldo marcado como contenido de diseño.
 - El formulario comunitario dejó de ser una simulación y envía a `/api/v1/public/initiatives/proposals/` el contacto, territorio declarado, iniciativa opcional, título, descripción y autorización.
-- El backend desplegó una proyección pública depurada para ediciones y actividades. Angular mantiene una presentación mínima hasta verificarla con contenido publicado real.
+- La ficha pública interpreta la proyección depurada de ediciones: indicadores, comunidades de cobertura, actividades y casos aprobados relacionados. Cada edición se presenta de forma desplegable y muestra un estado vacío explícito cuando no tiene resultados asociados.
+- Los adaptadores públicos aceptan `metrics` resumido o estructurado, priorizan `url`/`url_archivo` para medios y no exponen identificadores de responsables ni coordenadas internas.
 - La administración de programas ya consulta listado y detalle reales, crea/edita contenido y confirma cambios de publicación y destacado.
 - El `slug` administrativo es de solo lectura en Angular porque lo genera y garantiza el backend.
 - Las ediciones anidadas se muestran desde la ficha real y su creación/edición ya consume `/admin/initiative-editions/`. Los medios generales y por edición también son REST.
 - La bandeja de postulaciones consulta `/admin/proposals/`, filtra en servidor, abre el detalle y guarda estado, respuesta e iniciativa generada mediante PATCH. No envía actor ni fecha de revisión desde el cliente.
-- Las actividades administrativas ya consultan, crean y actualizan `/admin/initiative-activities/` con relación explícita a la edición, fechas UTC, lugar y estado. Responsable, comunidad y coordenadas esperan confirmación contractual.
-- Los indicadores por edición ya consultan y escriben `/admin/initiative-metrics/`: valor decimal como texto, unidad, descripción, icono, tipo de medición, orden y fecha de corte. La cobertura todavía conserva implementación pendiente.
+- Las actividades administrativas ya consultan, crean y actualizan `/admin/initiative-activities/` con relación explícita a la edición, comunidad opcional activa, fechas UTC, lugar y estado. El listado y el detalle muestran responsable y comunidad devueltos por la API. La asignación de responsable y las coordenadas esperan un contrato de elegibilidad y escritura.
+- Los indicadores por edición ya consultan y escriben `/admin/initiative-metrics/`: valor decimal como texto, unidad, descripción, icono, tipo de medición, orden y fecha de corte.
+- La cobertura por edición ya consulta, crea, edita y elimina vínculos de `/admin/initiative-communities/`; el selector usa comunidades administrativas activas y conserva las observaciones territoriales.
+- Los casos vinculados ya se consultan por `?edicion=` y se administran mediante `/admin/initiative-case-links/`, con los tipos `hallazgo`, `seguimiento`, `resultado` y `otro`. El selector usa `/candidates/`, recibe únicamente casos aprobados no vinculados, permite búsqueda y paginación y ya no depende del permiso general de administración de casos.
 
 ### Formularios dinámicos
 
@@ -101,7 +104,7 @@ No se envían contraseñas por correo. El backend genera un enlace de un solo us
 ### Contenido editorial pendiente
 
 - Bloques secundarios de la página principal y nosotros.
-- Administración de cobertura de iniciativas; campos avanzados de actividades.
+- Responsable y ubicación geográfica editable de actividades.
 - Inventario inicial reproducible de contenido e imágenes.
 
 Estas pantallas todavía usan contenido de diseño. Falta aprobación institucional, carga inicial en la base de datos y conexión REST. No conviene conectar una colección vacía porque degradaría el sitio publicado.
@@ -134,7 +137,7 @@ Falta que el backend entregue coordenadas o GeoJSON verificable, visibilidad pú
 
 ### Backend general
 
-No hay problemas técnicos activos demostrados en [problemas-integracion.md](problemas-integracion.md). P01–P21 se conservan como trazabilidad en [correcciones-backend-historico.md](correcciones-backend-historico.md). Angular ya adaptó versiones históricas, acciones editoriales y carga multipart; siguen pendientes pruebas autenticadas y migrar las vistas restantes.
+La limitación P23 sobre responsable/geometría de actividades está registrada en [problemas-integracion.md](problemas-integracion.md). P01–P22 se conservan como trazabilidad en [correcciones-backend-historico.md](correcciones-backend-historico.md). Angular ya adaptó versiones históricas, acciones editoriales, carga multipart y subrecursos principales de iniciativas; siguen pendientes pruebas autenticadas y migrar las vistas restantes.
 
 ## 5. Próximo trabajo recomendado
 
@@ -142,15 +145,15 @@ No hay problemas técnicos activos demostrados en [problemas-integracion.md](pro
 2. Completar los controles avanzados de validación del constructor.
 3. Aprobar y cargar el contenido editorial inicial.
 4. Probar contra el servidor la carga multipart ya conectada y construir las páginas de confirmación/baja del boletín.
-5. Integrar cobertura; completar responsable/comunidad/coordenadas de actividades cuando se confirme su contrato y revisar el DTO público.
+5. Completar responsable y coordenadas de actividades y probar la ficha pública y los candidatos paginados contra el servidor desplegado.
 6. Integrar casos georreferenciados en el mapa.
 7. Probar el reemplazo real de portada con una cuenta superadministradora controlada.
 8. Repetir revisión responsive, accesibilidad, temas, Docker y Nginx con datos reales.
 
 ## 6. Verificación local actual
 
-- `npm run build`: correcto el 12 de noviembre de 2026.
-- `npm run test:api`: trece suites correctas.
+- `npm run build`: correcto el 12 de noviembre de 2026 después de integrar indicadores, cobertura territorial, vínculos con casos, comunidad de actividades y detalle público por edición.
+- `npm run test:api`: trece suites correctas; iniciativas incluye la proyección pública y el contrato P22 de filtro, respuesta enriquecida, búsqueda y paginación de candidatos.
 - La suite de formularios comprueba listado administrativo, siete tipos de pregunta, validación local, payload público, `Idempotency-Key`, activación/reenvío, historial ciudadano, ciclo de publicación y rutas de exportación.
 - La suite de portada comprueba la lectura pública, las métricas verificadas, la consulta administrativa y el reemplazo multipart protegido.
 - La suite editorial comprueba catálogo/detalle público, boletín, listado y categorías administrativas, creación y transiciones editoriales.
@@ -165,7 +168,7 @@ No hay problemas técnicos activos demostrados en [problemas-integracion.md](pro
 - Formularios dinámicos: conexión REST y versión histórica implementadas; falta validación real completa.
 - Portada institucional: lectura y administración conectadas; prueba real de archivo pendiente.
 - Noticias: lecturas públicas, administración REST y medios binarios conectados; carga editorial inicial y acciones por token pendientes.
-- Iniciativas: catálogo, detalle, postulación pública, CRUD textual, ediciones, medios, indicadores, actividades básicas y revisión administrativa de postulaciones conectados; cobertura, campos avanzados de actividades y carga editorial inicial siguen pendientes.
+- Iniciativas: catálogo, detalle, postulación pública, CRUD textual, ediciones, medios, indicadores, cobertura, vínculos con casos, actividades con comunidad y revisión administrativa de postulaciones conectados; responsable/coordenadas de actividades y carga editorial inicial siguen pendientes.
 - Mapa: base real corregida localmente; falta desplegar/verificar el arreglo y siguen pendientes los datos georreferenciados.
 
 Las cifras son orientativas. El estado local no implica que los cambios estén publicados en `fundacionplus.site`.
