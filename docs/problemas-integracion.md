@@ -13,7 +13,7 @@ Actualizado: 11 de noviembre de 2026. Este registro separa problemas comprobados
 | 1 · Alta | P01 · Exclusividad ciudadana | **Corregido en las vistas locales, sigue abierto en producción.** Las cuatro consultas ciudadanas aceptaron al administrador con 200. | Desplegar la versión que usa `IsCitizenOnly` y verificar 403 para roles internos en rutas y aliases. |
 | 1 · Alta | P15 · Último administrador y edición general | **Corrección parcial local.** Usuarios/roles son exclusivos de administrador y las acciones específicas tienen `last_admin_lock`; falta esa garantía visible en PATCH/PUT general. | Centralizar la protección o retirar rol/estado de edición general. Revisar también los validadores de contraseña administrativos. |
 | 2 · Alta | P16 · Sesiones tras cambiar rol/estado | **Implementado localmente; pendiente verificar despliegue y efecto.** | Probar revocación de access y refresh mediante todas las rutas admitidas, con cuentas controladas. No rehacer lo ya implementado. |
-| Desbloqueado | P02 · Catálogos territoriales | **Disponibles en producción:** 32 departamentos, 88 municipios y 83 comunidades. | No volver a cargarlos a ciegas. Confirmar fuente/relaciones y acompañar una prueba funcional de radicación. |
+| Desbloqueado | P02 · Catálogos territoriales | **Despliegue `db69f04`:** alcance exclusivo del Meta con 1 departamento, 29 municipios y 70 comunidades. | Confirmar que ese alcance es la decisión institucional y acompañar una prueba funcional de radicación. |
 | 2 · Siguiente bloque | P11 · Contenido inicial y pruebas reales | **Inventario listo; contenido sin aprobación/importación.** | Preparar carga editorial específica, repetible y de borradores aprobados; definir datos de prueba operativos y comprobar correo. |
 | 3 · Media | P03 | Serializer corregido; el servicio conserva el fallback con `or`. | Unificar tratamiento de coordenadas cero y probar el recorrido completo. |
 | 3 · Media | P04 | GET de mensajes sigue marcando lectura. | Definir/documentar el efecto o trasladarlo a lectura explícita. |
@@ -53,11 +53,11 @@ Actualizado: 11 de noviembre de 2026. Este registro separa problemas comprobados
 
 ## P02 — Catálogos territoriales disponibles; validación funcional pendiente
 
-**Evidencia actualizada:** las consultas públicas más recientes devolvieron 200 con **32 departamentos, 88 municipios y 83 comunidades**. Los ceros registrados anteriormente son históricos. La existencia de datos ya está comprobada; esta revisión no certifica su procedencia oficial ni la corrección de cada relación geográfica.
+**Evidencia actualizada:** tras desplegar `db69f04`, el arranque declaró configuración exclusiva del Meta y sincronizó **1 departamento, 29 municipios y 70 comunidades**. `GET /api/v1/catalogs/departments/` respondió 200 con Meta y sus 29 municipios. Los conteos anteriores de 32/88/83 pertenecen al despliegue previo y ya no describen producción. La existencia de datos está comprobada; esta revisión no certifica la corrección de cada comunidad ni que el alcance exclusivo haya recibido aprobación institucional.
 
 **Frontend:** muestra el estado vacío y exige seleccionar UUID reales y relaciones válidas; no envía nombres o territorios ficticios. Listados, perfil sin residencia y consultas independientes pueden continuar.
 
-**Backend requerido:** conservar la carga disponible y confirmar fuente, códigos y relaciones del ámbito institucional. Verificar que filtrar municipios por departamento y comunidades activas por municipio devuelve relaciones válidas. No duplicar la carga ni crear tablas nuevas para resolver un vacío que ya desapareció.
+**Backend requerido:** confirmar formalmente el alcance exclusivo del Meta, la fuente DANE y las relaciones de las 70 comunidades. Verificar que filtrar municipios por departamento y comunidades activas por municipio devuelve relaciones válidas. No duplicar la carga ni crear tablas nuevas para resolver un vacío que ya desapareció.
 
 **Estado:** **desbloqueado por disponibilidad de catálogos en producción**. Falta una prueba funcional controlada de selección territorial y radicación. Ver [integracion-territorios.md](integracion-territorios.md); sus conteos iniciales vacíos describen la entrega anterior.
 

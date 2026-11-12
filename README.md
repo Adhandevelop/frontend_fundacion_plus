@@ -13,7 +13,7 @@ La aplicación local abre en http://127.0.0.1:4200. `proxy.conf.json` reenvía `
 
 Acceso, registro, recuperación/restablecimiento y perfil usan servicios REST. Las rutas de ciudadano y administración requieren sesión, y administración verifica las capacidades devueltas por el servidor. El perfil incluye fotografía, preferencias y ubicación mediante catálogos reales.
 
-Los casos ciudadanos ya consultan y envían datos por REST: listado, métricas, radicación, expediente, evidencias y aportes. Ver [alcance y pruebas](docs/integracion-casos-ciudadanos.md). La última consulta del servidor confirmó 32 departamentos, 88 municipios y 83 comunidades; queda la prueba funcional controlada de radicación y selección territorial.
+Los casos ciudadanos ya consultan y envían datos por REST: listado, métricas, radicación, expediente, evidencias y aportes. Ver [alcance y pruebas](docs/integracion-casos-ciudadanos.md). Después del despliegue `db69f04`, producción quedó configurada exclusivamente para Meta y la consulta confirmó 1 departamento, 29 municipios y 70 comunidades; queda la prueba funcional controlada de radicación y selección territorial.
 
 El ciudadano dispone de un inicio autenticado en `/ciudadano`, con resumen, accesos rápidos y casos recientes. Login, registro, logo e “Inicio” permanecen dentro de ese portal y conservan su navegación lateral; el perfil es una sección independiente.
 
