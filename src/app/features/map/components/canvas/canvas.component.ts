@@ -10,21 +10,28 @@ export class MapCanvasComponent implements AfterViewInit,OnDestroy {
   status='Cargando cartografía de OpenStreetMap…';
 
   async ngAfterViewInit():Promise<void> {
-    const L=await import('leaflet');
-    if(!this.mapElement.nativeElement.isConnected)return;
-    const map=L.map(this.mapElement.nativeElement,{center:VILLAVICENCIO,zoom:13,minZoom:6,maxZoom:19,zoomControl:true,attributionControl:true});
-    this.map=map;
-    const tiles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
-      maxZoom:19,
-      attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors',
-    });
-    tiles.on('load',()=>this.status='Mapa centrado en Villavicencio, Meta.');
-    tiles.on('tileerror',()=>this.status='No fue posible cargar una parte del mapa. Comprueba la conexión e inténtalo nuevamente.');
-    tiles.addTo(map);
-    L.circleMarker(VILLAVICENCIO,{radius:9,color:'#0f172a',weight:3,fillColor:'#facc15',fillOpacity:1})
-      .addTo(map)
-      .bindTooltip('Villavicencio · Meta',{permanent:true,direction:'top',offset:[0,-8],className:'plus-map-label'});
-    map.whenReady(()=>setTimeout(()=>map.invalidateSize(),0));
+    try {
+      const leafletModule=await import('leaflet');
+      const fallback=(leafletModule as unknown as {default?:typeof import('leaflet')}).default;
+      const L=typeof leafletModule.map==='function'?leafletModule:fallback;
+      if(!this.mapElement.nativeElement.isConnected)return;
+      if(!L||typeof L.map!=='function')throw new Error('Leaflet no expuso su API de mapas.');
+      const map=L.map(this.mapElement.nativeElement,{center:VILLAVICENCIO,zoom:13,minZoom:6,maxZoom:19,zoomControl:true,attributionControl:true});
+      this.map=map;
+      const tiles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
+        maxZoom:19,
+        attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors',
+      });
+      tiles.on('load',()=>this.status='Mapa centrado en Villavicencio, Meta.');
+      tiles.on('tileerror',()=>this.status='No fue posible cargar una parte del mapa. Comprueba la conexión e inténtalo nuevamente.');
+      tiles.addTo(map);
+      L.circleMarker(VILLAVICENCIO,{radius:9,color:'#0f172a',weight:3,fillColor:'#facc15',fillOpacity:1})
+        .addTo(map)
+        .bindTooltip('Villavicencio · Meta',{permanent:true,direction:'top',offset:[0,-8],className:'plus-map-label'});
+      map.whenReady(()=>setTimeout(()=>map.invalidateSize(),0));
+    } catch {
+      this.status='No fue posible iniciar el mapa. Recarga la página; si el problema continúa, informa al equipo técnico.';
+    }
   }
 
   showVillavicencio():void {this.map?.setView(VILLAVICENCIO,13,{animate:true});this.status='Mapa centrado en Villavicencio, Meta.';}

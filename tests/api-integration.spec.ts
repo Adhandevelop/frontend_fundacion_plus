@@ -194,3 +194,4 @@ await import('./forms-demo.spec');
 await import('./homepage-integration.spec');
 await import('./news-integration.spec');
 await import('./initiatives-integration.spec');
+await import('./proposals-integration.spec');

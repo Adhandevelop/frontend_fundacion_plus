@@ -22,6 +22,10 @@ Las ediciones recibidas dentro del detalle se muestran con año, nombre, tempora
 
 La galería general y la galería por edición consultan los medios anidados del programa. Permiten subir archivos mediante `FormData`, marcar portada, definir texto alternativo, descripción y orden, previsualizar imágenes o videos, abrir documentos y eliminar un medio. Angular valida los formatos acordados y el límite de 15 MB antes del envío; la validación definitiva permanece en el backend.
 
+## Postulaciones integradas
+
+`/admin/postulaciones` consume el listado paginado real, con búsqueda, estado e iniciativa solicitada como filtros del servidor. El detalle muestra contacto, territorio, consentimiento y resultado de revisión. Las decisiones usan PATCH sobre `/api/v1/admin/proposals/{id}/` con `estado`, `respuesta` e `iniciativa_generada`; el actor y la fecha quedan bajo responsabilidad del backend.
+
 ## Aún demostrativo
 
 - Indicadores y sus metadatos.

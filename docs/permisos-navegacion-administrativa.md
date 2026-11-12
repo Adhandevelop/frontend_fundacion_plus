@@ -15,7 +15,7 @@ Actualizado: 11 de noviembre de 2026. Adapta el frontend al código de permisos 
 | Moderación de comentarios | Sí | Sí | No |
 | Noticias, iniciativas y postulaciones administrativas | Sí | Sí | No |
 
-Las vistas administrativas de noticias, iniciativas y postulaciones mantienen sus datos de demostración; aplicarles estos límites no las conecta a REST. El mapa y el portal públicos conservan su acceso público. Ningún rol interno obtiene acceso al portal ciudadano; el ciudadano tampoco accede al portal administrativo.
+Las vistas administrativas de noticias, programas, ediciones, medios y postulaciones ya consumen REST; sus subrecursos pendientes siguen sujetos a la misma matriz. El mapa y el portal públicos conservan su acceso público. Ningún rol interno obtiene acceso al portal ciudadano; el ciudadano tampoco accede al portal administrativo.
 
 La política `core/auth/admin-access.policy.ts` exige cuenta activa, capacidades administrativas reconocidas y rol permitido para la sección. Formularios y portada comprueban además sus capacidades explícitas entregadas por `/me/`. Una sección desconocida se deniega. El menú filtra sus enlaces mediante esa política; cada ruta administrativa declara `data.adminSection`. `accountGuard`, ejecutado también para hijos, comprueba todos los requisitos de sus ancestros. No basta con ocultar un enlace: escribir la URL, recargar o enlazar directamente a un editor también debe superar el guard.
 

@@ -69,7 +69,9 @@ Este es el registro consolidado del frontend Angular. “Integrado” significa 
 - El backend desplegó una proyección pública depurada para ediciones y actividades. Angular mantiene una presentación mínima hasta verificarla con contenido publicado real.
 - La administración de programas ya consulta listado y detalle reales, crea/edita contenido y confirma cambios de publicación y destacado.
 - El `slug` administrativo es de solo lectura en Angular porque lo genera y garantiza el backend.
-- Las ediciones anidadas se muestran desde la ficha real y su creación/edición ya consume `/admin/initiative-editions/`. Los medios generales y por edición también son REST. Indicadores, cobertura, actividades y revisión de postulaciones todavía conservan implementación demostrativa.
+- Las ediciones anidadas se muestran desde la ficha real y su creación/edición ya consume `/admin/initiative-editions/`. Los medios generales y por edición también son REST.
+- La bandeja de postulaciones consulta `/admin/proposals/`, filtra en servidor, abre el detalle y guarda estado, respuesta e iniciativa generada mediante PATCH. No envía actor ni fecha de revisión desde el cliente.
+- Indicadores, cobertura y actividades todavía conservan implementación demostrativa.
 
 ### Formularios dinámicos
 
@@ -98,7 +100,7 @@ No se envían contraseñas por correo. El backend genera un enlace de un solo us
 ### Contenido editorial pendiente
 
 - Bloques secundarios de la página principal y nosotros.
-- Administración de indicadores, cobertura, actividades y postulaciones de iniciativas.
+- Administración de indicadores, cobertura y actividades de iniciativas.
 - Inventario inicial reproducible de contenido e imágenes.
 
 Estas pantallas todavía usan contenido de diseño. Falta aprobación institucional, carga inicial en la base de datos y conexión REST. No conviene conectar una colección vacía porque degradaría el sitio publicado.
@@ -116,6 +118,7 @@ Estas pantallas todavía usan contenido de diseño. Falta aprobación institucio
 - Rutas `/mapa`, `/ciudadano/mapa` y `/admin/mapa`, conservando el layout del portal.
 - Cartografía legible también en tema oscuro.
 - Sin marcadores ni coordenadas inventadas.
+- Corregida la interoperabilidad del import dinámico de Leaflet en producción: se admite la API como exportación directa o dentro de `default`. El fallo anterior generaba `TypeError: map is not a function` y dejaba el lienzo vacío.
 
 Falta que el backend entregue coordenadas o GeoJSON verificable, visibilidad pública explícita y filtros. No se geocodifican descripciones textuales de casos.
 
@@ -138,7 +141,7 @@ No hay problemas técnicos activos demostrados en [problemas-integracion.md](pro
 2. Completar los controles avanzados de validación del constructor.
 3. Aprobar y cargar el contenido editorial inicial.
 4. Probar contra el servidor la carga multipart ya conectada y construir las páginas de confirmación/baja del boletín.
-5. Integrar indicadores, cobertura, actividades y postulaciones administrativas; revisar el DTO público de actividades.
+5. Integrar indicadores, cobertura y actividades administrativas; revisar el DTO público de actividades.
 6. Integrar casos georreferenciados en el mapa.
 7. Probar el reemplazo real de portada con una cuenta superadministradora controlada.
 8. Repetir revisión responsive, accesibilidad, temas, Docker y Nginx con datos reales.
@@ -161,7 +164,7 @@ No hay problemas técnicos activos demostrados en [problemas-integracion.md](pro
 - Formularios dinámicos: conexión REST y versión histórica implementadas; falta validación real completa.
 - Portada institucional: lectura y administración conectadas; prueba real de archivo pendiente.
 - Noticias: lecturas públicas, administración REST y medios binarios conectados; carga editorial inicial y acciones por token pendientes.
-- Iniciativas: catálogo, detalle, postulación pública, CRUD textual, ediciones y medios administrativos conectados; indicadores, cobertura, actividades, postulaciones administrativas y carga editorial inicial siguen pendientes.
-- Mapa: base real lista; datos georreferenciados pendientes.
+- Iniciativas: catálogo, detalle, postulación pública, CRUD textual, ediciones, medios y revisión administrativa de postulaciones conectados; indicadores, cobertura, actividades y carga editorial inicial siguen pendientes.
+- Mapa: base real corregida localmente; falta desplegar/verificar el arreglo y siguen pendientes los datos georreferenciados.
 
 Las cifras son orientativas. El estado local no implica que los cambios estén publicados en `fundacionplus.site`.

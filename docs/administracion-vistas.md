@@ -11,7 +11,7 @@ Rutas:
 - `/admin/noticias`: listado, borradores, vista previa y revisión/publicación simulada. Ver `noticias-administrativas.md`.
 - `/admin/iniciativas`: programas, publicación, ediciones anuales, indicadores y cobertura local. Ver `iniciativas-administrativas.md`.
 - Desde las fichas de programa/edición: medios generales/anuales y agenda de actividades con creación/edición/detalle. Ver `jornadas-medios-demostracion.md`.
-- `/admin/postulaciones`: bandeja y revisión local de propuestas, con acceso filtrado desde programas. Ver `postulaciones-demostracion.md`.
+- `/admin/postulaciones`: bandeja REST, filtros, detalle y revisión persistida de propuestas. Ver `iniciativas-administrativas.md`.
 - `/admin/comentarios`: cola y decisiones locales de moderación con vista previa e historial. Ver `moderacion-comentarios-demostracion.md`.
 
 Un layout administrativo compartido incorpora barra lateral adaptable, encabezado, selector persistente de tema y navegación al portal. Las rutas y pantallas se cargan de forma diferida. Existe un acceso explícito a la demostración desde el layout de login/registro, sin simular autenticación.

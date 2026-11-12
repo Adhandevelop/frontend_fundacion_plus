@@ -14,6 +14,7 @@ Los puntos P01–P21 se conservan en [correcciones-backend-historico.md](correcc
 
 ## Pendientes que no son errores del backend
 
+- Desplegar y verificar en navegador la corrección de interoperabilidad de Leaflet; el build de producción local ya compila correctamente.
 - Verificar contra el servidor desplegado los selectores y formularios multipart ya conectados: carga válida, formato inválido, archivo mayor de 15 MB y reemplazo de portada.
 - Aprobar los textos, cifras e imágenes antes de ejecutar la carga editorial sin `--draft`.
 - Realizar pruebas autenticadas controladas de permisos, revocación y último administrador.

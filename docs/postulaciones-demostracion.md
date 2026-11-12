@@ -1,4 +1,6 @@
-# Bandeja administrativa de postulaciones de demostración
+# Histórico del prototipo de postulaciones
+
+> Este documento describe la primera versión local. La bandeja, el detalle y la revisión actualmente consumen `/api/v1/admin/proposals/`; consultar [iniciativas-administrativas.md](iniciativas-administrativas.md) para el estado vigente.
 
 ## Vistas y organización
 
