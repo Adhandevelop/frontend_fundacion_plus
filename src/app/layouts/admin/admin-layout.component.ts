@@ -19,7 +19,8 @@ const NAVIGATION:AdminNavigationItem[]=[
   {path:'/admin/iniciativas',label:'Iniciativas y ediciones',icon:'volunteer_activism',section:'initiatives',exact:false},
   {path:'/admin/postulaciones',label:'Postulaciones',icon:'inbox',section:'proposals',exact:false},
   {path:'/admin/comentarios',label:'Moderación de comentarios',icon:'forum',section:'comments',exact:false},
-  {path:'/admin/formularios',label:'Formularios · demo',icon:'description',section:'forms',exact:false},
+  {path:'/admin/formularios',label:'Formularios',icon:'description',section:'forms',exact:false},
+  {path:'/admin/portada',label:'Fotografía de portada',icon:'image',section:'homepage',exact:false},
 ];
 
 @Component({selector: 'plus-admin-layout', standalone: true, imports: [RouterLink, RouterLinkActive, RouterOutlet, ResponsiveNavigationDirective, NavigationIconComponent], templateUrl: './admin-layout.component.html', styleUrl: './admin-layout.component.css', encapsulation: ViewEncapsulation.None})

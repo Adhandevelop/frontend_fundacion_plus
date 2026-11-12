@@ -220,14 +220,12 @@
                   Acepto la política de Tratamiento de Datos Personales conforme a la Ley 1581 de 2012 y el Estatuto Institucional de PLUS.
                 </label>
 </div>
-<button class="w-full py-2.5 px-4 rounded-lg ed-news-bg-primary-container text-black font-title-sm text-title-sm font-semibold hover:brightness-95 transition-all shadow-xs active:scale-95 flex items-center justify-center gap-2 mt-2" type="submit">
+<button class="w-full py-2.5 px-4 rounded-lg ed-news-bg-primary-container text-black font-title-sm text-title-sm font-semibold hover:brightness-95 transition-all shadow-xs active:scale-95 flex items-center justify-center gap-2 mt-2" type="submit" [disabled]="pending()">
 <span class="material-symbols-outlined text-[18px]">mark_email_read</span>
-<span>Suscribirme al Boletín Informativo</span>
+<span>{{pending()?'Enviando…':'Suscribirme al Boletín Informativo'}}</span>
 </button>
 <p class="text-body-sm mt-3" role="status">{{message()}}</p></form>
 </div>
-<p class="font-label-sm text-label-sm ed-news-text-secondary mt-4">
-            Formulario de demostración. No se envían suscripciones ni se almacenan datos.
-          </p>
+<p class="font-label-sm text-label-sm ed-news-text-secondary mt-4">La suscripción requiere confirmación mediante el enlace enviado al correo indicado.</p>
 </div>
 </section>

@@ -6,7 +6,7 @@ Generado por `npm run content:inventory`. No constituye aprobación editorial ni
 - initiative_catalog: 4
 - home_news: 3
 - home_initiative_panels: 4
-- unique_image_urls: 19
+- unique_image_urls: 16
 - template_sources: 11
 
 ## Textos para revisar

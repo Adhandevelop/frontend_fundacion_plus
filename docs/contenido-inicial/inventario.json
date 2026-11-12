@@ -8,17 +8,17 @@
     "initiative_catalog": 4,
     "home_news": 3,
     "home_initiative_panels": 4,
-    "unique_image_urls": 19,
+    "unique_image_urls": 16,
     "template_sources": 11
   },
   "source_data": [
     {
       "source": "src/app/features/news/data/news.demo.ts",
-      "sha256": "8289bcea31f512412c1aa517691bb12a1e09f02bf7b2dec6f7d52c4f9b4f51e2"
+      "sha256": "e931154e24adab1f81d4dbc7dab1fcb0c37e96ed45df258053a698e98b066304"
     },
     {
       "source": "src/app/features/initiatives/data/initiatives.demo.ts",
-      "sha256": "579366b1443c0eb65f73af09e80975b10150f95ceb2dadfff5ff556cd33b6994"
+      "sha256": "1024d52815b6e6f0f31d15def3e8de61f8724dc2dfefe5505cb2fd0b1ab905b7"
     }
   ],
   "news_catalog": [
@@ -376,10 +376,6 @@
         {
           "source": "news:publicacion-0",
           "alt": null
-        },
-        {
-          "source": "src/app/features/news/components/featured/featured.component.html",
-          "alt": "Fotografía de referencia de PLUS"
         }
       ]
     },
@@ -471,10 +467,6 @@
         {
           "source": "initiative:dulcemania",
           "alt": null
-        },
-        {
-          "source": "src/app/features/initiatives/components/featured/featured.component.html",
-          "alt": "Jornada comunitaria Dulcemanía realizada por la Corporación PLUS en barrio de ladera popular"
         }
       ]
     },
@@ -527,45 +519,6 @@
         {
           "source": "src/app/features/news/components/community/community.component.html",
           "alt": "Fotografía de referencia de PLUS"
-        }
-      ]
-    },
-    {
-      "review_key": "image:310eed69b68488a7",
-      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCbsSmLLr2pOw6n0RvCZpkJgBIiWohfY4a9kcm2Wl00v-u7wEYBQA2E1rD91gFDZUbHPYFT_qVEE4yp-P6T5Zjs6TiZtdMKERCDLQYQOwWjiKA3oru1qm_jg0T7pfZR7o2jhXN8qFIdlMh-NDY6yvRMNS6PgjheexalknKrRMCSDEF2VVr6L5R_CdUlsVE1bsJGJuNmCyNwLVX2Mxqnoxs1SmjQhyj-eaNN-vS-rPd6",
-      "approval": "pending",
-      "publication_allowed": false,
-      "rights": "unverified",
-      "references": [
-        {
-          "source": "src/app/features/initiatives/components/featured/featured.component.html",
-          "alt": "Imagen de referencia de una iniciativa comunitaria de PLUS"
-        }
-      ]
-    },
-    {
-      "review_key": "image:6db1a9a6fd10a94e",
-      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuDtfFdnIsKwO9YvqaPyrHhdMP_el2-U5ZNb5ppfasWeX8m3WblVs7lXSU6X2ckm16RiEG9burFxkysqFW0DzhE2Oj1L-MApmYAYPGOt9G-z6P5hlNhq0kT9HIk-ijyfXzy5Y6rmgqRszt2sN3B4eu629p49_0c6Lmev3MXiAGRr42nSqKvluvKSkm7rh6eF2QxtY4BsQSqCCcpd8JrQd2hjmXM70uat3WvaqJhSdzjn",
-      "approval": "pending",
-      "publication_allowed": false,
-      "rights": "unverified",
-      "references": [
-        {
-          "source": "src/app/features/initiatives/components/featured/featured.component.html",
-          "alt": "Imagen de referencia de una iniciativa comunitaria de PLUS"
-        }
-      ]
-    },
-    {
-      "review_key": "image:617607de1cdcc222",
-      "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCXGShhnXBdZN5aQICc_fYti0Wljm4h7_A_pBQdz-UrXZiWalzACVsNK0dpy7GuRTd6nxU-LbdVLKJskH1nUcdWihVW2MjQhjZBlNLR2C-79ubAD98mR7tRGb2jhC0iS3nm5rOrcfYqxBMgDAUTrsPDsQcMNjQ4Z8MSZiK97T4kLem6UkwnzVBRQcjZjQBF4gK5Zmbj7IcT73kIIOYffApKPalcyFPbw70N0xeXx2ps",
-      "approval": "pending",
-      "publication_allowed": false,
-      "rights": "unverified",
-      "references": [
-        {
-          "source": "src/app/features/initiatives/components/featured/featured.component.html",
-          "alt": "Imagen de referencia de una iniciativa comunitaria de PLUS"
         }
       ]
     },
@@ -637,16 +590,15 @@
   "source_snapshots": [
     {
       "source": "src/app/features/news/components/card/news-card.component.html",
-      "sha256": "b7028a1a4affdffd5f4b0ddf98db0a270790bd94d7add6fb809219d6592adf27",
+      "sha256": "c7efe2ed11bc8737cc89cffbc3657637bfc3673321174538d5563e46d75afaee",
       "static_text_fragments": [
-        "Ver resumen",
         "arrow_forward"
       ],
       "images": []
     },
     {
       "source": "src/app/features/news/components/community/community.component.html",
-      "sha256": "42fd9c6f0d9d4d0a337aaceef4ef2d499c5c80529b137f8c94df2180231eabba",
+      "sha256": "f05beacc3c738b21f57a3dcd175745edd87b7e8409694e41b88e0339b65c4b7f",
       "static_text_fragments": [
         "Representante Legal & Vocero Oficial",
         "Luis Alberto Muñoz Granada",
@@ -710,8 +662,7 @@
         "Correo electrónico institucional o personal",
         "Acepto la política de Tratamiento de Datos Personales conforme a la Ley 1581 de 2012 y el Estatuto Institucional de PLUS.",
         "mark_email_read",
-        "Suscribirme al Boletín Informativo",
-        "Formulario de demostración. No se envían suscripciones ni se almacenan datos."
+        "La suscripción requiere confirmación mediante el enlace enviado al correo indicado."
       ],
       "images": [
         {
@@ -722,40 +673,16 @@
     },
     {
       "source": "src/app/features/news/components/featured/featured.component.html",
-      "sha256": "617156cc758852b17f2319f247f75b6e2f58ba1aad943c23a374ad5fc5e2149d",
+      "sha256": "ca81c1e229883731800a47303352b442d52fc16ccf26b0310822a4a5074ef633",
       "static_text_fragments": [
-        "Actividades de Representación",
-        "Territorio Atrato",
-        "Registro Fotográfico Oficial: Subregión del Medio y Bajo Atrato",
-        "Archivo PLUS 2025",
         "calendar_today",
-        "18 de Febrero de 2025",
-        "•",
-        "schedule",
-        "5 min de lectura",
-        "•",
-        "Despacho Legal",
-        "Luis Alberto Muñoz Granada lidera mesa técnica interinstitucional para seguimiento a compromisos viales y de salud en el Atrato",
-        "En el marco del mandato cívico y las competencias conferidas por la Ley 850 de 2003, la Corporación Pluralismo Social articuló un espacio de interlocución vinculante entre comités comunitarios de base, delegados de ministerios y contratistas ejecutores. Durante la jornada se establecieron cronogramas de entrega con penalidades contractuales y verificación satelital de avances.",
-        "check_circle",
-        "Inspección directa a 4 frentes de obra en corredores fluviales críticos.",
-        "check_circle",
-        "Acta de compromiso firmada con veedurías étnicas y autoridades locales.",
-        "Ver resumen de ejemplo",
-        "arrow_forward",
-        "download",
-        "Descargar comunicado en PDF"
+        "arrow_forward"
       ],
-      "images": [
-        {
-          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCXBDSJe05exet7bTIy_rj083HnCNmvQj5ciwQ57zGVgGHldKahqK7pbhRlTw-7Ws0Eofu74IkHzaEyG-8qIwP8fVztRkg5XLXiDAQKtaaS7LkulVod7DSTFQkrNM5i2s4j-_cru67YriEvVPxJCspWXPWiYs_0aU7iXSvev8Cw1eqZ0k2u2ywg0SlRNDXy0sd77JQY_76CwKDDubxSRHjlp_I2WJ1PiJEJnYf7IDJw",
-          "alt": "Fotografía de referencia de PLUS"
-        }
-      ]
+      "images": []
     },
     {
       "source": "src/app/features/news/news-page.component.html",
-      "sha256": "272d368b2b69ab94c57bc139c8d8e413fb58700f88e949a7619658437553d250",
+      "sha256": "d101d2f156bf3456fbcc379db680f086363eb6ad304d2cd2b4daa23502bb4bdb",
       "static_text_fragments": [
         "Boletín de Prensa & Registro Territorial Oficial",
         "•",
@@ -764,17 +691,13 @@
         "Monitoreo de transparencia en contratación estatal, acompañamiento directo en territorio y reportes periódicos de la gestión liderada por el Representante Legal",
         "Luis Alberto Muñoz Granada",
         "en las subregiones de Colombia.",
-        "142",
-        "Alertas Emitidas (2025)",
-        "34",
-        "Mesas de Trabajo Activas",
+        "publicaciones disponibles",
         "Buscar publicaciones",
         "search",
         "Ordenar:",
         "Más recientes",
         "Más antiguas",
         "Crónicas, Reportes y Avances Territoriales",
-        "Publicaciones de ejemplo del diseño.",
         "Anterior",
         "Siguiente"
       ],
@@ -782,88 +705,21 @@
     },
     {
       "source": "src/app/features/initiatives/components/card/initiative-card.component.html",
-      "sha256": "a85db057207d676fcb3ba839cdf9b9f07c8fe0e24acd183104e43157a24ca71b",
+      "sha256": "19ac89939074696090a502d02eb75e588e1cff7ce38ed26f0aa6e96b21f155a0",
       "static_text_fragments": [
         "photo_library",
-        "Explorar memoria y fotos"
+        "Ver programa y galería"
       ],
       "images": []
     },
     {
       "source": "src/app/features/initiatives/components/featured/featured.component.html",
-      "sha256": "ceb200d8288bac9927970bb5f1554b1862c8b3f5eeaa74504264c267cb64476b",
+      "sha256": "c65f24753ad36ccd0c1f3b8fb53c2faf41d88765ff4586584e1f51396d6ab380",
       "static_text_fragments": [
-        "verified",
-        "Dinámica Insignia Anual",
-        "Jornada Territorial de Halloween y Escucha Cívica",
-        "event",
-        "Octubre de cada año",
-        "Dulcemanía: Alegría, Niñez y Escucha Territorial",
-        "Transformando la celebración infantil en un canal directo de veeduría y diagnóstico participativo en las laderas y comunas.",
-        "photo_camera",
-        "Registro Fotográfico de Campo #Dulcemanía2024",
-        "— Entrega lúdica de sorpresas, disfraces infantiles y carpa de recepción comunitaria.",
-        "policy",
-        "Sello Veeduría Ley 850",
-        "local_library",
-        "Origen y metodología de la dinámica",
-        "Dulcemanía nació como una respuesta solidaria a las brechas de acceso recreativo en sectores periféricos. Lo que comenzó como una entrega de dulces y comparsas temáticas en Halloween se consolidó institucionalmente como nuestra herramienta más eficaz de",
-        "escucha territorial no invasiva",
-        ".",
-        "Mientras los niños y niñas disfrutan de pinta-caritas, shows de títeres y juguetes didácticos en placas polideportivas y andenes, las madres comunitarias, abuelos y líderes de juntas de acción comunal conversan abiertamente con nuestros veedores. En este ambiente de confianza comunitaria se identifican fallas en el suministro de agua potable, parques infantiles clausurados por deterioro, riesgos geológicos desatendidos y demoras en el transporte escolar.",
-        "«El juego y el afecto derriban barreras institucionales. No esperamos a que la comunidad baje al centro cívico a poner una queja; subimos a sus canchas y callejones para proteger sus derechos colectivos.»",
-        "— Coordinación de Veeduría Territorial PLUS",
-        "Registros complementarios de la jornada",
-        "zoom_in",
-        "zoom_in",
-        "zoom_in",
-        "assessment",
-        "Ficha Técnica de Impacto",
-        "Corte 2024",
-        "Cobertura Territorial Priorizada",
-        "La Aurora",
-        "Vallejuelos",
-        "Moravia",
-        "Santo Domingo",
-        "San Antonio",
-        "850",
-        "Niños y niñas participantes",
-        "42",
-        "Líderes comunales articulados",
-        "18",
-        "Peticiones cívicas radicadas",
-        "Demandas Vecinales Canalizadas a Auditoría",
-        "water_drop",
-        "Continuidad de acueducto veredal",
-        "3 veredas con cortes de más de 48 horas. Veeduría abierta ante EPM.",
-        "park",
-        "Recuperación de zonas de juego",
-        "2 parques infantiles con mallas rotas y columpios colapsados en La Aurora.",
-        "shield",
-        "Luminarias públicas apagadas",
-        "Solicitud de intervención prioritaria de alumbrado público en Vallejuelos.",
-        "download",
-        "Descargar Ficha Metodológica Completa (PDF)",
-        "Ver imagen de la jornada"
+        "Iniciativa destacada",
+        "Ver programa y galería"
       ],
-      "images": [
-        {
-          "url": "https://lh3.googleusercontent.com/aida/AEtjO1XzkATqgB3Hq11KMmzEzZFbRBsv2Mg3xAGdZ-Gf6AsLSYJ4HJuDLvU30ssVsUkvqMF7kLvjtaVdE-xPI_cusz3BrDMhTUrN4Xcht4I4pV8qMWmk8-c0qxdwsFP3eOCZTkel0Nk18mblVP4x-RyV7LCjcz86zhqSSZwACuWX7rEEl3tXDCqKCqCfOl2EzbyWjoETUqlrEmnuiQE9atTT-xS8U6KX6Mv85l4TtYotyW8R",
-          "alt": "Jornada comunitaria Dulcemanía realizada por la Corporación PLUS en barrio de ladera popular"
-        },
-        {
-          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCbsSmLLr2pOw6n0RvCZpkJgBIiWohfY4a9kcm2Wl00v-u7wEYBQA2E1rD91gFDZUbHPYFT_qVEE4yp-P6T5Zjs6TiZtdMKERCDLQYQOwWjiKA3oru1qm_jg0T7pfZR7o2jhXN8qFIdlMh-NDY6yvRMNS6PgjheexalknKrRMCSDEF2VVr6L5R_CdUlsVE1bsJGJuNmCyNwLVX2Mxqnoxs1SmjQhyj-eaNN-vS-rPd6",
-          "alt": "Imagen de referencia de una iniciativa comunitaria de PLUS"
-        },
-        {
-          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuDtfFdnIsKwO9YvqaPyrHhdMP_el2-U5ZNb5ppfasWeX8m3WblVs7lXSU6X2ckm16RiEG9burFxkysqFW0DzhE2Oj1L-MApmYAYPGOt9G-z6P5hlNhq0kT9HIk-ijyfXzy5Y6rmgqRszt2sN3B4eu629p49_0c6Lmev3MXiAGRr42nSqKvluvKSkm7rh6eF2QxtY4BsQSqCCcpd8JrQd2hjmXM70uat3WvaqJhSdzjn",
-          "alt": "Imagen de referencia de una iniciativa comunitaria de PLUS"
-        },
-        {
-          "url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCXGShhnXBdZN5aQICc_fYti0Wljm4h7_A_pBQdz-UrXZiWalzACVsNK0dpy7GuRTd6nxU-LbdVLKJskH1nUcdWihVW2MjQhjZBlNLR2C-79ubAD98mR7tRGb2jhC0iS3nm5rOrcfYqxBMgDAUTrsPDsQcMNjQ4Z8MSZiK97T4kLem6UkwnzVBRQcjZjQBF4gK5Zmbj7IcT73kIIOYffApKPalcyFPbw70N0xeXx2ps",
-          "alt": "Imagen de referencia de una iniciativa comunitaria de PLUS"
-        }
-      ]
+      "images": []
     },
     {
       "source": "src/app/features/initiatives/components/hero/hero.component.html",
@@ -886,10 +742,10 @@
     },
     {
       "source": "src/app/features/initiatives/components/participation/participation.component.html",
-      "sha256": "491bcd66cab3700f2dba4bd618e1c65bd3bc23af3f5e9d057cd3a0eb1fc88e24",
+      "sha256": "9df275a6f9c1e1c2c3ccf9a32ad843ecfe4364da605e014a5095b2aaeab06dc5",
       "static_text_fragments": [
         "volunteer_activism",
-        "Convocatoria Abierta 2025",
+        "Postulación comunitaria",
         "¿Quieres que PLUS lleve estas dinámicas a tu barrio o vereda?",
         "Si eres presidente de Junta de Acción Comunal (JAC), líder barrial, madre comunitaria o integrante de un colectivo juvenil, postula tu sector para las próximas jornadas de niñez, novenas o brigadas comunitarias.",
         "check_circle",
@@ -904,38 +760,25 @@
         "Teléfono o WhatsApp de contacto *",
         "Municipio, Comuna y Barrio/Vereda *",
         "Dinámica que deseas priorizar *",
-        "Dulcemanía (Niñez y Veeduría en Halloween)",
-        "Novenas Navideñas Comunitarias",
-        "Jornada de Útiles y Regreso a Clases",
-        "Torneo Relámpago y Juventudes",
-        "Brigada Integral de Diagnóstico Cívico",
+        "Sin programa específico",
         "Título de la postulación *",
-        "Hasta 200 caracteres. Usa datos ficticios para explorar este formulario.",
+        "Hasta 200 caracteres.",
         "Breve descripción de la necesidad del sector *",
-        "Aceptación de demostración. El aviso de privacidad y su versión deben confirmarse antes de activar postulaciones reales.",
-        "Usaré datos ficticios y confirmo la aceptación de este ejemplo. Esta casilla no registra un consentimiento real.",
+        "La información será utilizada para estudiar la postulación y contactar al enlace comunitario.",
+        "Autorizo el tratamiento de mis datos personales para gestionar esta solicitud.",
         "lock",
-        "Demostración: los datos no se envían ni guardan.",
-        "send",
-        "Validar postulación de ejemplo"
+        "Envío seguro a la plataforma PLUS.",
+        "send"
       ],
       "images": []
     },
     {
       "source": "src/app/features/initiatives/initiatives-page.component.html",
-      "sha256": "9dba0c116a9a2f0e3c50c16c6ee31855769c73448fd9558e69ce21c9a4b87130",
+      "sha256": "a223cd5f7d1f89836666873a3f30499c07490424c14067bd53e9c6e1d09b2654",
       "static_text_fragments": [
-        "Todas las Dinámicas",
-        "Infancia y Niñez (Dulcemanía)",
-        "Navidad y Novenas Comunitarias",
-        "Educación y Regreso a Clases",
-        "Deporte y Convivencia Juvenil",
-        "Edición 2025",
-        "Edición 2024",
-        "Histórico Territorial",
-        "search",
-        "Ciclo anual de acompañamiento",
-        "Otras dinámicas en territorio"
+        "Todas",
+        "Todas las ediciones",
+        "Programas en territorio"
       ],
       "images": []
     },

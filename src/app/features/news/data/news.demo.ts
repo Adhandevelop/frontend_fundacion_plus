@@ -1,5 +1,5 @@
 // UI fixtures from the mockup; no API contract is implied.
-export interface NewsDemo {id:string;title:string;summary:string;image:string;category:string;date:string;order:number;featured:boolean;}
+export interface NewsDemo {id:string;slug?:string;title:string;summary:string;content?:string;image:string;imageAlt?:string;category:string;date:string;publishedAt?:string;order:number;featured:boolean;demo?:boolean;}
 export const NEWS_DEMO: readonly NewsDemo[] = [
   {
     "id": "publicacion-0",

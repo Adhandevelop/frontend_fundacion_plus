@@ -41,7 +41,7 @@ export class AuthService {
   }
   accessToken() {return this.tokens()?.access ?? null;}
   hasSession() {return !!this.tokens();}
-  defaultRoute() {return this.canAdmin() ? '/admin' : this.canCitizen() ? '/ciudadano/perfil' : '/acceso-denegado';}
+  defaultRoute() {return this.canAdmin() ? '/admin' : this.canCitizen() ? '/ciudadano' : '/acceso-denegado';}
   login(correo: string, password: string, remember: boolean) {
     return this.http.post<AuthResponse>(`${this.base}/auth/login/`, {correo, password}).pipe(tap(response => this.accept(response, remember)));
   }

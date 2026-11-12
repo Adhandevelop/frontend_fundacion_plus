@@ -1,19 +1,12 @@
 <article class="ed-news-bg-surface-container-lowest rounded-xl border ed-news-border-surface-container-highest shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md">
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-0">
 <div class="lg:col-span-7 relative min-h-[380px] lg:min-h-[460px] ed-news-bg-surface-container overflow-hidden">
-<img class="w-full h-full object-cover object-center group-hover:scale-102 transition-transform duration-500" alt="Fotografía de referencia de PLUS" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXBDSJe05exet7bTIy_rj083HnCNmvQj5ciwQ57zGVgGHldKahqK7pbhRlTw-7Ws0Eofu74IkHzaEyG-8qIwP8fVztRkg5XLXiDAQKtaaS7LkulVod7DSTFQkrNM5i2s4j-_cru67YriEvVPxJCspWXPWiYs_0aU7iXSvev8Cw1eqZ0k2u2ywg0SlRNDXy0sd77JQY_76CwKDDubxSRHjlp_I2WJ1PiJEJnYf7IDJw">
+<img class="w-full h-full object-cover object-center group-hover:scale-102 transition-transform duration-500" [alt]="featured().imageAlt||featured().title" loading="lazy" [src]="featured().image">
 <div class="absolute top-4 left-4 flex flex-wrap gap-2">
 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full ed-news-bg-primary-container text-black font-label-md text-label-md font-bold shadow-xs">
 <span class="w-1.5 h-1.5 rounded-full ed-news-bg-on-surface"></span>
-                Actividades de Representación
+                {{featured().category}}
               </span>
-<span class="inline-flex items-center px-3 py-1 rounded-full ed-news-bg-on-surface-85 backdrop-blur-md ed-news-text-surface font-label-md text-label-md">
-                Territorio Atrato
-              </span>
-</div>
-<div class="absolute bottom-4 left-4 right-4 ed-news-bg-on-surface-80 backdrop-blur-md ed-news-text-surface px-4 py-2 rounded-lg text-body-sm font-body-sm flex items-center justify-between">
-<span>Registro Fotográfico Oficial: Subregión del Medio y Bajo Atrato</span>
-<span class="font-label-sm ed-news-text-primary-container">Archivo PLUS 2025</span>
 </div>
 </div>
 <div class="lg:col-span-5 p-6 lg:p-8 flex flex-col justify-between ed-news-bg-surface-container-lowest">
@@ -21,41 +14,20 @@
 <div class="flex items-center gap-3 ed-news-text-secondary font-label-md text-label-md mb-3">
 <span class="flex items-center gap-1">
 <span class="material-symbols-outlined text-[16px]">calendar_today</span>
-                  18 de Febrero de 2025
+                  {{featured().date}}
                 </span>
-<span>•</span>
-<span class="flex items-center gap-1">
-<span class="material-symbols-outlined text-[16px]">schedule</span>
-                  5 min de lectura
-                </span>
-<span>•</span>
-<span class="ed-news-text-primary font-semibold">Despacho Legal</span>
 </div>
 <h2 class="font-headline-lg text-headline-lg ed-news-text-on-surface tracking-tight mb-4 ed-news-hover-text-primary transition-colors cursor-pointer">
-                Luis Alberto Muñoz Granada lidera mesa técnica interinstitucional para seguimiento a compromisos viales y de salud en el Atrato
+                {{featured().title}}
               </h2>
 <p class="font-body-md text-body-md ed-news-text-secondary leading-relaxed mb-6">
-                En el marco del mandato cívico y las competencias conferidas por la Ley 850 de 2003, la Corporación Pluralismo Social articuló un espacio de interlocución vinculante entre comités comunitarios de base, delegados de ministerios y contratistas ejecutores. Durante la jornada se establecieron cronogramas de entrega con penalidades contractuales y verificación satelital de avances.
+                {{featured().summary}}
               </p>
-<div class="space-y-2 border-y ed-news-border-surface-container-high py-4 mb-6">
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined ed-news-text-primary-container text-[20px] shrink-0 font-bold">check_circle</span>
-<span class="font-body-sm text-body-sm ed-news-text-on-surface">Inspección directa a 4 frentes de obra en corredores fluviales críticos.</span>
-</div>
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined ed-news-text-primary-container text-[20px] shrink-0 font-bold">check_circle</span>
-<span class="font-body-sm text-body-sm ed-news-text-on-surface">Acta de compromiso firmada con veedurías étnicas y autoridades locales.</span>
-</div>
-</div>
 </div>
 <div class="flex flex-wrap items-center gap-3 pt-2">
-<a class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg ed-news-bg-primary-container text-black font-title-sm text-title-sm font-semibold hover:brightness-95 transition-all shadow-xs active:scale-95" href="#news-preview" (click)="openArticle(featured,$event)">
-<span>Ver resumen de ejemplo</span>
+<a class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg ed-news-bg-primary-container text-black font-title-sm text-title-sm font-semibold hover:brightness-95 transition-all shadow-xs active:scale-95" href="#news-preview" (click)="openArticle(featured(),$event)">
+<span>{{featured().demo?'Ver resumen de ejemplo':'Leer publicación'}}</span>
 <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-</a>
-<a class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border ed-news-border-surface-container-highest ed-news-text-on-surface font-title-sm text-title-sm ed-news-hover-bg-surface-container transition-colors" href="#" aria-disabled="true" (click)="$event.preventDefault(); $event.stopPropagation()" title="Documento no disponible en la demostración">
-<span class="material-symbols-outlined text-[18px] ed-news-text-secondary">download</span>
-<span>Descargar comunicado en PDF</span>
 </a>
 </div>
 </div>

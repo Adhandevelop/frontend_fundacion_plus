@@ -1,225 +1,166 @@
 # Estado de integración del frontend PLUS
 
-Actualizado: 9 de noviembre de 2026.
+Actualizado: 11 de noviembre de 2026.
 
-Este documento resume qué partes del frontend Angular ya consumen la API REST, cuáles continúan como demostraciones locales y qué necesita entregar o corregir el backend. “Integrado” significa que existe una implementación HTTP en Angular y pruebas automatizadas del contrato; no significa necesariamente que la versión local ya se encuentre desplegada en producción.
+Este es el registro consolidado del frontend Angular. “Integrado” significa que existe un servicio HTTP, una vista conectada y pruebas aisladas del contrato; no significa que el cambio local ya esté desplegado en `fundacionplus.site`. Este repositorio no modifica Django ni la base de datos.
 
-## 1. Ya integrado con el backend
+## 1. Integrado con la API REST
 
-### Autenticación y sesiones
+### Autenticación, cuenta y permisos
 
-- Inicio de sesión mediante REST.
-- Registro de ciudadanos.
-- Almacenamiento separado de sesión recordada y sesión temporal.
-- Renovación y rotación de JWT ante respuestas `401`.
-- Restauración de la cuenta mediante `/api/v1/me/`.
-- Cierre de sesión y limpieza local de credenciales.
-- Solicitud, validación y restablecimiento de contraseña.
-- Tratamiento diferenciado de errores de autenticación, permisos y sesión vencida.
-
-### Separación de roles y navegación
-
-- Un ciudadano no puede ingresar a rutas administrativas.
-- Administradores, moderadores y representantes no reciben acceso al portal ciudadano.
-- Las rutas hijas vuelven a comprobar los permisos; no se protege únicamente el menú.
-- La navegación administrativa se filtra mediante una matriz de módulos y roles.
-- Usuarios, roles, comunidades, auditoría y formularios están reservados al administrador según la política actual del frontend.
-- Noticias, iniciativas, postulaciones y comentarios admiten administrador y moderador.
-- Dashboard, casos, informes, perfil y mapa interno admiten los roles internos autorizados.
-- Perfil y mapa conservan el layout correspondiente en lugar de sacar al usuario de su portal.
-
-### Perfil y catálogos territoriales
-
-- Consulta y actualización del perfil.
-- Actualización de preferencias de notificación.
-- Carga y eliminación de fotografía mediante `multipart/form-data`.
-- Consulta de departamentos, municipios y comunidades.
-- Selección territorial dependiente y validación de relaciones.
-- El servidor consultado devolvió 32 departamentos, 88 municipios y 83 comunidades; aún debe validarse funcionalmente la cobertura y procedencia completa de esos datos.
+- Inicio de sesión, registro ciudadano, cierre de sesión y restauración mediante `/me/`.
+- JWT con almacenamiento temporal/recordado, renovación, rotación y tratamiento de sesión vencida.
+- Recuperación, validación y cambio de contraseña.
+- Perfil, preferencias, foto por `multipart/form-data` y catálogos territoriales.
+- Separación estricta de portales: ciudadano no entra a administración y un rol interno no entra al portal ciudadano.
+- Guards en rutas padre e hijas y menú administrativo filtrado por rol/capacidades.
 
 ### Portal ciudadano
 
-- Dashboard ciudadano.
-- Listado paginado de casos propios.
-- Radicación de casos.
-- Detalle e historial de un caso propio.
-- Carga individual de evidencias.
-- Aportes y respuestas a solicitudes de corrección.
-- Conversaciones privadas y envío de mensajes.
-- Marcado explícito de mensajes como leídos.
-- Listado paginado de notificaciones.
-- Marcado individual y múltiple de notificaciones como leídas.
-- Contadores de mensajes y notificaciones aislados por cuenta.
+- Inicio ciudadano propio en `/ciudadano`, con resumen real, accesos rápidos y casos recientes dentro del layout autenticado.
+- Login y registro ciudadano aterrizan en ese inicio, no directamente en el perfil.
+- Logo y enlace “Inicio” conservan cabecera, menú lateral, identidad y sesión del portal ciudadano.
+- Dashboard, listado, radicación, detalle e historial de casos propios.
+- Evidencias, aportes, solicitudes de corrección y descargas protegidas.
+- Conversaciones, mensajes, notificaciones, lectura explícita y contadores por cuenta.
+- “Mis formularios”: listado paginado y detalle histórico de respuestas vinculadas.
 
-### Administración de casos
+### Administración
 
-- Dashboard administrativo.
-- Listado, filtros, paginación y detalle de casos.
-- Revisión previa de acciones antes de enviarlas.
-- Acciones permitidas según `allowed_actions` entregado por el backend.
-- Búsqueda paginada de responsables elegibles.
-- Asignación, cambios de estado, solicitudes de corrección y decisiones de publicación según el contrato existente.
-- Revisión administrativa de evidencias.
-- Protección frente a respuestas tardías al cambiar rápidamente de expediente.
+- Dashboard, listado, filtros, detalle y acciones de casos según `allowed_actions`.
+- Responsables elegibles, asignación, estados, corrección, publicación y revisión de evidencias.
+- Usuarios: listado, alta, contacto, rol y estado.
+- Comunidades: listado, creación, edición y activación/desactivación.
+- Comentarios: cola, detalle y decisión de moderación.
+- Informes de casos y exportación CSV.
+- Auditoría reciente y detalle seguro de metadatos.
+- Gestión exclusiva de la fotografía principal para cuentas con `can_manage_homepage`.
 
-### Usuarios, roles y estados
+### Portada institucional
 
-- Directorio paginado y filtrado de usuarios.
-- Consulta de ficha administrativa.
-- Creación de usuarios internos.
-- Actualización de datos de contacto.
-- Consulta de roles asignables.
-- Acciones separadas para cambio de rol y cambio de estado.
-- Confirmación antes de escrituras sensibles.
-- Bloqueo de acciones administrativas sobre la propia cuenta desde la interfaz.
+- La página principal consulta `/api/v1/public/home/`.
+- Fotografía, nombre institucional, representante, misión y métricas verificadas proceden del backend cuando la consulta está disponible.
+- Las cifras ficticias del diseño fueron retiradas: ante un error se muestran guiones, no valores inventados.
+- `/admin/portada` permite consultar y reemplazar la imagen mediante `multipart/form-data`.
+- El frontend valida JPG/PNG/WEBP, límite de 5 MB y texto alternativo; el backend conserva la validación definitiva, versiona el recurso y audita la escritura.
+- Menú y ruta exigen administrador activo y capacidad `can_manage_homepage`.
 
-### Comunidades y territorios
+### Noticias públicas y boletín
 
-- Listado paginado de comunidades.
-- Filtros y consulta de detalle.
-- Creación y edición.
-- Activación y desactivación con confirmación.
-- Conservación de geometría existente cuando la interfaz no la modifica.
-- Departamentos y municipios tratados como catálogos de consulta.
+- `/noticias` consulta `/api/v1/public/news/` y las categorías activas.
+- La apertura de una publicación consulta su detalle completo y medios por `slug`.
+- Búsqueda, categoría, orden y paginación visual operan sobre la colección recibida.
+- Si no existen noticias publicadas o falla la consulta, se conservan los mockups como respaldo marcado explícitamente; no se presentan como información oficial.
+- La suscripción al boletín consume `/api/v1/public/newsletter/subscribe/`, envía consentimiento y comunica que debe confirmarse por correo.
+- No se implementaron todavía las rutas de confirmación/baja porque normalmente se abren desde enlaces con token y falta incorporar sus páginas específicas.
+- La administración editorial consulta listado, categorías y detalle reales.
+- Creación y edición escriben título, categoría, extracto, contenido y destacado.
+- La revisión aplica estados `borrador`, `en_revision`, `publicada` y `archivada`, con confirmación antes de cambiar visibilidad.
+- El almacenamiento temporal administrativo fue retirado.
+- La carga binaria de medios no se habilita: `/admin/news-media/` recibe `ruta_archivo`, pero no define una carga de archivo segura desde el navegador.
 
-### Moderación, informes y auditoría
+### Iniciativas públicas y postulaciones
 
-- Cola paginada de comentarios.
-- Consulta individual y decisión de moderación.
-- Separación entre motivo interno y explicación compartida.
-- Informes de casos con filtros y paginación.
-- Exportación CSV de toda la selección cargada por el servicio de informes.
-- Consulta de auditoría reciente y detalle de eventos.
-- Presentación segura de metadatos, sin interpretar HTML recibido.
-
-## 2. Construido, pero todavía con datos demostrativos
+- `/iniciativas` consulta `/api/v1/public/initiatives/` y `/categories/`.
+- Búsqueda, categoría y edición filtran la colección recibida; al abrir un programa se consulta el detalle por `slug` y se muestran descripción, portada y galería pública.
+- Si la colección está vacía o la consulta falla, los cuatro mockups se conservan como respaldo marcado como contenido de diseño.
+- El formulario comunitario dejó de ser una simulación y envía a `/api/v1/public/initiatives/proposals/` el contacto, territorio declarado, iniciativa opcional, título, descripción y autorización.
+- No se muestran actividades, responsables ni casos vinculados del objeto anidado porque el contrato público actual incluye campos cuyo alcance debe revisar el backend (P19).
+- La administración de programas ya consulta listado y detalle reales, crea/edita contenido y confirma cambios de publicación y destacado.
+- El `slug` administrativo es de solo lectura en Angular porque lo genera y garantiza el backend.
+- Las ediciones anidadas se muestran en lectura desde la ficha real. Sus editores, indicadores, cobertura, actividades, medios y revisión de postulaciones todavía conservan implementación demostrativa.
 
 ### Formularios dinámicos
 
-La interfaz completa inicial ya existe:
+El prototipo en memoria fue retirado. El módulo consume `apps.dynamic_forms`:
 
-- Listado administrativo de formularios.
-- Creación y edición de borradores.
-- Preguntas de texto corto, texto largo, selección única, selección múltiple y fecha en la demostración actual.
-- Opciones, obligatoriedad, orden y validación local.
-- Vista previa administrativa.
-- Publicación, cierre y duplicación simuladas.
-- Formulario público con identificación y consentimiento.
-- Confirmación neutral de recepción.
-- Listado y detalle de respuestas administrativas.
-- “Mis formularios” y detalle histórico en el portal ciudadano.
-- Separación de datos temporales por propietario.
+- capacidad `can_manage_forms` aplicada en menú y rutas;
+- listado administrativo con búsqueda, estado y paginación;
+- creación y actualización de borradores con `revision_esperada`;
+- constructor para `texto_corto`, `texto_largo`, `numero`, `fecha`, `booleano`, `seleccion_unica` y `seleccion_multiple`;
+- obligatoriedad, orden, opciones y configuración básica de límites;
+- publicación, cierre, reapertura, archivo, duplicación y borrador desde versión;
+- vista previa sin guardar respuestas;
+- formulario público desde `/api/v1/public/forms/{slug}/`;
+- envío con política legal vigente e `Idempotency-Key` estable durante el intento;
+- confirmación neutral de recepción;
+- activación/reivindicación mediante `/activar-cuenta?token=...`, contraseña elegida por el usuario y reenvío neutral;
+- bandeja y detalle administrativo de envíos;
+- exportación CSV de respuestas;
+- listado y detalle ciudadano de envíos vinculados.
 
-Actualmente este módulo usa memoria local. No persiste formularios, no crea cuentas, no envía correos y no invoca los endpoints nuevos. El backend entregó un contrato 1.0 para `apps.dynamic_forms`, pero falta confirmar que sus migraciones, endpoints, permisos, correo y pruebas ya estén implementados y desplegados.
+No se envían contraseñas por correo. El backend genera un enlace de un solo uso para que la persona establezca la suya.
 
-### Noticias e iniciativas
+## 2. Construido, pero aún demostrativo o estático
 
-- Noticias públicas y administración editorial.
-- Iniciativas públicas.
-- Programas, ediciones, actividades y medios administrativos.
-- Postulaciones y propuestas.
-- Contenido inicial preparado en un inventario reproducible.
+### Contenido editorial pendiente
 
-Los textos, imágenes y cifras proceden de los diseños y no deben considerarse información institucional aprobada. Antes de sustituirlos se necesita carga inicial controlada en la base de datos, aprobación editorial y conexión de los servicios REST.
+- Bloques secundarios de la página principal y nosotros.
+- Administración de ediciones, indicadores, cobertura, actividades, medios y postulaciones de iniciativas.
+- Inventario inicial reproducible de contenido e imágenes.
 
-### Otros espacios demostrativos
+Estas pantallas todavía usan contenido de diseño. Falta aprobación institucional, carga inicial en la base de datos y conexión REST. No conviene conectar una colección vacía porque degradaría el sitio publicado.
 
-- Algunos componentes internos del expediente conservan datos ilustrativos donde el backend todavía no ofrece el contrato requerido.
-- Algunas métricas de las vistas públicas continúan pendientes de una fuente real.
-- No se ejecutan escrituras de demostración contra producción.
+### Otros límites
+
+- Algunos bloques secundarios del expediente conservan información ilustrativa donde no existe contrato suficiente.
+- Algunas cifras públicas carecen de una fuente real.
+- Las vistas administrativas de iniciativas siguen esperando su siguiente etapa de servicios REST y la carga editorial aprobada.
 
 ## 3. Mapa territorial
 
-El mapa ya no es un SVG ficticio:
+- Leaflet 1.9.4 y cartografía real de OpenStreetMap con atribución.
+- Centrado inicial en Villavicencio y encuadre general del Meta.
+- Rutas `/mapa`, `/ciudadano/mapa` y `/admin/mapa`, conservando el layout del portal.
+- Cartografía legible también en tema oscuro.
+- Sin marcadores ni coordenadas inventadas.
 
-- Usa Leaflet 1.9.4.
-- Usa cartografía real de OpenStreetMap con atribución visible.
-- Abre centrado en Villavicencio, Meta.
-- Incluye un control para volver a Villavicencio.
-- Incluye un encuadre general aproximado para explorar el departamento del Meta.
-- Está disponible en `/mapa`, `/ciudadano/mapa` y `/admin/mapa` sin abandonar el layout correspondiente.
-- Conserva el mapa claro cuando la interfaz está en tema oscuro.
-- No muestra marcadores, conteos ni coordenadas ficticias.
+Falta que el backend entregue coordenadas o GeoJSON verificable, visibilidad pública explícita y filtros. No se geocodifican descripciones textuales de casos.
 
-Todavía falta integrar casos reales. El backend debe entregar coordenadas o geometrías GeoJSON verificadas, visibilidad pública explícita y filtros territoriales. No se deben calcular ni inventar coordenadas a partir de la descripción textual de un caso.
+## 4. Limitaciones encontradas durante esta integración
 
-## 4. Pendientes del backend que condicionan la integración
+### Formularios
 
-El seguimiento detallado se encuentra en `docs/problemas-integracion.md`. Los puntos de mayor impacto son:
+- El detalle administrativo entrega `preguntas_borrador`, pero los elementos de `versiones` solo incluyen conteos. Una versión histórica cerrada/archivada no puede reconstruirse en la vista previa si no existe borrador. Se necesita detalle de versión con sus preguntas congeladas, o incluirlas en el detalle administrativo.
+- El editor cubre los siete tipos y las validaciones frecuentes. La interfaz avanzada para `min_date`, `max_date`, expresión regular y mensaje de expresión regular aún no se expone, aunque el adaptador conserva `configuracion_validacion` recibida.
+- La disponibilidad real de correo, migraciones, documento legal y formulario semilla debe comprobarse en el entorno desplegado. Las pruebas locales no envían correos ni crean cuentas reales.
+- Se debe realizar una prueba funcional controlada del ciclo completo: crear borrador, publicar, enviar como anónimo, recibir correo, activar, iniciar sesión, consultar “Mis formularios” y exportar desde administración.
 
-- Desplegar y comprobar las correcciones de separación entre endpoints ciudadanos y administrativos.
-- Comprobar en el servidor la revocación de sesiones después de cambiar rol o estado.
-- Restringir completamente los campos sensibles en las actualizaciones generales de usuarios.
-- Aplicar la protección del último administrador en todos los métodos de escritura.
-- Evitar efectos secundarios en peticiones `GET`, especialmente el marcado de mensajes como leídos.
-- Normalizar claves, errores, filtros y paginación donde todavía existen diferencias de contrato.
-- Definir y verificar idempotencia y concurrencia en escrituras críticas.
-- Completar pruebas de publicación, moderación, correo y operaciones editoriales.
-- Acordar el alcance de dashboard y listados para representantes.
-- Completar historial o versionado de comentarios si se requiere trazabilidad detallada.
+### Backend general
 
-## 5. Requisitos antes de conectar formularios dinámicos
+Los problemas P01–P20, su evidencia y estado están en [problemas-integracion.md](problemas-integracion.md). Los principales pendientes siguen siendo verificar en el servidor la exclusividad ciudadana, la revocación de sesiones tras rol/estado, la protección integral del último administrador, la ausencia de efectos secundarios en consultas GET, el detalle histórico de versiones de formularios, la carga segura de medios editoriales y una proyección pública mínima para actividades de iniciativas.
 
-Para sustituir el servicio demostrativo se necesita confirmar:
+## 5. Próximo trabajo recomendado
 
-- Aplicación `apps.dynamic_forms` instalada y migraciones aplicadas.
-- Rutas registradas bajo `/api/v1/`.
-- Capacidad `can_manage_forms` incluida en `/api/v1/me/`.
-- Separación entre número de versión publicada y revisión de edición para concurrencia optimista.
-- Enumeraciones definitivas de estado del formulario y vinculación del envío.
-- JSON completo del detalle administrativo de formulario.
-- JSON completo del listado y detalle ciudadano.
-- `Idempotency-Key` obligatorio o una regla definitiva equivalente.
-- Respuestas neutrales que no permitan enumerar cuentas o envíos previos.
-- Política legal vigente disponible y validada por el servidor.
-- Tokens de activación y reivindicación de un solo uso, con hash y vencimiento.
-- Reenvío con límite por correo e IP.
-- Plantilla de correo y proveedor SMTP probados.
-- Listado, detalle y exportación administrativa auditados.
-- Datos de prueba que no contengan información personal real.
+1. Probar formularios de extremo a extremo en un entorno controlado y corregir diferencias observadas.
+2. Añadir el detalle de versión histórica al backend y conectarlo a la vista previa.
+3. Completar los controles avanzados de validación del constructor.
+4. Aprobar y cargar el contenido editorial inicial.
+5. Completar carga segura de medios de noticias y las páginas de confirmación/baja del boletín.
+6. Integrar ediciones, indicadores, cobertura, actividades y postulaciones administrativas; revisar el DTO público de actividades.
+7. Integrar casos georreferenciados en el mapa.
+8. Probar el reemplazo real de portada con una cuenta superadministradora controlada.
+9. Repetir revisión responsive, accesibilidad, temas, Docker y Nginx con datos reales.
 
-Después de esa confirmación, el orden de integración será:
+## 6. Verificación local actual
 
-1. Modelos TypeScript y adaptadores del contrato definitivo.
-2. Listado y detalle administrativo.
-3. Creación, edición, publicación y control de conflictos.
-4. Consulta y envío público.
-5. Activación o reivindicación mediante enlace.
-6. Reenvío de enlace.
-7. “Mis formularios” ciudadano.
-8. Consulta administrativa de respuestas y exportación CSV.
-9. Eliminación del servicio temporal en memoria.
+- `npm run build`: correcto el 11 de noviembre de 2026.
+- `npm run test:api`: trece suites correctas.
+- La suite de formularios comprueba listado administrativo, siete tipos de pregunta, validación local, payload público, `Idempotency-Key`, activación/reenvío, historial ciudadano, ciclo de publicación y rutas de exportación.
+- La suite de portada comprueba la lectura pública, las métricas verificadas, la consulta administrativa y el reemplazo multipart protegido.
+- La suite editorial comprueba catálogo/detalle público, boletín, listado y categorías administrativas, creación y transiciones editoriales.
+- La suite de iniciativas comprueba catálogo, categorías, detalle/galería, postulación comunitaria, listado administrativo, creación y transición editorial.
+- Las pruebas HTTP son simuladas y no escriben en producción.
+- No se realizó despliegue, commit ni prueba con credenciales reales en esta etapa.
 
-## 6. Pendientes del frontend
-
-- Conectar formularios dinámicos cuando el backend confirme su disponibilidad.
-- Conectar noticias, iniciativas, actividades, medios y postulaciones.
-- Cargar contenido inicial aprobado en lugar de trasladar directamente los datos de diseño.
-- Conectar el mapa a casos reales y filtros territoriales.
-- Incorporar el editor de imagen principal únicamente cuando exista el permiso separado para superadministración y su endpoint de medios.
-- Sustituir los últimos bloques demostrativos de expedientes por contratos reales.
-- Ejecutar pruebas funcionales controladas contra un entorno de pruebas del backend.
-- Repetir revisión responsive, accesibilidad y temas con datos reales.
-- Verificar Docker y Nginx después de cada integración que introduzca nuevos tamaños de carga o rutas.
-
-## 7. Verificación actual
-
-La revisión local más reciente incluye:
-
-- `npm run build`: correcto.
-- `npm run test:api`: diez suites aprobadas.
-- Pruebas de autenticación, permisos, casos ciudadanos, comunicaciones, casos administrativos, informes, auditoría, comentarios, territorios, usuarios y formularios demostrativos.
-- Revisión visual del mapa real en Chrome a 1440 × 1200 píxeles.
-- Revisión de espacios y formato del diff sin errores.
-
-Las pruebas utilizan HTTP simulado y datos no sensibles; no crean cuentas, casos, mensajes, formularios ni contenido en producción.
-
-## 8. Estimación orientativa
+## 7. Estimación orientativa
 
 - Vistas generales: aproximadamente 90 % construidas.
-- Integración de módulos respaldados por endpoints existentes: aproximadamente 75–80 %.
-- Formularios dinámicos: recorrido visual construido, conexión REST pendiente.
-- Noticias e iniciativas: interfaz construida, integración REST y carga editorial pendientes.
-- Mapa base: implementado; integración de casos georreferenciados pendiente.
+- Integración de módulos respaldados por endpoints: aproximadamente 85 %.
+- Formularios dinámicos: conexión REST implementada; falta validación real completa y versión histórica.
+- Portada institucional: lectura y administración conectadas; prueba real de archivo pendiente.
+- Noticias: lecturas públicas y administración REST conectadas; carga editorial, medios binarios y acciones por token pendientes.
+- Iniciativas: catálogo, detalle, postulación pública y CRUD textual administrativo de programas conectados; subrecursos y carga editorial pendientes.
+- Mapa: base real lista; datos georreferenciados pendientes.
 
-Estas cifras son orientativas y deben actualizarse cuando el backend despliegue los contratos pendientes. El estado local tampoco implica que los cambios se encuentren desplegados en `fundacionplus.site`.
+Las cifras son orientativas. El estado local no implica que los cambios estén publicados en `fundacionplus.site`.

@@ -16,17 +16,7 @@
               Monitoreo de transparencia en contratación estatal, acompañamiento directo en territorio y reportes periódicos de la gestión liderada por el Representante Legal <span class="font-semibold ed-news-text-on-surface">Luis Alberto Muñoz Granada</span> en las subregiones de Colombia.
             </p>
 </div>
-<div class="flex items-center gap-4 border-l-2 ed-news-border-primary-container pl-4 py-1 ed-news-bg-surface-container-low-40 rounded-r-lg">
-<div>
-<span class="block font-headline-md text-headline-md ed-news-text-on-surface font-bold">142</span>
-<span class="block font-label-sm text-label-sm ed-news-text-secondary">Alertas Emitidas (2025)</span>
-</div>
-<div class="h-8 w-px ed-news-bg-surface-container-high"></div>
-<div>
-<span class="block font-headline-md text-headline-md ed-news-text-on-surface font-bold">34</span>
-<span class="block font-label-sm text-label-sm ed-news-text-secondary">Mesas de Trabajo Activas</span>
-</div>
-</div>
+<div class="border-l-2 ed-news-border-primary-container pl-4 py-1 text-body-sm"><strong>{{articles().length}}</strong> publicaciones disponibles</div>
 </div>
 </div>
 </section>
@@ -40,7 +30,7 @@
             </span>
 <input [value]="query()" (input)="changeQuery($any($event.target).value)" class="w-full h-11 pl-11 pr-4 rounded-lg ed-news-bg-surface-container-lowest border ed-news-border-surface-container-highest ed-news-text-on-surface font-body-md text-body-md ed-news-placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-on-surface transition-all" id="search-articles" placeholder="Buscar publicaciones por título o palabra clave..." type="search">
 </div>
-<div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">@for(value of categories;track value){<button type="button" class="inline-flex items-center px-3.5 py-1.5 rounded-full border border-slate-400/40 text-label-md whitespace-nowrap" (click)="changeCategory(value)" [attr.aria-pressed]="category() === value">{{value || 'Todos'}}</button>}</div>
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">@for(value of categories();track value){<button type="button" class="inline-flex items-center px-3.5 py-1.5 rounded-full border border-slate-400/40 text-label-md whitespace-nowrap" (click)="changeCategory(value)" [attr.aria-pressed]="category() === value">{{value || 'Todos'}}</button>}</div>
 <div class="flex items-center gap-2 self-end lg:self-center shrink-0">
 <span class="font-label-sm text-label-sm ed-news-text-secondary">Ordenar:</span>
 <select aria-label="Ordenar publicaciones" [value]="order()" (change)="order.set($any($event.target).value)" class="h-10 px-3 py-1.5 rounded-lg ed-news-bg-surface-container-lowest border ed-news-border-surface-container-highest text-title-sm font-title-sm ed-news-text-on-surface focus:outline-none focus:ring-1 focus:ring-primary-container cursor-pointer">
@@ -52,8 +42,12 @@
 </div>
 </section>
 <div class="max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-xl space-y-space-xl">
-@if(showFeatured()){<plus-news-featured (open)="openArticle($event)"/>}
-<div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-400/30 pb-4"><div><h2 class="text-headline-md">Crónicas, Reportes y Avances Territoriales</h2><p class="text-body-sm mt-1">Publicaciones de ejemplo del diseño.</p></div><span class="text-body-sm" role="status">{{filtered().length}} publicaciones en la cuadrícula</span></div>
-@if(selected();as article){<section id="news-preview" class="editorial-panel p-5 rounded-xl border space-y-3" aria-label="Resumen de la publicación"><div class="flex flex-wrap justify-between gap-3"><h2 id="news-preview-title" tabindex="-1" class="text-headline-sm">{{article.title}}</h2><button type="button" class="editorial-button" (click)="selected.set(null)">Cerrar resumen</button></div><p class="text-body-sm">{{article.category}} · {{article.date}}</p><p>{{article.summary}}</p><p class="text-body-sm">Resumen de demostración. La noticia completa todavía no está disponible.</p></section>}
-<section aria-label="Cuadrícula de noticias" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg">@for(article of visible();track article.id){<plus-news-card [article]="article" (open)="openArticle($event)"/>}@empty{<p class="col-span-full py-8 text-center" role="status">No hay publicaciones de ejemplo que coincidan con los filtros.</p>}</section>
-<div class="flex flex-wrap justify-between items-center gap-3 text-body-sm"><span>Página {{page()}} de {{pages()}} · {{filtered().length}} publicaciones de ejemplo</span><div class="flex gap-2"><button type="button" class="editorial-button" (click)="navigate(-1)" [disabled]="page() === 1">Anterior</button><button type="button" class="editorial-button" (click)="navigate(1)" [disabled]="page() === pages()">Siguiente</button></div></div><plus-news-community/></div></div>
+@if(loading()){<p class="editorial-panel p-5" role="status">Consultando publicaciones…</p>}
+@if(fallback()){<p class="border border-amber-500 bg-amber-400/10 rounded-xl p-4 text-body-sm" role="status">El backend todavía no tiene noticias publicadas o no fue posible consultarlas. Se conserva temporalmente el contenido de diseño, claramente identificado, mientras se realiza la carga editorial.</p>}
+@if(error()){<p class="plus-form-errors" role="alert">{{error()}}</p>}
+@if(showFeatured()&&featured();as featuredArticle){<plus-news-featured [featured]="featuredArticle" (open)="openArticle($event)"/>}
+<div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-400/30 pb-4"><div><h2 class="text-headline-md">Crónicas, Reportes y Avances Territoriales</h2><p class="text-body-sm mt-1">{{fallback()?'Contenido temporal pendiente de aprobación y carga.':'Publicaciones institucionales entregadas por PLUS.'}}</p></div><span class="text-body-sm" role="status">{{filtered().length}} publicaciones en la cuadrícula</span></div>
+@if(detailLoading()){<p class="editorial-panel p-5" role="status">Consultando la publicación completa…</p>}
+@if(selected();as article){<section id="news-preview" class="editorial-panel p-5 rounded-xl border space-y-3" aria-label="Publicación"><div class="flex flex-wrap justify-between gap-3"><h2 id="news-preview-title" tabindex="-1" class="text-headline-sm">{{article.title}}</h2><button type="button" class="editorial-button" (click)="selected.set(null)">Cerrar</button></div><p class="text-body-sm">{{article.category}} · {{article.date}}</p><p class="font-semibold">{{article.summary}}</p>@if(article.content){<div class="whitespace-pre-wrap text-body-md">{{article.content}}</div>}@else{<p class="text-body-sm">Resumen de contenido de diseño. La publicación completa todavía no está cargada en el backend.</p>}</section>}
+<section aria-label="Cuadrícula de noticias" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg">@for(article of visible();track article.id){<plus-news-card [article]="article" (open)="openArticle($event)"/>}@empty{<p class="col-span-full py-8 text-center" role="status">No hay publicaciones que coincidan con los filtros.</p>}</section>
+<div class="flex flex-wrap justify-between items-center gap-3 text-body-sm"><span>Página {{page()}} de {{pages()}} · {{filtered().length}} publicaciones</span><div class="flex gap-2"><button type="button" class="editorial-button" (click)="navigate(-1)" [disabled]="page() === 1">Anterior</button><button type="button" class="editorial-button" (click)="navigate(1)" [disabled]="page() === pages()">Siguiente</button></div></div><plus-news-community/></div></div>

@@ -27,6 +27,8 @@ export interface AccountUser {
   primary_role: string;
   rol_nombre: string;
   permissions: AccountPermissions;
+  can_manage_homepage?: boolean;
+  can_manage_forms?: boolean;
   perfil: UserProfile | null;
   preferencias: UserPreferences | null;
 }

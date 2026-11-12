@@ -1,47 +1,53 @@
 import assert from 'node:assert/strict';
-import { createEnvironmentInjector, PLATFORM_ID, runInInjectionContext, ɵINJECTOR_SCOPE } from '@angular/core';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
+import { createEnvironmentInjector, PLATFORM_ID, ɵINJECTOR_SCOPE } from '@angular/core';
+import { provideHttpClient, withNoXsrfProtection } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
+import { API_BASE_URL } from '../src/app/core/api/api.config';
 import { AuthService } from '../src/app/core/auth/auth.service';
-import { FormsDemoService } from '../src/app/shared/dynamic-forms/forms-demo.service';
-import { copyForm, formProblems, submissionProblems } from '../src/app/shared/dynamic-forms/forms-demo.models';
-import { FormRunnerComponent } from '../src/app/shared/dynamic-forms/form-runner.component';
-import { AccountUser } from '../src/app/core/auth/auth.models';
+import { FormsApiService } from '../src/app/shared/dynamic-forms/forms-api.service';
+import { formProblems, submissionProblems } from '../src/app/shared/dynamic-forms/forms.models';
 
-const env=createEnvironmentInjector([{provide:PLATFORM_ID,useValue:'browser'},{provide:ɵINJECTOR_SCOPE,useValue:'root'},provideHttpClient(),provideHttpClientTesting(),{provide:Router,useValue:{}},AuthService,FormsDemoService],undefined as never);
-const auth=env.get(AuthService),store=env.get(FormsDemoService);
-const account:AccountUser={id_usuario:'admin-a',primary_role:'administrador',rol_nombre:'administrador',permissions:{all:['*']},estado:'activo',nombres:'Cuenta',apellidos:'Prueba',full_name:'Cuenta Prueba',correo:'local@example.invalid',telefono:null,perfil:null,preferencias:null};
-auth.updateUser(account);
-const source=store.adminForm('demo-form-community')!;
-assert.equal(store.forms().length,3);assert.equal(store.publicForm('borrador-demo'),null);
-const invalid=store.save({...copyForm(source),id:'',title:' '},0);assert.ok('error'in invalid);
-const added=store.save({...copyForm(source),id:'',title:'Formulario local de prueba'},0);assert.ok('id'in added);if(!('id'in added))throw new Error('Missing draft');
-const created=store.adminForm(added.id)!;assert.equal(created.state,'borrador');assert.equal(created.owner,account.id_usuario);
-assert.equal(store.publicForm(created.slug),null);assert.equal(store.transition(created.id,0,'publicado'),false);assert.equal(store.transition(created.id,created.revision,'publicado'),true);
-assert.ok('error'in store.save({...created,title:'No editar publicado'},created.revision));
-const schema=store.publicForm(created.slug)!;
-assert.ok(formProblems({...schema,questions:[{...schema.questions[0],options:['Igual','igual']}]}).length);
-assert.ok(formProblems({...schema,questions:[{...schema.questions[0],id:'email'}]}).length);
-const input={identity:{names:'Persona',surnames:'Prueba',document:'00000000',email:'persona@example.invalid',phone:'0000000000'},answers:{subject:'Orientación comunitaria',description:'Texto sintético',availability:''},consent:true};
-assert.deepEqual(submissionProblems(schema,input),[]);
-assert.ok(submissionProblems(schema,{...input,answers:{...input.answers,subject:'No existe'}}).length);
-assert.ok(submissionProblems(schema,{...input,answers:{...input.answers,availability:'2026-02-31'}}).length);
-assert.equal(store.submit(created.slug,{...input,consent:false}),null);
-// Anonymous submissions cannot be claimed by a subsequent login with the same email.
-auth.clear();const anonymous=store.submit(created.slug,input)!;assert.equal(anonymous.owner,null);assert.equal(anonymous.activation,'pendiente_demo');
-auth.updateUser({...account,id_usuario:'citizen-a',primary_role:'ciudadano',permissions:{casos:['ver_propios']},correo:input.identity.email});
-assert.equal(store.citizenResponses().some(row=>row.id===anonymous.id),false);
-const owned=store.submit(created.slug,input)!;assert.equal(owned.owner,'citizen-a');assert.equal(owned.activation,'sesion_ciudadana_demo');assert.equal(store.citizenResponses().some(row=>row.id===owned.id),true);
-input.answers.description='No debe cambiar el snapshot';assert.equal(owned.answers['description'],'Texto sintético');
-auth.updateUser({...account,id_usuario:'citizen-b',primary_role:'ciudadano',permissions:{casos:['ver_propios']}});assert.equal(store.citizenResponses().some(row=>row.id===owned.id),false);assert.equal(store.forms().length,0);
-auth.updateUser({...account,id_usuario:'admin-b'});assert.equal(store.adminForm(created.id),null);assert.deepEqual(store.adminResponses(created.id),[]);
-auth.updateUser(account);assert.equal(store.adminResponses(created.id).length,2);
-const closed=store.adminForm(created.id)!;assert.equal(store.transition(closed.id,closed.revision,'cerrado'),true);assert.equal(store.submit(created.slug,input),null);assert.equal(owned.form.state,'publicado');
-const cloned=store.copy(created.id);assert.ok('id'in cloned);if('id'in cloned)assert.equal(store.adminForm(cloned.id)?.state,'borrador');
-auth.updateUser({...account,primary_role:'moderador'});assert.equal(store.canManage(),false);assert.equal(store.transition(source.id,source.revision,'cerrado'),false);
-// All five question types run locally. Preview never emits; a public double click emits once.
-const runner=runInInjectionContext(env,()=>new FormRunnerComponent());runner.schema={...schema,collectDocument:false,questions:[{id:'short',type:'texto',label:'Texto',required:true,options:[]},{id:'long',type:'parrafo',label:'Párrafo',required:false,options:[]},{id:'single',type:'unica',label:'Única',required:true,options:['A','B']},{id:'multi',type:'multiple',label:'Múltiple',required:true,options:['A','B']},{id:'date',type:'fecha',label:'Fecha',required:true,options:[]}]};runner.preview=true;runner.ngOnChanges();let emits=0;runner.submitted.subscribe(()=>emits++);
-runner.send();assert.ok(runner.issues().length);runner.form.patchValue({names:'Persona',surnames:'Prueba',email:'persona@example.invalid',phone:'0000000000',short:'Texto',single:'A',date:'2026-11-09',consent:'yes'});runner.multiple('multi','A');runner.multiple('multi','B');runner.multiple('multi','A');assert.deepEqual(runner.form.controls['multi'].value,['B']);assert.deepEqual(runner.issues(),[]);runner.send();assert.equal(emits,0);runner.preview=false;runner.send();runner.send();assert.equal(emits,1);
-env.get(HttpTestingController).expectNone(()=>true);env.destroy();
-console.log('Dynamic form demo checks passed: builder validation, revisions, immutable submitted schemas, owner isolation, anonymous pending status, preview and duplicate-submit protection without HTTP.');
+const env=createEnvironmentInjector([
+  {provide:PLATFORM_ID,useValue:'browser'},{provide:ɵINJECTOR_SCOPE,useValue:'root'},
+  provideHttpClient(withNoXsrfProtection()),provideHttpClientTesting(),{provide:API_BASE_URL,useValue:'/api/v1'},
+  {provide:Router,useValue:{navigate:()=>Promise.resolve(true)}},AuthService,FormsApiService,
+],undefined as never);
+const auth=env.get(AuthService),backend=env.get(HttpTestingController),api=env.get(FormsApiService);
+auth.updateUser({id_usuario:'admin-test',nombres:'Cuenta',apellidos:'Prueba',full_name:'Cuenta Prueba',correo:'admin@example.invalid',telefono:null,primary_role:'administrador',rol_nombre:'administrador',estado:'activo',permissions:{all:['*'],can_manage_forms:true},can_manage_forms:true,perfil:null,preferencias:null});
+assert.equal(api.canManage(),true);
+
+const questionDto=(id:string,tipo_campo:string)=>({id,codigo:id,enunciado:`Pregunta ${id}`,descripcion_ayuda:'Ayuda',tipo_campo,es_obligatorio:true,orden:1,configuracion_validacion:{},opciones:tipo_campo.startsWith('seleccion_')?[{id:'o1',valor:'opcion_a',etiqueta:'Opción A',orden:1},{id:'o2',valor:'opcion_b',etiqueta:'Opción B',orden:2}]:[]});
+const summary={id:'form-1',slug:'censo-meta',titulo:'Censo Meta',estado:'borrador',numero_version_publicada:0,revision_edicion:2,total_versiones:0,total_envios:0,permite_multiples_envios:false,requiere_documento:true,fecha_creacion:'2026-11-11T00:00:00Z',fecha_actualizacion:'2026-11-11T00:00:00Z'};
+const listPromise=firstValueFrom(api.adminList('censo','borrador',2,20));
+let request=backend.expectOne(req=>req.url==='/api/v1/admin/forms/');
+assert.deepEqual({search:request.request.params.get('search'),estado:request.request.params.get('estado'),page:request.request.params.get('page'),pageSize:request.request.params.get('page_size')},{search:'censo',estado:'borrador',page:'2',pageSize:'20'});
+request.flush({count:1,next:null,previous:null,results:[summary]});assert.equal((await listPromise).results[0].title,'Censo Meta');
+
+const publicPromise=firstValueFrom(api.publicForm('censo-meta'));
+backend.expectOne('/api/v1/public/forms/censo-meta/').flush({...summary,descripcion:'Descripción',version_activa:{numero_version:1,preguntas:['texto_corto','texto_largo','numero','fecha','booleano','seleccion_unica','seleccion_multiple'].map((type,index)=>questionDto(`q${index}`,type))},politica_datos:{id_documento:'legal-1',version:'1',titulo:'Política',resumen:'Resumen',url_contenido:'/api/v1/public/legal/tratamiento_datos/'}});
+const form=await publicPromise;assert.equal(form.questions.length,7);assert.equal(form.policy?.id,'legal-1');
+assert.ok(formProblems({...form,slug:'Enlace inválido'}).length);
+const input={identity:{names:'Ana',surnames:'Prueba',email:'ana@example.invalid',phone:'3000000000',documentType:'CC',document:'123'},answers:{q0:'Corto',q1:'Largo',q2:2,q3:'2026-11-11',q4:true,q5:'opcion_a',q6:['opcion_a','opcion_b']},consent:true};
+assert.deepEqual(submissionProblems(form,input),[]);
+
+const submitPromise=firstValueFrom(api.submit(form,input,'idem-test-1'));
+request=backend.expectOne('/api/v1/public/forms/censo-meta/submit/');
+assert.equal(request.request.headers.get('Idempotency-Key'),'idem-test-1');assert.equal(request.request.body.respuestas.length,7);assert.deepEqual(request.request.body.respuestas[6].valores_seleccionados,['opcion_a','opcion_b']);
+request.flush({id_envio:'submission-1',estado:'recibido',mensaje:'Recibido'});assert.equal((await submitPromise).id,'submission-1');
+
+const verifyPromise=firstValueFrom(api.verifyActivation('token-test','Password123!'));
+request=backend.expectOne('/api/v1/public/forms/activation/verify/');assert.deepEqual(request.request.body,{token:'token-test',nueva_contrasena:'Password123!'});request.flush({mensaje:'Cuenta activada',estado:'activada',login_required:true});await verifyPromise;
+const resendPromise=firstValueFrom(api.resendActivation('ana@example.invalid'));
+request=backend.expectOne('/api/v1/public/forms/activation/resend/');assert.deepEqual(request.request.body,{correo:'ana@example.invalid'});request.flush({mensaje:'Si corresponde, se enviará un correo.'});await resendPromise;
+
+const citizenPromise=firstValueFrom(api.citizenList());
+backend.expectOne(req=>req.url==='/api/v1/me/forms/submissions/').flush({count:1,next:null,previous:null,results:[{id:'submission-1',formulario:{slug:'censo-meta',titulo:'Censo Meta'},numero_version:1,fecha_envio:'2026-11-11T01:00:00Z',estado_vinculacion:'vinculado',total_respuestas:7}]});assert.equal((await citizenPromise).results[0].totalAnswers,7);
+const detailPromise=firstValueFrom(api.citizenDetail('submission-1'));
+backend.expectOne('/api/v1/me/forms/submissions/submission-1/').flush({id:'submission-1',formulario_titulo:'Censo Meta',numero_version:1,fecha_envio:'2026-11-11T01:00:00Z',respuestas:[{id:'answer-1',codigo_pregunta:'q0',enunciado_congelado:'Pregunta q0',tipo_campo_congelado:'texto_corto',valor:'Corto'}]});assert.equal((await detailPromise).answers[0].value,'Corto');
+
+const lifecyclePromise=firstValueFrom(api.lifecycle('form-1','publish'));backend.expectOne('/api/v1/admin/forms/form-1/publish/').flush({mensaje:'Publicado',estado:'publicado',numero_version:1});assert.equal((await lifecyclePromise).estado,'publicado');
+assert.equal(api.exportUrl('form-1',1),'/api/v1/admin/forms/form-1/submissions-export/?version=1');
+backend.verify();env.destroy();
+console.log('Dynamic forms integration checks passed: admin list, seven field types, validation, idempotent public submission, activation, citizen history and lifecycle routes.');

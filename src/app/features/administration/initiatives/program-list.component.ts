@@ -1,23 +1,18 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { InitiativeAdminDemoService } from './services/initiative-admin-demo.service';
-import { PROGRAM_LABELS, PROGRAM_STATES, PUBLICATION_LABELS, PUBLICATION_STATES, ProgramFilters, filterPrograms } from './data/initiative-admin.demo';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs';
+import { apiErrorMessage } from '../../../core/api/api-error';
+import { AdminInitiative, AdminInitiativesApiService, INITIATIVE_PUBLICATION_LABELS, INITIATIVE_STATE_LABELS, InitiativePublication } from './services/admin-initiatives-api.service';
 
-@Component({selector: 'plus-admin-programs', standalone: true, imports: [RouterLink], templateUrl: './program-list.component.html'})
+@Component({selector:'plus-admin-programs',standalone:true,imports:[RouterLink],templateUrl:'./program-list.component.html'})
 export class ProgramListComponent {
-  readonly store = inject(InitiativeAdminDemoService);
-  readonly states = PROGRAM_STATES; readonly publications = PUBLICATION_STATES;
-  readonly stateLabels = PROGRAM_LABELS; readonly publicationLabels = PUBLICATION_LABELS;
-  readonly filters = signal<ProgramFilters>({query: '', category: '', state: '', publication: '', year: ''});
-  readonly categories = computed(() => [...new Set(this.store.programs().map(row => row.category))].sort());
-  readonly years = computed(() => [...new Set(this.store.editions().map(row => row.year))].sort((a, b) => b - a));
-  readonly filtered = computed(() => filterPrograms(this.store.programs(), this.store.editions(), this.filters()));
-  readonly page = signal(1);
-  readonly pages = computed(() => Math.max(1, Math.ceil(this.filtered().length / 5)));
-  readonly visible = computed(() => this.filtered().slice((this.page() - 1) * 5, this.page() * 5));
-  readonly reviewCount = computed(() => this.filtered().filter(row => row.publication === 'pendiente').length);
-  change(key: keyof ProgramFilters, value: string) {this.filters.update(current => ({...current, [key]: value})); this.page.set(1);}
-  reset() {this.filters.set({query: '', category: '', state: '', publication: '', year: ''}); this.page.set(1);}
-  navigate(delta: number) {this.page.update(page => Math.max(1, Math.min(this.pages(), page + delta)));}
-  editionCount(id: string) {return this.store.editions().filter(row => row.programId === id).length;}
+ private readonly api=inject(AdminInitiativesApiService);private readonly destroy=inject(DestroyRef);readonly stateLabels=INITIATIVE_STATE_LABELS;readonly publicationLabels=INITIATIVE_PUBLICATION_LABELS;readonly publications=Object.keys(INITIATIVE_PUBLICATION_LABELS) as InitiativePublication[];
+ readonly rows=signal<AdminInitiative[]>([]);readonly count=signal(0);readonly page=signal(1);readonly pageSize=10;readonly pages=computed(()=>Math.max(1,Math.ceil(this.count()/this.pageSize)));readonly publication=signal('');readonly query=signal('');readonly loading=signal(false);readonly error=signal('');
+ readonly visible=computed(()=>{const term=this.normalize(this.query());return term?this.rows().filter(row=>this.normalize(`${row.title} ${row.slug} ${row.category} ${row.summary}`).includes(term)):this.rows();});
+ constructor(){this.load();}
+ load(page=1){this.loading.set(true);this.error.set('');this.api.list(this.publication(),page,this.pageSize).pipe(takeUntilDestroyed(this.destroy),finalize(()=>this.loading.set(false))).subscribe({next:value=>{this.rows.set(value.results);this.count.set(value.count);this.page.set(page);},error:error=>this.error.set(apiErrorMessage(error))});}
+ changePublication(value:string){this.publication.set(value);this.load(1);}
+ navigate(delta:number){this.load(Math.max(1,Math.min(this.pages(),this.page()+delta)));}
+ private normalize(value:string){return value.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
 }

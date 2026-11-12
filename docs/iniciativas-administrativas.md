@@ -1,53 +1,41 @@
-# Administración de iniciativas y ediciones de demostración
+# Administración de iniciativas y ediciones
 
-## Vistas y organización
+Actualizado: 11 de noviembre de 2026.
 
-- `/admin/iniciativas`: listado de programas con búsqueda, categoría, operación, publicación, año con edición y paginación de cinco registros.
-- `/admin/iniciativas/nueva` y `/admin/iniciativas/:id/editar`: editor de programa permanente.
-- `/admin/iniciativas/:id`: ficha, presentación, revisión de publicación, destacado y listado de ediciones.
-- `/admin/iniciativas/:programId/ediciones/nueva` y `/admin/iniciativas/:programId/ediciones/:editionId/editar`: editor anual.
-- `/admin/iniciativas/:programId/ediciones/:editionId`: indicadores y comunidades de esa ejecución.
+## Integrado con REST
 
-Las rutas específicas anteceden al detalle dinámico; el menú administrativo enlaza el listado. `features/administration/initiatives` separa modelos/fixtures, servicio local y componentes de programa y edición. Se reutilizan layout, temas y controles administrativos. No se recibió un mockup específico de este módulo.
+- `/admin/iniciativas`: listado paginado desde `/api/v1/admin/initiatives/`, filtro de publicación en servidor y búsqueda local sobre la página recibida.
+- `/admin/iniciativas/nueva` y `/admin/iniciativas/:id/editar`: creación y edición de título, subtítulo, categoría, descripciones y estado operativo.
+- `/admin/iniciativas/:id`: ficha real, portada existente, contenido, estado operativo/editorial y ediciones anidadas.
+- Transiciones confirmadas entre borrador, pendiente, publicada y rechazada, además del destacado de programas publicados.
+- El `slug` lo genera Django y Angular lo trata como solo lectura.
+- El guard administrativo conserva el módulo para administrador/moderador según la matriz vigente.
 
-## Modelo de demostración
+Las pruebas HTTP verifican paginación/filtro, payload de creación sin `slug` inventado y PATCH de publicación/destacado. No se realizaron escrituras en producción.
 
-Se conservan separados programa, edición, indicadores y cobertura, siguiendo las relaciones del esquema v1.1. Los DTO REST siguen pendientes; los identificadores locales no son UUID. No hay HTTP, autoría verificada ni permisos reales.
+## Parcialmente integrado
 
-Cuatro programas reutilizan título, descripción e imagen de las iniciativas del diseño. Cada uno tiene una edición de ejemplo 2025. Las ediciones empiezan sin indicadores ni comunidades: no se convierten los textos de impacto/cobertura del mockup en resultados institucionales ni vínculos territoriales inventados. Las fechas vacías se muestran como no definidas.
+Las ediciones recibidas dentro del detalle se muestran en lectura con año, nombre, temporada, estado y conteos de indicadores, comunidades y actividades. La ficha real no enlaza los editores locales antiguos para evitar mezclar UUID del backend con el almacenamiento demostrativo.
 
-Operación del programa y edición: planificada, en curso, finalizada, cancelada. Publicación del programa: borrador, pendiente, publicada, rechazada. Los códigos coinciden con las restricciones SQL, pero las transiciones son locales de demostración y requieren contrato de backend.
+## Aún demostrativo
 
-## Programas
+- Alta y edición de ediciones.
+- Indicadores y sus metadatos.
+- Cobertura/comunidades y observaciones.
+- Actividades, responsables y ubicación.
+- Vínculos con casos.
+- Medios generales y por edición.
+- Bandeja y decisión administrativa de postulaciones.
 
-Título hasta 200, subtítulo hasta 250, slug único hasta 220 y categoría de texto hasta 80, según campos del SQL. Descripción corta y descripción se conservan como texto, sin ejecutar HTML. Un borrador puede guardarse sin descripciones; solicitar revisión/publicar requiere ambas como regla local propuesta.
+Las pantallas existentes de estos subrecursos siguen usando servicios locales. No deben interpretarse como datos guardados ni como publicación institucional.
 
-Guardar un programa, incluido uno publicado, vuelve a borrador y quita el destacado sin borrar ediciones. Borrador/rechazado puede pasar a revisión; revisión permite publicación o rechazo con motivo de 10 a 2000 caracteres; publicado puede volver a borrador. Se confirma la transición en pantalla. Solo publicado admite destacado. La operación del programa no cambia por cambiar publicación.
+## Pendientes del backend
 
-Estas acciones no alteran las iniciativas de Inicio o del portal público. No se simula una publicación externa ni una fecha de publicación institucional. La portada administrativa se obtiene de la galería general del programa; sus medios locales se gestionan como se documenta en `jornadas-medios-demostracion.md`.
-
-## Ediciones
-
-Año entero entre 2000 y 2200, único por programa. Nombre opcional hasta 150 y temporada hasta 100. Fechas opcionales de calendario válidas; si hay ambas, final no anterior a inicial. Cada lectura y escritura comprueba que la edición pertenece al programa indicado; una referencia cruzada muestra no disponible o se rechaza.
-
-Editar la edición mantiene indicadores y comunidades. Editar datos anuales no cambia la publicación del programa ni se propaga al portal. Un programa nuevo puede no tener ediciones; se ofrece estado vacío y alta anual.
-
-## Indicadores
-
-Alta/edición y retirada con confirmación. Nombre con contenido hasta 100, valor decimal no negativo con hasta 12 dígitos enteros y 2 decimales, unidad opcional hasta 50, tipo estimado/real y fecha de corte opcional válida. El valor se conserva como cadena decimal para evitar conversiones innecesarias del NUMERIC(14,2) propuesto; el formato usa punto.
-
-«Real» expresa una selección del ejemplo, no un resultado verificado. No se agregan valores entre unidades o ediciones. La edición puede no tener indicadores, y editar uno conserva su identidad. Descripción, icono y orden configurables del indicador SQL quedan para una ampliación posterior de la interfaz.
-
-## Cobertura
-
-La selección reutiliza el servicio local de Comunidades y territorios. Solo se añaden comunidades activas aún no vinculadas. El vínculo es único por edición/comunidad y no afecta casos ni perfiles. Una comunidad que después quede inactiva conserva el vínculo existente con esa condición visible. Retirar un vínculo requiere confirmación y no borra el catálogo.
-
-El conteo de comunidades no se presenta como beneficiarios. Las comunidades de ediciones diferentes permanecen separadas. Las observaciones por vínculo del modelo SQL todavía no se editan en esta vista.
-
-## Pendientes
-
-Jornadas y medios generales/por edición ya cuentan con vistas locales, documentadas en `jornadas-medios-demostracion.md`. Siguen pendientes vinculación de casos, asociación de medios a jornada concreta, orden de destacados, observaciones de cobertura, más metadatos de indicadores, permisos y contratos REST. El historial/auditoría de casos no se reutiliza para acreditar acciones de iniciativas. La persistencia de los ejemplos es solo en memoria; recargar restaura fixtures y pierde los cambios locales. No hay eliminación de programas/ediciones.
+El contrato permite CRUD por recursos, pero antes de completar el módulo deben aplicarse las garantías descritas en P19 y P20 de [problemas-integracion.md](problemas-integracion.md): proyección pública mínima, carga binaria segura, transiciones editoriales validadas, pertenencia estricta entre programa/edición/subrecurso y auditoría uniforme.
 
 ## Verificación
 
-Compilación Angular. Comprobaciones locales de validación, slug único, transiciones, año único por programa, pertenencia de edición, calendario y rangos, precisión decimal, edición de indicadores, cobertura sin duplicados/inactivos nuevos y conservación de hijos al editar. También se verifica que los fixtures públicos permanezcan intactos. Pendiente revisión visual, teclado, navegación y ambos temas en navegador.
+- `npm run build`: correcto.
+- `npm run test:api`: correcto, incluida la suite pública y administrativa de iniciativas.
+- `npm run content:check`: inventario editorial vigente.
+- Pendientes: prueba con una cuenta controlada, revisión responsive/teclado y recorrido real crear → revisar → publicar → consultar en portal.

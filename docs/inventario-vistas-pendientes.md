@@ -4,9 +4,15 @@
 
 > **Permisos actualizados:** menú y guards de rutas aplican la [matriz por rol](permisos-navegacion-administrativa.md), incluyendo URLs directas y editores. Usuarios, comunidades y auditoría son exclusivos de administrador. Esto no cierra los pendientes de autorización y despliegue del backend.
 
-> **Contenido inicial inventariado:** [textos, imágenes y guía para la carga editorial](contenido-inicial/preparacion.md) extraídos del frontend. No equivale a aprobación ni importación; noticias/iniciativas públicas mantienen sus datos actuales hasta verificar la carga del backend.
+> **Contenido inicial inventariado:** [textos, imágenes y guía para la carga editorial](contenido-inicial/preparacion.md) extraídos del frontend. No equivale a aprobación ni importación. Noticias e iniciativas públicas ya consultan REST y solo muestran estos datos como respaldo marcado cuando la colección real está vacía o no disponible.
 
-> **Formularios dinámicos en demostración:** listado/editor, vista previa, formulario público, confirmación y seguimiento ciudadano implementados con almacenamiento temporal. No crean cuentas ni envían correos; contrato backend y campo de ubicación pendientes. Ver [formularios-demostracion.md](formularios-demostracion.md).
+> **Iniciativas conectadas parcialmente:** catálogo, categorías, panel de detalle/galería y postulación comunitaria consumen REST. En administración, listado, ficha, creación, edición y publicación del programa ya son reales; las ediciones se leen desde el detalle. Los subrecursos continúan demostrativos y el DTO público anidado requiere la reducción descrita en P19.
+
+> **Noticias conectadas:** listado, categorías, detalle y medios públicos consumen `/public/news`; el boletín envía suscripciones reales. La administración ya usa CRUD y estados del backend. Confirmación/baja por token, carga binaria segura de medios y contenido inicial aprobado permanecen pendientes.
+
+> **Portada institucional conectada:** el inicio consulta fotografía, institución y métricas verificadas desde `/public/home/`. Solo una cuenta con `can_manage_homepage` puede abrir `/admin/portada` y reemplazar la imagen. La escritura real con un archivo controlado sigue pendiente de prueba en el servidor.
+
+> **Formularios dinámicos conectados:** listado/editor, ciclo de vida, vista previa, envío público idempotente, activación, respuestas administrativas y seguimiento ciudadano consumen `apps.dynamic_forms`. Falta la prueba real completa y el detalle de versiones históricas. Ver [formularios-demostracion.md](formularios-demostracion.md).
 
 > **Informes y auditoría reciente conectados:** agregados de toda la selección, tabla paginada y CSV del backend; consulta de eventos recientes con filtros locales y detalle restringido. La auditoría no representa un historial exhaustivo. Ver [integracion-informes-auditoria.md](integracion-informes-auditoria.md).
 
@@ -22,13 +28,13 @@
 
 > **Inicio de integración REST:** acceso y perfil ya llaman al backend, con JWT, guards, fotografía, preferencias y catálogos de residencia. Los escenarios de recuperación ahora validan tokens reales. Las filas originales siguientes conservan el inventario de demostración previo; para el alcance integrado y la verificación pendiente en producción consultar [integracion-acceso-perfil.md](integracion-acceso-perfil.md).
 
-Revisión del 9 de noviembre de 2026. Basada en `app.routes.ts`, componentes, navegación, controles pendientes y esquema v1.1. «Vista disponible» significa interfaz Angular con datos de demostración: no equivale a integración, permisos efectivos ni validación visual completados.
+Revisión consolidada el 11 de noviembre de 2026. Basada en `app.routes.ts`, componentes, navegación, controles pendientes y contratos implementados. Las tablas históricas siguientes conservan parte del inventario inicial; el estado vigente de integración está en [estado-integracion-frontend-backend.md](estado-integracion-frontend-backend.md).
 
 ## 1. Vistas disponibles
 
 | Área | Disponible como demostración | Límites actuales |
 |---|---|---|
-| Portal | Inicio, mapa, Nosotros, listado de noticias, listado de iniciativas, caso público. | Mapa/datos de referencia; el caso completo disponible es el ejemplo conocido. Noticias muestran resumen y las iniciativas una imagen de galería; faltan sus páginas de detalle completas. |
+| Portal | Inicio, mapa, Nosotros, noticias, iniciativas y caso público. | Noticias e iniciativas consultan catálogo y detalle REST; no tienen todavía URL individual propia. El mapa espera datos territoriales y el caso público conserva límites de contrato. |
 | Acceso | Login, registro, recuperación, restablecimiento y escenarios de enlace inválido/vencido, sesión vencida, acceso denegado y 404. | Sin cuentas, tokens, correo ni guard de autorización real. |
 | Ciudadano | Mis casos, radicación de cinco pasos, confirmación local, expediente, seguimiento, evidencias, aportes, mensajes, notificaciones y perfil. | Estado temporal, sin envío/subida real. Perfil/contratos necesitan las ampliaciones solicitadas al backend. |
 | Administración de casos | Dashboard, listado y expediente con moderación, asignación, avances, evidencias, mensajes y cierre simulados. | Estados y responsables locales; faltan flujos específicos de radicado institucional y alerta temprana. |
@@ -36,7 +42,7 @@ Revisión del 9 de noviembre de 2026. Basada en `app.routes.ts`, componentes, na
 | Usuarios | Listado, detalle, creación/edición, estado y referencia de roles. | Demo anterior al DDL: pendiente adaptar nombres/apellidos, un rol y tres estados tras acordar el contrato. |
 | Territorio | Directorio de comunidades, detalle, creación/edición y estado, con selección departamento/municipio. | Añadido en esta revisión. Sin geometrías, DANE oficiales, edición de municipios/departamentos ni ámbitos de responsables. |
 | Noticias administrativas | Listado, creación/edición de borradores, vista previa, portada local, revisión, rechazo, publicación y destacado simulados. | Añadido tras el catálogo territorial. Independiente del portal, sin programación, galería múltiple ni publicación real. Ver `noticias-administrativas.md`. |
-| Iniciativas administrativas | Listado, ficha y editor de programas; revisión/publicación y destacado; ediciones anuales con indicadores y comunidades. | Añadido después de noticias. Jornadas y medios ya tienen vistas propias; faltan vínculos de casos y metadatos adicionales; sin cambios en el portal público. Ver `iniciativas-administrativas.md`. |
+| Iniciativas administrativas | Listado, ficha y editor de programas; revisión/publicación y destacado conectados. Ediciones reales visibles en lectura. | Editores de ediciones, indicadores, comunidades, jornadas, medios y vínculos continúan demostrativos. Ver P20 y `iniciativas-administrativas.md`. |
 | Jornadas y medios | Agenda por edición, creación/edición, ficha de actividad; galería general y anual, metadatos, portada por ámbito, video y PDF locales. | Añadido después de programas/ediciones. Sin vínculo de archivo a actividad concreta ni publicación; pendiente revisión audiovisual y visual. Ver `jornadas-medios-demostracion.md`. |
 | Postulaciones | Bandeja, filtros, ficha, contacto ficticio y revisión con respuesta y programa de resultado opcional. | Añadido después de jornadas. Sin envío de respuestas ni creación de programas; formulario público separado. Ver `postulaciones-demostracion.md`. |
 | Moderación de comentarios | Cola con filtros/paginación, detalle, aprobación/rechazo/ocultamiento, retorno a revisión e historial de decisiones; proyección pública restringida de ejemplo. | Añadido después de postulaciones. Sin publicación, avisos ni auditoría reales; separado de mensajes/aportes privados. Ver `moderacion-comentarios-demostracion.md`. |
@@ -47,7 +53,7 @@ Revisión del 9 de noviembre de 2026. Basada en `app.routes.ts`, componentes, na
 |---|---|---|---|
 | 2 | Ámbitos de responsables: listado/formulario por comunidad y tipo de caso. | Sí. | Semántica de combinación de ámbitos y elegibilidad; no son la asignación efectiva del caso. |
 | 3 | Noticia pública completa con URL propia y estado no disponible. | Estructura sí; solo mostrar contenido de ejemplo existente o claramente ficticio, sin inventar comunicados oficiales. | Contrato/noticia completa autorizada. |
-| 3 | Iniciativa pública completa: programa, selector de edición, indicadores, cobertura, actividades y galería. | Sí. | Datos separados por edición y reglas de exposición pública. |
+| 3 | Ampliar iniciativa pública: URL propia, selector de edición, indicadores, cobertura y actividades públicas. | La base y galería ya están conectadas. | Proyección pública segura de edición/actividad (P19) y reglas de exposición territorial. |
 | 3 | Casos seguidos: listado personal y estado de suscripción por caso. | Sí, sin activar avisos reales. | AMP-03 y política de novedades públicas. |
 | 3 | Resultados de alta/confirmación/baja del boletín y verificación de correo, si se adopta ese circuito. | Estados visuales sí. | Tokens, expiración y estados definidos por backend. |
 | 4 | Radicado institucional desde dashboard. | Estructura reutilizable de radicación, una vez fijados remitente/representación. | Reglas de actuación institucional, propietario y aceptación; el botón sigue deshabilitado. |
@@ -61,7 +67,7 @@ La prioridad organiza implementación de interfaces, no autoriza envíos, public
 
 - Mapa interactivo real, capas/marcadores, geolocalización opcional y consulta de filtros: la vista existe; falta implementación/integración cartográfica completa.
 - Persistencia de casos, mensajes, perfil y borradores; archivos privados/públicos; sesiones, permisos, contadores y notificaciones reales.
-- Formulario de postulación: título y aceptación de demostración ya añadidos; falta política/versionado y consentimiento real persistido para integrar envíos.
+- Formulario de postulación: envío REST y consentimiento ya conectados; falta prueba real controlada y confirmar el versionado/retención legal en backend.
 - Formularios de usuario y registro: nombres/apellidos, límites, rol único y estados reales. Multirrol sigue pendiente de decisión AMP-14.
 - Adaptación de catálogos/estados y programa/edición; no reemplazar contratos por textos de fixtures.
 - Galerías múltiples, descargas PDF, redes/contactos y documentos: recursos reales pendientes de confirmación, no una pantalla adicional por enlace.

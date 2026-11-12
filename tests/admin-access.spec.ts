@@ -17,7 +17,7 @@ const env=createEnvironmentInjector([
 ],undefined as never);
 const auth=env.get(AuthService);auth.clear();
 const admin=routes.find(route=>route.path==='admin')!;
-const user:AccountUser={id_usuario:'test-access-user',nombres:'Cuenta',apellidos:'Prueba',full_name:'Cuenta Prueba',correo:'local@example.invalid',telefono:null,primary_role:'administrador',rol_nombre:'administrador',estado:'activo',permissions:{all:['*']},perfil:null,preferencias:null};
+const user:AccountUser={id_usuario:'test-access-user',nombres:'Cuenta',apellidos:'Prueba',full_name:'Cuenta Prueba',correo:'local@example.invalid',telefono:null,primary_role:'administrador',rol_nombre:'administrador',estado:'activo',permissions:{all:['*'],can_manage_forms:true,can_manage_homepage:true},can_manage_forms:true,can_manage_homepage:true,perfil:null,preferencias:null};
 const signedIn=firstValueFrom(auth.login('local@example.invalid','test-only',false));
 env.get(HttpTestingController).expectOne('/api/v1/auth/login/').flush({user,tokens:{access:'local-access',refresh:'local-refresh'}});await signedIn;
 const expected:Record<string,string[]>={
@@ -40,6 +40,8 @@ assert.equal(canAccessAdminSection(user,'__proto__'),false);
 assert.equal(canAccessAdminSection(user,'new-unconfigured-section'),false);
 assert.equal(canAccessAdminSection({...user,estado:'suspendido'},'users'),false);
 assert.equal(canAccessAdminSection({...user,permissions:{}},'users'),false);
+assert.equal(canAccessAdminSection({...user,can_manage_forms:false,permissions:{all:['*'],can_manage_forms:false}},'forms'),false);
+assert.equal(canAccessAdminSection({...user,can_manage_homepage:false,permissions:{all:['*'],can_manage_homepage:false}},'homepage'),false);
 assert.equal(canAccessAdminSection(null,'profile'),false);
 // An unauthorized ancestor cannot be bypassed by an allowed child.
 auth.updateUser({...user,primary_role:'moderador'});

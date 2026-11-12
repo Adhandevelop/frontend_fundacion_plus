@@ -14,7 +14,7 @@
                 </span>
 </div>
 <div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden border border-outline-variant/30 bg-surface-container-high dark:bg-surface-container-highest">
-<img class="w-full h-full object-cover object-top" alt="Fotograf?a ilustrativa del dise?o de PLUS" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeivQ1NOrLY1wXuIV65Yxnu3W0viToVqFKH2WYC1NkQgAA0JWB3XDzIlfgvqi48CISlKVKrhbcA6T1A05vyW4ngwN1yRC-lAqU6y5Z4mFV2678EvPA_7LIANeeL9H6UoUfIQScaibQsqDqdgrEwpt6MNTSRPPO8GWmF6mRgdOjkmvrTbHMG767bZJzvaYI1LASc4V0R0CK3C6zZVUbBUPVbXV89JG6vbhlgF7l3Xhu54e5syfkD0lQGQ"/>
+<img class="w-full h-full object-cover object-top" [alt]="alt()" [src]="image()"/>
 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
 <div class="absolute bottom-3 left-3 right-3 text-white">
 <p class="text-label-sm font-label-sm tracking-wider uppercase opacity-90">Liderazgo Comunitario</p>
@@ -23,10 +23,10 @@
 </div>
 <div class="pt-space-md text-center lg:text-left">
 <h3 class="text-headline-sm font-headline-sm text-on-surface dark:text-inverse-on-surface tracking-tight">
-                  LUIS ALBERTO MUÑOZ GRANADA
+                  {{home()?.institution?.representative_name || 'LUIS ALBERTO MUÑOZ GRANADA'}}
                 </h3>
 <p class="text-body-sm font-body-sm text-secondary dark:text-secondary-fixed mt-0.5">
-                  Representante de la Corporación Pluralismo Social
+                  {{home()?.institution?.representative_role || 'Representante de la Corporación Pluralismo Social'}}
                 </p>
 <div class="mt-space-sm pt-space-sm border-t border-outline-variant/20 dark:border-outline/20 flex items-center justify-between text-label-sm font-label-sm text-secondary dark:text-secondary-fixed">
 <span class="flex items-center gap-1">
@@ -45,27 +45,27 @@
 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container dark:bg-surface-container-high border border-outline-variant/40 dark:border-outline/40">
 <span class="w-2 h-2 rounded-full bg-primary-container"></span>
 <span class="text-label-md font-label-md text-on-surface dark:text-inverse-on-surface uppercase tracking-wider">
-                CORPORACIÓN PLURALISMO SOCIAL
+                {{home()?.institution?.corporation_name || 'CORPORACIÓN PLURALISMO SOCIAL'}}
               </span>
 </div>
 <h1 class="text-display-lg font-display-lg text-on-surface dark:text-inverse-on-surface tracking-tight leading-none">
               Veeduría activa, justicia y equidad comunitaria con <span class="bg-primary-container px-2 py-0.5 rounded text-on-primary-fixed font-bold">PLUS</span>
 </h1>
 <p class="text-body-lg font-body-lg text-secondary dark:text-secondary-fixed max-w-2xl">
-              Garantizamos el seguimiento técnico, jurídico y social de las demandas de nuestras comunidades. Fortalecemos el control ciudadano transparente sobre recursos públicos, infraestructura veredal y servicios esenciales en el territorio colombiano.
+              {{home()?.institution?.mission || 'Garantizamos el seguimiento técnico, jurídico y social de las demandas de nuestras comunidades. Fortalecemos el control ciudadano transparente sobre recursos públicos, infraestructura veredal y servicios esenciales en el territorio colombiano.'}}
             </p>
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm w-full py-2">
 <div class="bg-surface-container-low dark:bg-surface-container border border-outline-variant/30 dark:border-outline/30 rounded-lg p-space-sm flex flex-col border-l-4 border-l-primary-container">
-<span class="text-headline-md font-headline-md text-on-surface dark:text-inverse-on-surface">+140</span>
-<span class="text-label-sm font-label-sm text-secondary dark:text-secondary-fixed">Casos atendidos</span>
+<span class="text-headline-md font-headline-md text-on-surface dark:text-inverse-on-surface">{{home()?.verified_indicators?.published_cases_count ?? '—'}}</span>
+<span class="text-label-sm font-label-sm text-secondary dark:text-secondary-fixed">Casos publicados</span>
 </div>
 <div class="bg-surface-container-low dark:bg-surface-container border border-outline-variant/30 dark:border-outline/30 rounded-lg p-space-sm flex flex-col border-l-4 border-l-on-surface">
-<span class="text-headline-md font-headline-md text-on-surface dark:text-inverse-on-surface">28</span>
-<span class="text-label-sm font-label-sm text-secondary dark:text-secondary-fixed">Municipios vinculados</span>
+<span class="text-headline-md font-headline-md text-on-surface dark:text-inverse-on-surface">{{home()?.verified_indicators?.active_municipalities_count ?? '—'}}</span>
+<span class="text-label-sm font-label-sm text-secondary dark:text-secondary-fixed">Municipios registrados</span>
 </div>
 <div class="bg-surface-container-low dark:bg-surface-container border border-outline-variant/30 dark:border-outline/30 rounded-lg p-space-sm flex flex-col border-l-4 border-l-primary-container">
-<span class="text-headline-md font-headline-md text-on-surface dark:text-inverse-on-surface">100%</span>
-<span class="text-label-sm font-label-sm text-secondary dark:text-secondary-fixed">Veeduría comunitaria</span>
+<span class="text-headline-md font-headline-md text-on-surface dark:text-inverse-on-surface">{{home()?.verified_indicators?.published_initiatives_count ?? '—'}}</span>
+<span class="text-label-sm font-label-sm text-secondary dark:text-secondary-fixed">Iniciativas publicadas</span>
 </div>
 </div>
 <div class="flex flex-wrap items-center gap-space-md pt-2">

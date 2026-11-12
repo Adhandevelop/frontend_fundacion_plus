@@ -1,25 +1,15 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InitiativeAdminDemoService } from './services/initiative-admin-demo.service';
-import { PROGRAM_LABELS, PUBLICATION_LABELS, ProgramPublication } from './data/initiative-admin.demo';
-import { InitiativeMediaDemoService } from './services/initiative-media-demo.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs';
+import { apiErrorMessage } from '../../../core/api/api-error';
+import { AdminInitiative, AdminInitiativesApiService, INITIATIVE_PUBLICATION_LABELS, INITIATIVE_STATE_LABELS, InitiativePublication } from './services/admin-initiatives-api.service';
 
-@Component({selector: 'plus-program-detail', standalone: true, imports: [RouterLink, ReactiveFormsModule], templateUrl: './program-detail.component.html'})
+@Component({selector:'plus-program-detail',standalone:true,imports:[RouterLink],templateUrl:'./program-detail.component.html'})
 export class ProgramDetailComponent {
-  readonly store = inject(InitiativeAdminDemoService);
-  readonly media = inject(InitiativeMediaDemoService);
-  private readonly route = inject(ActivatedRoute);
-  private readonly params = toSignal(this.route.paramMap, {initialValue: this.route.snapshot.paramMap});
-  private readonly query = toSignal(this.route.queryParamMap, {initialValue: this.route.snapshot.queryParamMap});
-  readonly id = computed(() => this.params().get('id') ?? ''); readonly record = computed(() => this.store.program(this.id()));
-  readonly editions = computed(() => this.store.editions().filter(row => row.programId === this.id()).sort((a,b) => b.year-a.year));
-  readonly labels = PROGRAM_LABELS; readonly publicationLabels = PUBLICATION_LABELS;
-  readonly pending = signal<ProgramPublication | null>(null); readonly status = signal('');
-  private readonly builder = inject(FormBuilder).nonNullable;
-  readonly review = this.builder.group({reason: ['', Validators.maxLength(2000)]});
-  constructor() {effect(() => {this.id(); const result = this.query().get('resultado'); this.pending.set(null); this.review.reset(); this.status.set(result === 'guardado' ? 'Programa guardado como borrador temporal.' : '');}, {allowSignalWrites: true});}
-  confirm() {const target = this.pending(); if (!target) return; this.review.markAllAsTouched(); if (this.review.invalid || !this.store.publish(this.id(),target,this.review.controls.reason.value)) {this.status.set('Revisa el estado y las descripciones. Para rechazo, indica un motivo de entre 10 y 2000 caracteres.'); return;} this.pending.set(null); this.review.reset(); this.status.set('Publicación actualizada solo en el ejemplo. El portal público no cambió.');}
-  feature() {this.status.set(this.store.feature(this.id()) ? 'Destacado de ejemplo actualizado.' : 'Solo un programa publicado puede destacarse.');}
+ private readonly api=inject(AdminInitiativesApiService);private readonly route=inject(ActivatedRoute);private readonly destroy=inject(DestroyRef);readonly id=this.route.snapshot.paramMap.get('id')??'';readonly record=signal<AdminInitiative|null>(null);readonly loading=signal(true);readonly saving=signal(false);readonly error=signal('');readonly pending=signal<InitiativePublication|null>(null);readonly labels=INITIATIVE_STATE_LABELS;readonly publicationLabels=INITIATIVE_PUBLICATION_LABELS;
+ constructor(){this.load(this.route.snapshot.queryParamMap.get('resultado')==='guardado'?'Programa guardado correctamente.':'');}
+ load(message=''){this.loading.set(true);this.error.set(message);this.api.detail(this.id).pipe(takeUntilDestroyed(this.destroy),finalize(()=>this.loading.set(false))).subscribe({next:value=>this.record.set(value),error:error=>this.error.set(apiErrorMessage(error))});}
+ confirm(){const target=this.pending();if(!target||this.saving())return;this.saving.set(true);this.error.set('');this.api.transition(this.id,target).pipe(takeUntilDestroyed(this.destroy),finalize(()=>this.saving.set(false))).subscribe({next:value=>{this.record.set(value);this.pending.set(null);this.error.set(`Estado actualizado a ${this.publicationLabels[target]}.`);},error:error=>this.error.set(apiErrorMessage(error))});}
+ feature(){const row=this.record();if(!row||row.publication!=='publicada'||this.saving())return;this.saving.set(true);this.api.transition(this.id,row.publication,!row.featured).pipe(takeUntilDestroyed(this.destroy),finalize(()=>this.saving.set(false))).subscribe({next:value=>{this.record.set(value);this.error.set(value.featured?'Programa destacado.':'Programa retirado de destacados.');},error:error=>this.error.set(apiErrorMessage(error))});}
 }

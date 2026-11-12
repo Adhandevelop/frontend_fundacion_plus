@@ -1,0 +1,20 @@
+<div class="p-4 sm:p-6 max-w-5xl mx-auto space-y-6">
+  <header><p class="text-label-sm uppercase tracking-wider">Superadministración</p><h1 class="text-headline-md">Fotografía principal de la página</h1><p class="text-body-sm mt-2">Reemplaza la imagen institucional que aparece al inicio. El backend conserva el archivo, actualiza la versión y registra la operación en auditoría.</p></header>
+  @if(loading()){<p class="admin-panel p-5" role="status">Consultando la fotografía actual…</p>}@else if(error()&&!hero()){<p class="plus-form-errors" role="alert">{{error()}}</p>}@else{
+    <form class="admin-panel p-5 sm:p-6 grid lg:grid-cols-2 gap-6" (ngSubmit)="save()">
+      <section class="space-y-3" aria-label="Vista previa de la portada">
+        <h2 class="text-title-md font-bold">Vista previa</h2>
+        @if(preview()){<img [src]="preview()" [alt]="altText||'Vista previa sin descripción'" class="w-full max-h-[34rem] aspect-[4/5] object-cover object-top rounded-xl border border-slate-400/40 bg-slate-200">}@else{<div class="aspect-[4/5] rounded-xl border border-dashed border-slate-400 grid place-items-center text-center p-5">Todavía no hay una fotografía configurada.</div>}
+      </section>
+      <section class="space-y-5">
+        <div><h2 class="text-title-md font-bold">Archivo y accesibilidad</h2><p class="text-body-sm mt-1">Formatos permitidos: JPG, PNG o WEBP. Tamaño máximo: 5 MB.</p></div>
+        <label class="admin-field">Nueva fotografía<input type="file" accept="image/jpeg,image/png,image/webp" (change)="choose($event)"></label>
+        <label class="admin-field">Texto alternativo<textarea name="altText" rows="4" maxlength="300" required [(ngModel)]="altText" placeholder="Describe brevemente quién o qué aparece en la fotografía"></textarea></label>
+        @if(hero()?.updated_at){<p class="text-body-sm">Última actualización registrada: {{hero()?.updated_at}}</p>}
+        @if(error()){<p class="plus-form-errors" role="alert">{{error()}}</p>}
+        @if(status()){<p class="border border-emerald-600 bg-emerald-500/10 rounded-lg p-3" role="status">{{status()}}</p>}
+        <button type="submit" class="admin-primary" [disabled]="saving()||(!file&&altText.trim()===hero()?.alt_text)">{{saving()?'Guardando…':'Guardar portada'}}</button>
+      </section>
+    </form>
+  }
+</div>

@@ -1,6 +1,6 @@
 ﻿# Problemas y pendientes de integración PLUS
 
-Actualizado: 9 de noviembre de 2026. Este registro separa problemas comprobados, mitigaciones del frontend y trabajo pendiente del backend. Se continúa con los módulos que no dependen de cada problema. No se modificó Django ni la base de datos desde este repositorio.
+Actualizado: 11 de noviembre de 2026. Este registro separa problemas comprobados, mitigaciones del frontend y trabajo pendiente del backend. Se continúa con los módulos que no dependen de cada problema. No se modificó Django ni la base de datos desde este repositorio.
 
 ## Entrega actual para el equipo de backend
 
@@ -26,6 +26,10 @@ Actualizado: 9 de noviembre de 2026. Este registro separa problemas comprobados,
 | 3 · Media | P12 | Auditoría recortada, sin paginación completa ni filtros uniformes. | Paginar el conjunto y unificar filtros/conteos y detalle autorizado. |
 | 3 · Verificación | P13 | **Corrección local nueva:** manejo de valores no numéricos y límites de tamaño. | Verificar despliegue y documentar normalización frente a rechazo de valores. |
 | 3 · Función pendiente | P14 | Comentarios sin historial específico de decisiones. | Exponer historial autorizado por comentario y definir control de versión. |
+| 3 · Formularios | P17 | Versiones históricas sin preguntas en el detalle administrativo. | Exponer detalle de versión con las preguntas congeladas para vista previa y auditoría. |
+| 3 · Noticias | P18 | Medios por ruta y transiciones editoriales sin operación especializada. | Definir carga binaria validada y auditar/validar las transiciones de publicación. |
+| 2 · Privacidad | P19 | El detalle público de iniciativas anida actividades con responsable, ubicación y casos vinculados. | Crear una proyección pública mínima y autorizar explícitamente cada campo territorial/vinculado. |
+| 3 · Iniciativas | P20 | Medios por ruta y transiciones editoriales genéricas; auditoría desigual en subrecursos. | Definir carga binaria, reglas de transición y auditoría uniforme para ediciones, actividades y relaciones. |
 
 ### Qué entregar para poder cerrar los puntos
 
@@ -139,9 +143,9 @@ Actualizado: 9 de noviembre de 2026. Este registro separa problemas comprobados,
 
 ## P11 — Preparación de contenido y pruebas reales pendientes
 
-Noticias e iniciativas conservan el contenido estático existente. Antes de conectar sus consultas se debe preparar una carga inicial repetible de textos y medios aprobados. Los casos, cifras y usuarios ficticios no se publican como datos institucionales.
+Noticias e iniciativas conservan el contenido estático existente como respaldo identificado cuando sus colecciones públicas están vacías o no disponibles. Sus consultas públicas ya están conectadas, pero antes de retirar el respaldo se debe preparar una carga inicial repetible de textos y medios aprobados. Los casos, cifras y usuarios ficticios no se publican como datos institucionales.
 
-**Avance de preparación:** se generó un [inventario reproducible y guía de carga editorial](contenido-inicial/preparacion.md): siete noticias de catálogo, tres tarjetas de inicio, cuatro iniciativas y cuatro paneles del carrusel, con 19 imágenes únicas referenciadas. Las apariciones se mantienen separadas para revisar duplicados. Falta aprobación de textos completos, hechos, fechas, cifras y medios, e implementar/ejecutar la carga editorial del backend. No se conectó el portal a una colección vacía ni se importó el inventario en producción.
+**Avance de preparación:** se generó un [inventario reproducible y guía de carga editorial](contenido-inicial/preparacion.md): siete noticias de catálogo, tres tarjetas de inicio, cuatro iniciativas y cuatro paneles del carrusel, con 16 imágenes únicas referenciadas en las fuentes actuales. Las apariciones se mantienen separadas para revisar duplicados. Falta aprobación de textos completos, hechos, fechas, cifras y medios, e implementar/ejecutar la carga editorial del backend. El portal consulta las colecciones reales sin importar automáticamente este inventario en producción.
 
 La verificación anterior encontró bandejas de prueba vacías. No se han creado casos, enviado mensajes ni publicado evidencias reales desde esta integración para verificar formularios. Las acciones se cubren con HTTP simulado y requieren una prueba operativa controlada. Posteriormente sí se realizaron comprobaciones de navegador y revisión de capturas en Chrome local con API simulada: navegación, algunos formularios, temas y anchos. No equivalen a validación visual completa ni a pruebas contra producción. Ver [revision-interfaz-accesibilidad.md](revision-interfaz-accesibilidad.md).
 
@@ -196,3 +200,43 @@ El correo de recuperación tiene implementación local de Resend SMTP y pruebas 
 **Backend requerido:** desplegar y verificar la implementación existente. En un entorno controlado, obtener access/refresh, cambiar el rol por cada ruta admitida y comprobar que los tokens anteriores reciben 401; volver a iniciar sesión debe devolver el rol/permisos nuevos. Repetir para suspensión/inactivación y probar transiciones ciudadano ↔ rol interno. Mantener activo el token cuando solo se cambie un dato de contacto, salvo política documentada distinta.
 
 **Estado:** **implementado en código local; pendiente de verificación desplegada**, no una implementación aún ausente. No repetir una corrección ya hecha; entregar evidencia de funcionamiento.
+
+## P17 — Media: no se pueden reconstruir versiones históricas de formularios
+
+**Evidencia de código local:** `AdminFormularioDetailSerializer` entrega `preguntas_borrador`. La colección `versiones` solo contiene identificador, número, vigencia, fecha y conteos. El endpoint público sí entrega las preguntas de la versión vigente, pero únicamente mientras el formulario está publicado. No existe una consulta administrativa de una versión concreta con sus preguntas congeladas.
+
+**Frontend:** usa el borrador cuando está disponible y, para un formulario publicado sin borrador, consulta la versión pública vigente. Si el formulario está cerrado o archivado y no conserva borrador, muestra una limitación explícita en lugar de inventar o mezclar el esquema. Las respuestas históricas individuales sí conservan enunciado, tipo y valor respondido.
+
+**Backend requerido:** añadir una ruta administrativa como `GET /api/v1/admin/forms/{id}/versions/{numero}/` o incorporar en cada versión un detalle autorizado con preguntas, opciones, orden y configuración de validación congelados. Debe mantener `CanManageForms`, evitar modificar la versión y documentarse en OpenAPI. Añadir pruebas para publicado, cerrado, archivado y versión inexistente.
+
+**Estado:** integración principal de formularios completada; vista previa histórica y auditoría íntegra del esquema pendientes de este contrato.
+
+## P18 — Media: medios y ciclo editorial de noticias incompletos
+
+**Evidencia de código local:** `AdminNewsMediaViewSet` usa `NewsMediaSerializer`, cuyo campo editable es `ruta_archivo`; no se observa un parser multipart ni una operación que reciba, valide y almacene el binario. `AdminNewsArticleViewSet` audita `perform_create`, pero no define acciones especializadas para solicitar revisión, publicar o archivar, ni una auditoría explícita de actualización. El serializer permite escribir directamente `estado_publicacion` mediante PATCH.
+
+**Frontend:** listado, detalle, categorías, creación, edición, destacado y cambios de estado ya consumen REST. Confirma los cambios de visibilidad y limita la secuencia mostrada en la interfaz. Muestra medios existentes en lectura, pero no permite introducir rutas de servidor ni simula una subida. Los guards mantienen el módulo para administrador/moderador y la API conserva `IsEditorOrAdmin`.
+
+**Backend requerido:** crear una carga `multipart/form-data` que valide tipo real, tamaño, extensión, nombre, almacenamiento y pertenencia a la noticia; devolver URL autorizada y texto alternativo. Definir acciones o validaciones atómicas para las transiciones editoriales, registrar actor/estado anterior/nuevo en auditoría y aclarar si se necesita rechazo con motivo. Probar que un PATCH directo no omita las reglas ni genere publicaciones parciales.
+
+**Estado:** CRUD textual integrado; carga de medios y garantías del ciclo editorial pendientes.
+
+## P19 — Alta: el detalle público de iniciativas expone una proyección administrativa amplia
+
+**Evidencia de código local:** el detalle público de iniciativa anida ediciones completas. Cada edición incorpora actividades con identificador/nombre del responsable y ubicación, además de casos vinculados con identificadores o códigos. Aunque la intención sea mostrar agenda y cobertura, estos campos no necesitan viajar al navegador para representar el catálogo público y no existe una señal de visibilidad individual en ese DTO.
+
+**Frontend:** consulta el detalle para descripción, años y galería, pero descarta responsables, ubicación, actividades y casos vinculados. Esto evita mostrarlos en la interfaz, pero no elimina los datos de la respuesta HTTP recibida.
+
+**Backend requerido:** definir serializers públicos específicos y mínimos para edición/actividad. Exponer solamente campos aprobados; convertir ubicación exacta en una referencia territorial general cuando corresponda y publicar casos vinculados únicamente si el caso es público y esa relación está autorizada. No confiar en que Angular oculte propiedades. Añadir pruebas anónimas que aseguren la ausencia de UUID de usuarios, datos internos y vínculos no publicables.
+
+**Estado:** catálogo, detalle visual y postulación pública integrados; proyección anidada pendiente de endurecimiento antes de mostrar actividades o vínculos.
+
+## P20 — Media: ciclo administrativo y medios de iniciativas necesitan garantías uniformes
+
+**Evidencia de código local:** el programa acepta cambios directos de `estado_publicacion` mediante PATCH y registra una auditoría genérica de actualización, pero no tiene acciones especializadas ni motivo de rechazo. Los medios reciben `ruta_archivo`, no un binario validado. Ediciones y actividades establecen actor de sesión únicamente al crear; en los viewsets revisados no hay un registro de auditoría equivalente y explícito para todas las actualizaciones y eliminaciones. Indicadores, comunidades, casos vinculados y medios tampoco presentan una política uniforme visible en sus viewsets.
+
+**Frontend:** listado, ficha, creación, edición, publicación y destacado del programa consumen REST. Confirma cambios de visibilidad y no inventa un campo de motivo que el serializer no acepta. Las ediciones reales se muestran solo en lectura; los editores demostrativos de subrecursos no se enlazan desde la ficha integrada. La carga de medios permanece deshabilitada.
+
+**Backend requerido:** definir transiciones permitidas y, si aplica, motivo/revisor; impedir que un PATCH genérico evada sus reglas. Crear carga multipart con validación y almacenamiento controlado. Auditar de forma uniforme altas, cambios y eliminaciones de ediciones, actividades, indicadores, coberturas, casos vinculados y medios, incluyendo estado anterior/nuevo y objeto padre. Añadir pruebas de permisos y pertenencia entre programa, edición y subrecursos.
+
+**Estado:** CRUD textual y lectura de ediciones integrados; subrecursos, medios y garantías editoriales pendientes.

@@ -1,0 +1,26 @@
+<div class="space-y-6">
+  <header class="cit-panel border rounded-xl p-6">
+    <p class="text-label-sm uppercase tracking-wider">Panel ciudadano</p>
+    <h1 class="text-headline-md mt-2">Hola, {{auth.user()?.nombres || auth.user()?.full_name}}</h1>
+    <p class="text-body-sm mt-2">Desde aquí puedes consultar tus casos, radicar una solicitud y revisar mensajes, notificaciones o formularios sin salir de tu cuenta.</p>
+    <div class="flex flex-wrap gap-3 mt-5"><a routerLink="/ciudadano/casos/nuevo" class="cit-primary">Radicar un caso</a><a routerLink="/ciudadano/casos" class="cit-button">Ver mis casos</a><a routerLink="/ciudadano/mapa" class="cit-button">Explorar el mapa</a></div>
+  </header>
+  @if(loading()){<p role="status" class="cit-panel border rounded-xl p-5">Consultando tu información…</p>}
+  @if(error()){<p role="alert" class="plus-form-errors">{{error()}}</p>}
+  @if(dashboard();as data){
+    <section aria-labelledby="citizen-summary-title">
+      <h2 id="citizen-summary-title" class="text-title-lg mb-4">Resumen de tu cuenta</h2>
+      <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        <article class="cit-panel border rounded-xl p-5"><p class="text-body-sm">Casos registrados</p><strong class="text-headline-md">{{data.total_cases}}</strong></article>
+        <article class="cit-panel border rounded-xl p-5"><p class="text-body-sm">En gestión</p><strong class="text-headline-md">{{data.en_gestion}}</strong></article>
+        <article class="cit-panel border rounded-xl p-5"><p class="text-body-sm">Resueltos o cerrados</p><strong class="text-headline-md">{{data.resueltos_o_cerrados}}</strong></article>
+        <article class="cit-panel border rounded-xl p-5"><p class="text-body-sm">Correcciones abiertas</p><strong class="text-headline-md">{{data.open_correction_requests}}</strong></article>
+      </div>
+      <div class="grid sm:grid-cols-3 gap-4 mt-4"><a routerLink="/ciudadano/mensajes" class="cit-panel border rounded-xl p-4"><strong>{{data.unread_messages}}</strong> mensajes sin leer</a><a routerLink="/ciudadano/notificaciones" class="cit-panel border rounded-xl p-4"><strong>{{data.unread_notifications}}</strong> notificaciones sin leer</a><article class="cit-panel border rounded-xl p-4"><strong>{{data.followed_cases_count}}</strong> casos seguidos</article></div>
+    </section>
+  }
+  <section class="cit-panel border rounded-xl overflow-hidden">
+    <div class="p-5 flex flex-wrap justify-between gap-3"><h2 class="text-title-lg">Casos recientes</h2><a routerLink="/ciudadano/casos" class="underline">Ver todos</a></div>
+    <div class="overflow-x-auto"><table class="w-full min-w-[620px] text-left text-body-sm"><thead class="bg-slate-400/10"><tr><th class="p-4">Radicado</th><th class="p-4">Título</th><th class="p-4">Estado</th><th class="p-4">Acción</th></tr></thead><tbody>@for(row of recent();track row.id_caso){<tr class="border-t border-slate-400/30"><td class="p-4">{{row.codigo}}</td><td class="p-4">{{row.titulo}}</td><td class="p-4">{{stateLabel(row.estado_nombre)}}</td><td class="p-4"><a [routerLink]="['/ciudadano/casos',row.id_caso]" class="cit-button inline-flex">Abrir</a></td></tr>}@empty{<tr><td colspan="4" class="p-8 text-center">Todavía no tienes casos registrados. Puedes comenzar desde “Radicar un caso”.</td></tr>}</tbody></table></div>
+  </section>
+</div>

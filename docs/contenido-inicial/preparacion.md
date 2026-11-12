@@ -1,6 +1,6 @@
 # Preparación de noticias e iniciativas para el backend
 
-Fecha de revisión: 9 de noviembre de 2026. Se conserva el contenido actual del frontend hasta cargar y verificar una versión inicial aprobada. Esta entrega no conecta más módulos ni modifica la base de datos.
+Fecha de revisión: 11 de noviembre de 2026. Se conserva el contenido actual del frontend como respaldo marcado hasta cargar y verificar una versión inicial aprobada. Noticias e iniciativas ya consultan la API; esta entrega no modifica la base de datos.
 
 ## Archivos entregados
 
@@ -8,7 +8,7 @@ Fecha de revisión: 9 de noviembre de 2026. Se conserva el contenido actual del 
 - [inventario.json](inventario.json): textos existentes, fechas y categorías tal como aparecen, cifras de diseño, referencias de imágenes y hashes de las fuentes. Es un formato de revisión local, **no un contrato REST, fixture Django ni archivo listo para importar**.
 - `scripts/export-public-content.mjs`: genera ambos archivos desde los módulos públicos, sin leer documentos de cuentas ni fixtures administrativos. No realiza solicitudes HTTP, descargas, escrituras de base de datos o publicaciones.
 
-Se encontraron siete noticias en el catálogo y tres tarjetas adicionales en el inicio. Hay cuatro programas en el catálogo de iniciativas y cuatro paneles del carrusel con textos distintos. Son **18 apariciones de contenido**, no 18 entidades confirmadas distintas. Se registraron 19 URLs únicas de imágenes y 11 plantillas como contexto de revisión.
+Se encontraron siete noticias en el catálogo y tres tarjetas adicionales en el inicio. Hay cuatro programas en el catálogo de iniciativas y cuatro paneles del carrusel con textos distintos. Son **18 apariciones de contenido**, no 18 entidades confirmadas distintas. Se registraron 16 URLs únicas de imágenes y 11 plantillas como contexto de revisión.
 
 Todos los registros generados tienen `approval: pending` y `publication_allowed: false`. Estos campos pertenecen al inventario, no al backend, y no garantizan ninguna restricción de servidor. El JSON no se envía desde Angular ni altera lo que ve el usuario.
 
@@ -53,7 +53,7 @@ El seed local revisado crea categorías de noticias y otros catálogos, pero no 
 4. Hacer la carga repetible sin duplicar entidades ni sobrescribir ediciones manuales. Antes de actualizar una entrada ya cargada, comparar procedencia/hash o una revisión esperada y reportar conflictos. No usar títulos como identidad permanente: pueden corregirse.
 5. Crear las ediciones y únicamente los indicadores, coberturas, actividades y medios aprobados. No importar los casos, usuarios o cifras ficticias de otros módulos.
 6. Revisar los borradores y publicar explícitamente. Comprobar consultas públicas, portadas, destacados y filtros; contrastar resultados con las apariciones del diseño.
-7. Cambiar las consultas del frontend a REST cuando haya contenido publicado verificado. Mantener estados vacíos y errores reales, sin mezclar datos estáticos con respuestas fallidas de API.
+7. Las consultas del frontend ya usan REST. Cargar y verificar el contenido publicado antes de retirar el respaldo marcado; mantener estados vacíos y diferenciar claramente datos reales de contenido de diseño.
 
 Esta secuencia es una propuesta de implementación, no afirma que el comando editorial exista ni que se haya ejecutado. No se necesita cambiar las tablas para inventariar el material; cualquier mecanismo de importación se acuerda en el backend.
 

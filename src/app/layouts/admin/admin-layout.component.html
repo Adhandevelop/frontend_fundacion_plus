@@ -19,7 +19,7 @@
       <div class="flex gap-3 items-center min-w-0"><button type="button" class="lg:hidden admin-button shrink-0" aria-controls="admin-navigation" [attr.aria-expanded]="menu()" (click)="menu.set(!menu())">Menú</button><span class="text-title-sm truncate">PLUS / Despacho territorial</span></div>
       <div class="flex gap-3 items-center shrink-0"><button type="button" class="admin-button flex items-center" (click)="theme.toggle()" [attr.aria-pressed]="theme.dark()" aria-label="Cambiar tema de color"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false">@if(theme.dark()){<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/>}@else{<path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z"/>}</svg></button><span class="text-label-sm hidden sm:inline">Administración</span></div>
     </header>
-    <p class="bg-primary-container/15 px-4 py-2 text-body-sm text-center">Casos, informes, comunidades, usuarios y comentarios conectados; auditoría reciente disponible. Noticias, iniciativas, postulaciones y formularios administrativos continúan en demostración.</p>
+    <p class="bg-primary-container/15 px-4 py-2 text-body-sm text-center">Casos, informes, comunidades, usuarios, comentarios, formularios, portada y noticias conectados. Iniciativas y postulaciones continúan en demostración.</p>
     <main #content id="admin-content" tabindex="-1"><router-outlet (activate)="content.focus()"/></main>
     <footer class="px-6 py-5 text-body-sm border-t border-slate-400/30">PLUS · Corporación Pluralismo Social</footer>
   </div>

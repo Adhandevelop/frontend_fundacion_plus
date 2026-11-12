@@ -1,21 +1,19 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { EDITORIAL_CATEGORIES, EDITORIAL_LABELS, EDITORIAL_STATES, EditorialFilters, filterEditorialNews } from './data/editorial-news.demo';
-import { EditorialNewsDemoService } from './services/editorial-news-demo.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs';
+import { apiErrorMessage } from '../../../core/api/api-error';
+import { AdminNewsApiService, AdminNewsArticle, NEWS_STATE_LABELS, NewsState } from './services/admin-news-api.service';
 
-@Component({selector: 'plus-admin-news', standalone: true, imports: [RouterLink], templateUrl: './admin-news-list.component.html'})
+@Component({selector:'plus-admin-news',standalone:true,imports:[RouterLink,DatePipe],templateUrl:'./admin-news-list.component.html'})
 export class AdminNewsListComponent {
-  readonly store = inject(EditorialNewsDemoService);
-  readonly labels = EDITORIAL_LABELS;
-  readonly states = EDITORIAL_STATES;
-  readonly categories = EDITORIAL_CATEGORIES;
-  readonly filters = signal<EditorialFilters>({query: '', category: '', state: ''});
-  readonly filtered = computed(() => filterEditorialNews(this.store.news(), this.filters()));
-  readonly page = signal(1);
-  readonly pages = computed(() => Math.max(1, Math.ceil(this.filtered().length / 5)));
-  readonly visible = computed(() => this.filtered().slice((this.page() - 1) * 5, this.page() * 5));
-  readonly metrics = computed(() => [{label: 'Noticias de la selección', value: this.filtered().length}, {label: 'En revisión', value: this.filtered().filter(row => row.state === 'en_revision').length}, {label: 'Publicadas en el ejemplo', value: this.filtered().filter(row => row.state === 'publicada').length}]);
-  change(key: keyof EditorialFilters, value: string) {this.filters.update(current => ({...current, [key]: value})); this.page.set(1);}
-  reset() {this.filters.set({query: '', category: '', state: ''}); this.page.set(1);}
-  navigate(delta: number) {this.page.update(page => Math.max(1, Math.min(this.pages(), page + delta)));}
+ private readonly api=inject(AdminNewsApiService);private readonly destroy=inject(DestroyRef);readonly labels=NEWS_STATE_LABELS;readonly states=Object.keys(NEWS_STATE_LABELS) as NewsState[];
+ readonly rows=signal<AdminNewsArticle[]>([]);readonly count=signal(0);readonly page=signal(1);readonly pageSize=10;readonly pages=computed(()=>Math.max(1,Math.ceil(this.count()/this.pageSize)));readonly state=signal('');readonly query=signal('');readonly loading=signal(false);readonly error=signal('');
+ readonly visible=computed(()=>{const term=this.normalize(this.query());return term?this.rows().filter(row=>this.normalize(`${row.title} ${row.slug} ${row.summary}`).includes(term)):this.rows();});
+ constructor(){this.load();}
+ load(page=1){this.loading.set(true);this.error.set('');this.api.list(this.state(),page,this.pageSize).pipe(takeUntilDestroyed(this.destroy),finalize(()=>this.loading.set(false))).subscribe({next:value=>{this.rows.set(value.results);this.count.set(value.count);this.page.set(page);},error:error=>this.error.set(apiErrorMessage(error))});}
+ changeState(value:string){this.state.set(value);this.load(1);}
+ navigate(delta:number){this.load(Math.max(1,Math.min(this.pages(),this.page()+delta)));}
+ private normalize(value:string){return value.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
 }

@@ -48,7 +48,7 @@ function login(remember=false) {
 }
 await login();
 assert.equal(auth.canAdmin(),false);
-assert.equal(auth.defaultRoute(),'/ciudadano/perfil');
+assert.equal(auth.defaultRoute(),'/ciudadano');
 assert.equal(localStorage.getItem('plus.session.v1'),null);
 assert.equal(JSON.parse(sessionStorage.getItem('plus.session.v1')!).refresh,'old-refresh');
 assert.equal(sessionStorage.getItem('plus.session.v1')!.includes('test-only'),false);
@@ -87,7 +87,7 @@ assert.equal(auth.canAdmin(),false);
 auth.updateUser({...user,primary_role:'administrador',permissions:{can_moderate_cases:true}});assert.equal(auth.canAdmin(),true);
 // Production /me/ returns module/action lists, despite the documented boolean example.
 const citizenPermissions={casos:['crear','ver_propios','subir_evidencia','comentar','mensajes_privados'],propuestas:['crear','ver_propias'],notificaciones:['ver_propias']};
-const adminPermissions={all:['*'],usuarios:['crear','editar','cambiar_rol','asignar_ambito'],territorios:['crear','editar','eliminar'],casos:['*'],iniciativas:['*'],auditoria:['consultar'],configuracion:['*']};
+const adminPermissions={all:['*'],usuarios:['crear','editar','cambiar_rol','asignar_ambito'],territorios:['crear','editar','eliminar'],casos:['*'],iniciativas:['*'],auditoria:['consultar'],configuracion:['*'],can_manage_forms:true,can_manage_homepage:true};
 assert.equal(canAccessAdministration(citizenPermissions),false);
 assert.equal(canAccessAdministration(adminPermissions),true);
 assert.equal(canAccessAdministration({casos:['revisar_publicacion','moderar_comentarios']}),true);
@@ -95,7 +95,7 @@ assert.equal(canAccessAdministration({casos:['ver_asignados','seguimiento','camb
 assert.equal(canAccessAdministration({unknown:['*']}),false);
 assert.equal(canAccessAdministration({casos:['unknown']}),false);
 assert.equal(canAccessAdministration({all:true}),false);
-auth.updateUser({...user,primary_role:'administrador',permissions:adminPermissions});assert.equal(auth.defaultRoute(),'/admin');
+auth.updateUser({...user,primary_role:'administrador',permissions:adminPermissions,can_manage_forms:true,can_manage_homepage:true});assert.equal(auth.defaultRoute(),'/admin');
 assert.equal(await firstValueFrom(runInInjectionContext(env,()=>accountGuard({data:{requiresAdmin:true}} as never,{url:'/admin'} as never)) as any),true);
 assert.ok(adminRoute.canActivateChild?.includes(accountGuard));
 assert.ok(citizenRoute.canActivateChild?.includes(accountGuard));
@@ -111,7 +111,7 @@ async function verifyPortal(portal:typeof adminRoute, allowed:boolean|((path:str
   }
 }
 await verifyPortal(adminRoute,true);await verifyPortal(citizenRoute,false);
-auth.updateUser({...user,permissions:citizenPermissions});assert.equal(auth.defaultRoute(),'/ciudadano/perfil');
+auth.updateUser({...user,permissions:citizenPermissions});assert.equal(auth.defaultRoute(),'/ciudadano');
 await verifyPortal(citizenRoute,true);await verifyPortal(adminRoute,false);
 for(const role of ['representante','moderador']) {
   auth.updateUser({...user,primary_role:role,permissions:adminPermissions});
@@ -191,3 +191,6 @@ await import('./admin-territories.spec');
 await import('./admin-users.spec');
 await import('./admin-access.spec');
 await import('./forms-demo.spec');
+await import('./homepage-integration.spec');
+await import('./news-integration.spec');
+await import('./initiatives-integration.spec');

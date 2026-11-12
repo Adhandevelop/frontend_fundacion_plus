@@ -25,7 +25,7 @@ export class RegisterComponent {
   this.attempted.set(true);this.form.markAllAsTouched();if(this.form.invalid){this.message.set('');focusFormTarget('register-errors');return;}
   const value=this.form.getRawValue();this.pending.set(true);this.message.set('');
   this.auth.register({nombres:value.name.trim(),apellidos:value.surname.trim(),correo:value.email.trim(),telefono:value.phone.trim(),password:value.password,acepta_tratamiento_datos:value.consent}).pipe(finalize(()=>this.pending.set(false))).subscribe({
-   next:()=>{this.form.reset();void this.router.navigateByUrl('/ciudadano/perfil');},error:error=>this.message.set(apiErrorMessage(error)),
+   next:()=>{this.form.reset();void this.router.navigateByUrl('/ciudadano');},error:error=>this.message.set(apiErrorMessage(error)),
   });
  }
  passwordProgress(){return Math.min(100,this.form.controls.password.value.length / 8 * 100);}

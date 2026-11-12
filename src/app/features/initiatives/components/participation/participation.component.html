@@ -4,7 +4,7 @@
 <div class="lg:col-span-5 space-y-space-md">
 <div class="inline-flex items-center gap-space-xs px-3 py-1 rounded-full ini-bg-primary-container ini-text-on-primary-fixed text-label-md font-label-md">
 <span class="material-symbols-outlined text-label-md" data-weight="fill">volunteer_activism</span>
-<span>Convocatoria Abierta 2025</span>
+<span>Postulación comunitaria</span>
 </div>
 <h2 class="text-headline-md md:text-headline-lg font-headline-lg tracking-tight text-white">
             ¿Quieres que PLUS lleve estas dinámicas a tu barrio o vereda?
@@ -49,35 +49,32 @@
 <div>
 <label for="proposal-initiative" class="block text-title-sm font-title-sm ini-text-on-surface mb-1">Dinámica que deseas priorizar *</label>
 <select id="proposal-initiative" formControlName="initiative" class="w-full h-11 px-3 rounded-md ini-bg-surface-container-lowest border ini-border-outline-variant text-body-md font-body-md focus:border-on-surface focus:ring-2 focus:ring-primary-container outline-none">
-<option>Dulcemanía (Niñez y Veeduría en Halloween)</option>
-<option>Novenas Navideñas Comunitarias</option>
-<option>Jornada de Útiles y Regreso a Clases</option>
-<option>Torneo Relámpago y Juventudes</option>
-<option>Brigada Integral de Diagnóstico Cívico</option>
+<option value="">Sin programa específico</option>
+@for(item of selectableInitiatives();track item.id){<option [value]="item.id">{{item.title}}</option>}
 </select>
 </div>
 </div>
 <div>
 <label for="proposal-title" class="block text-title-sm font-title-sm ini-text-on-surface mb-1">Título de la postulación *</label>
-<input id="proposal-title" formControlName="title" maxlength="200" class="w-full h-11 px-3 rounded-md ini-bg-surface-container-lowest border ini-border-outline-variant text-body-md font-body-md focus:border-on-surface focus:ring-2 focus:ring-primary-container outline-none" placeholder="Título de ejemplo para tu solicitud" [attr.aria-invalid]="form.controls.title.touched && form.controls.title.invalid" required type="text" aria-describedby="proposal-title-help"/>
-<p id="proposal-title-help" class="text-body-sm ini-text-secondary mt-2">Hasta 200 caracteres. Usa datos ficticios para explorar este formulario.</p>
+<input id="proposal-title" formControlName="title" maxlength="200" class="w-full h-11 px-3 rounded-md ini-bg-surface-container-lowest border ini-border-outline-variant text-body-md font-body-md focus:border-on-surface focus:ring-2 focus:ring-primary-container outline-none" placeholder="Ej. Jornada comunitaria en el barrio" [attr.aria-invalid]="form.controls.title.touched && form.controls.title.invalid" required type="text" aria-describedby="proposal-title-help"/>
+<p id="proposal-title-help" class="text-body-sm ini-text-secondary mt-2">Hasta 200 caracteres.</p>
 </div>
 <div>
 <label for="proposal-description" class="block text-title-sm font-title-sm ini-text-on-surface mb-1">Breve descripción de la necesidad del sector *</label>
 <textarea id="proposal-description" formControlName="description" maxlength="2000" class="w-full p-3 rounded-md ini-bg-surface-container-lowest border ini-border-outline-variant text-body-md font-body-md focus:border-on-surface focus:ring-2 focus:ring-primary-container outline-none" placeholder="Cuéntanos sobre la situación de los niños, estado de canchas, parques o problemas con servicios públicos que requieren veeduría..." required="" rows="3"></textarea>
 </div>
 <div class="rounded-lg border ini-border-outline-variant p-4 space-y-3">
-<p id="proposal-consent-help" class="text-body-sm ini-text-secondary">Aceptación de demostración. El aviso de privacidad y su versión deben confirmarse antes de activar postulaciones reales.</p>
-<label class="flex items-start gap-3 text-body-sm"><input type="checkbox" formControlName="consent" class="mt-1 shrink-0 accent-yellow-400" aria-describedby="proposal-consent-help" [attr.aria-invalid]="form.controls.consent.touched && form.controls.consent.invalid"><span>Usaré datos ficticios y confirmo la aceptación de este ejemplo. Esta casilla no registra un consentimiento real.</span></label>
+<p id="proposal-consent-help" class="text-body-sm ini-text-secondary">La información será utilizada para estudiar la postulación y contactar al enlace comunitario.</p>
+<label class="flex items-start gap-3 text-body-sm"><input type="checkbox" formControlName="consent" class="mt-1 shrink-0 accent-yellow-400" aria-describedby="proposal-consent-help" [attr.aria-invalid]="form.controls.consent.touched && form.controls.consent.invalid"><span>Autorizo el tratamiento de mis datos personales para gestionar esta solicitud.</span></label>
 </div>
 <div class="flex items-center justify-between flex-wrap gap-space-sm pt-space-xs">
 <span class="text-label-sm font-label-sm ini-text-secondary flex items-center gap-1">
 <span class="material-symbols-outlined text-label-sm">lock</span>
-                Demostración: los datos no se envían ni guardan.
+                Envío seguro a la plataforma PLUS.
               </span>
-<button class="px-space-lg py-2.5 rounded-md ini-bg-primary-container ini-text-on-primary-fixed font-title-sm text-title-sm ini-hover-bg-primary-fixed-dim transition-all shadow-sm active:scale-95 inline-flex items-center gap-space-xs font-semibold" type="submit">
+<button class="px-space-lg py-2.5 rounded-md ini-bg-primary-container ini-text-on-primary-fixed font-title-sm text-title-sm ini-hover-bg-primary-fixed-dim transition-all shadow-sm active:scale-95 inline-flex items-center gap-space-xs font-semibold disabled:opacity-60" type="submit" [disabled]="pending()">
 <span class="material-symbols-outlined text-title-sm" data-weight="fill">send</span>
-<span>Validar postulación de ejemplo</span>
+<span>{{pending()?'Enviando…':'Enviar postulación'}}</span>
 </button>
 </div>
 <p class="mt-3 text-body-sm" role="status">{{message()}}</p></form>
