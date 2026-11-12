@@ -6,7 +6,9 @@ export function apiErrorMessage(error: unknown): string {
   if (error.status >= 500) return 'El servicio no está disponible temporalmente. Inténtalo de nuevo.';
   const body = error.error;
   const fields = body && typeof body === 'object' ? body.errors : null;
+  const directFields = body && typeof body === 'object' && !Array.isArray(body) ? body : null;
   const details = fields && typeof fields === 'object'
-    ? Object.values(fields).flat().filter((value): value is string => typeof value === 'string').join(' ') : '';
+    ? Object.values(fields).flat().filter((value): value is string => typeof value === 'string').join(' ')
+    : directFields ? Object.entries(directFields).filter(([key]) => !['message','detail','code'].includes(key)).flatMap(([,value]) => Array.isArray(value) ? value : [value]).filter((value): value is string => typeof value === 'string').join(' ') : '';
   return details || body?.message || body?.detail || (error.status === 401 ? 'La sesión o las credenciales no son válidas.' : 'No se pudo completar la solicitud.');
 }

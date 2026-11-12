@@ -7,31 +7,34 @@ Actualizado: 11 de noviembre de 2026.
 - `/admin/iniciativas`: listado paginado desde `/api/v1/admin/initiatives/`, filtro de publicación en servidor y búsqueda local sobre la página recibida.
 - `/admin/iniciativas/nueva` y `/admin/iniciativas/:id/editar`: creación y edición de título, subtítulo, categoría, descripciones y estado operativo.
 - `/admin/iniciativas/:id`: ficha real, portada existente, contenido, estado operativo/editorial y ediciones anidadas.
+- `/admin/iniciativas/:id/ediciones/nueva` y `/:editionId/editar`: creación y actualización mediante `/api/v1/admin/initiative-editions/`, con relación UUID explícita al programa.
 - Transiciones confirmadas entre borrador, pendiente, publicada y rechazada, además del destacado de programas publicados.
 - El `slug` lo genera Django y Angular lo trata como solo lectura.
 - El guard administrativo conserva el módulo para administrador/moderador según la matriz vigente.
 
 Las pruebas HTTP verifican paginación/filtro, payload de creación sin `slug` inventado y PATCH de publicación/destacado. No se realizaron escrituras en producción.
 
-## Parcialmente integrado
+## Ediciones integradas
 
-Las ediciones recibidas dentro del detalle se muestran en lectura con año, nombre, temporada, estado y conteos de indicadores, comunidades y actividades. La ficha real no enlaza los editores locales antiguos para evitar mezclar UUID del backend con el almacenamiento demostrativo.
+Las ediciones recibidas dentro del detalle se muestran con año, nombre, temporada, estado y conteos de indicadores, comunidades y actividades. El editor conectado guarda año, fechas, temporada, descripción y estado operativo; valida localmente el orden de las fechas y deja la unicidad anual definitiva al backend.
+
+## Medios integrados
+
+La galería general y la galería por edición consultan los medios anidados del programa. Permiten subir archivos mediante `FormData`, marcar portada, definir texto alternativo, descripción y orden, previsualizar imágenes o videos, abrir documentos y eliminar un medio. Angular valida los formatos acordados y el límite de 15 MB antes del envío; la validación definitiva permanece en el backend.
 
 ## Aún demostrativo
 
-- Alta y edición de ediciones.
 - Indicadores y sus metadatos.
 - Cobertura/comunidades y observaciones.
 - Actividades, responsables y ubicación.
 - Vínculos con casos.
-- Medios generales y por edición.
 - Bandeja y decisión administrativa de postulaciones.
 
 Las pantallas existentes de estos subrecursos siguen usando servicios locales. No deben interpretarse como datos guardados ni como publicación institucional.
 
-## Pendientes del backend
+## Estado del backend
 
-El contrato permite CRUD por recursos, pero antes de completar el módulo deben aplicarse las garantías descritas en P19 y P20 de [problemas-integracion.md](problemas-integracion.md): proyección pública mínima, carga binaria segura, transiciones editoriales validadas, pertenencia estricta entre programa/edición/subrecurso y auditoría uniforme.
+El backend reportó implementadas la proyección pública, las acciones editoriales y la auditoría de subrecursos. El multipart de medios P21, corregido en `54dd730`, ya está conectado en Angular y solo falta su prueba autenticada contra el servidor. Consultar [correcciones-backend-historico.md](correcciones-backend-historico.md) y [problemas-integracion.md](problemas-integracion.md).
 
 ## Verificación
 

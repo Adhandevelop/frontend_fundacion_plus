@@ -52,12 +52,13 @@ Este es el registro consolidado del frontend Angular. “Integrado” significa 
 - Búsqueda, categoría, orden y paginación visual operan sobre la colección recibida.
 - Si no existen noticias publicadas o falla la consulta, se conservan los mockups como respaldo marcado explícitamente; no se presentan como información oficial.
 - La suscripción al boletín consume `/api/v1/public/newsletter/subscribe/`, envía consentimiento y comunica que debe confirmarse por correo.
-- No se implementaron todavía las rutas de confirmación/baja porque normalmente se abren desde enlaces con token y falta incorporar sus páginas específicas.
+- No se implementaron todavía las rutas de confirmación/baja. Los endpoints existen, pero la documentación disponible no fija el nombre/transporte del token ni el DTO de resultado; se evita inventar ese contrato.
 - La administración editorial consulta listado, categorías y detalle reales.
 - Creación y edición escriben título, categoría, extracto, contenido y destacado.
 - La revisión aplica estados `borrador`, `en_revision`, `publicada` y `archivada`, con confirmación antes de cambiar visibilidad.
+- Publicar y archivar utilizan las acciones auditadas `POST /publish/` y `POST /archive/` desplegadas en `8dca085`.
 - El almacenamiento temporal administrativo fue retirado.
-- La carga binaria de medios no se habilita: `/admin/news-media/` recibe `ruta_archivo`, pero no define una carga de archivo segura desde el navegador.
+- El backend habilitó en `54dd730` la carga multipart segura de medios mediante `file` o `archivo`, sin exigir `ruta_archivo`, y devuelve `url`/`url_archivo` utilizables por el DOM. Angular ya conecta selección, validación local, subida, portada, orden, previsualización y eliminación en la revisión editorial. Falta ejecutar una prueba funcional autenticada contra el servidor.
 
 ### Iniciativas públicas y postulaciones
 
@@ -65,10 +66,10 @@ Este es el registro consolidado del frontend Angular. “Integrado” significa 
 - Búsqueda, categoría y edición filtran la colección recibida; al abrir un programa se consulta el detalle por `slug` y se muestran descripción, portada y galería pública.
 - Si la colección está vacía o la consulta falla, los cuatro mockups se conservan como respaldo marcado como contenido de diseño.
 - El formulario comunitario dejó de ser una simulación y envía a `/api/v1/public/initiatives/proposals/` el contacto, territorio declarado, iniciativa opcional, título, descripción y autorización.
-- No se muestran actividades, responsables ni casos vinculados del objeto anidado porque el contrato público actual incluye campos cuyo alcance debe revisar el backend (P19).
+- El backend desplegó una proyección pública depurada para ediciones y actividades. Angular mantiene una presentación mínima hasta verificarla con contenido publicado real.
 - La administración de programas ya consulta listado y detalle reales, crea/edita contenido y confirma cambios de publicación y destacado.
 - El `slug` administrativo es de solo lectura en Angular porque lo genera y garantiza el backend.
-- Las ediciones anidadas se muestran en lectura desde la ficha real. Sus editores, indicadores, cobertura, actividades, medios y revisión de postulaciones todavía conservan implementación demostrativa.
+- Las ediciones anidadas se muestran desde la ficha real y su creación/edición ya consume `/admin/initiative-editions/`. Los medios generales y por edición también son REST. Indicadores, cobertura, actividades y revisión de postulaciones todavía conservan implementación demostrativa.
 
 ### Formularios dinámicos
 
@@ -81,6 +82,7 @@ El prototipo en memoria fue retirado. El módulo consume `apps.dynamic_forms`:
 - obligatoriedad, orden, opciones y configuración básica de límites;
 - publicación, cierre, reapertura, archivo, duplicación y borrador desde versión;
 - vista previa sin guardar respuestas;
+- vista previa de versiones históricas mediante `/admin/forms/{id}/versions/{numero}/`, incluidas preguntas y opciones congeladas;
 - formulario público desde `/api/v1/public/forms/{slug}/`;
 - envío con política legal vigente e `Idempotency-Key` estable durante el intento;
 - confirmación neutral de recepción;
@@ -96,7 +98,7 @@ No se envían contraseñas por correo. El backend genera un enlace de un solo us
 ### Contenido editorial pendiente
 
 - Bloques secundarios de la página principal y nosotros.
-- Administración de ediciones, indicadores, cobertura, actividades, medios y postulaciones de iniciativas.
+- Administración de indicadores, cobertura, actividades y postulaciones de iniciativas.
 - Inventario inicial reproducible de contenido e imágenes.
 
 Estas pantallas todavía usan contenido de diseño. Falta aprobación institucional, carga inicial en la base de datos y conexión REST. No conviene conectar una colección vacía porque degradaría el sitio publicado.
@@ -121,30 +123,29 @@ Falta que el backend entregue coordenadas o GeoJSON verificable, visibilidad pú
 
 ### Formularios
 
-- El detalle administrativo entrega `preguntas_borrador`, pero los elementos de `versiones` solo incluyen conteos. Una versión histórica cerrada/archivada no puede reconstruirse en la vista previa si no existe borrador. Se necesita detalle de versión con sus preguntas congeladas, o incluirlas en el detalle administrativo.
+- El detalle de versión histórica desplegado en `8dca085` ya está conectado a la vista previa administrativa.
 - El editor cubre los siete tipos y las validaciones frecuentes. La interfaz avanzada para `min_date`, `max_date`, expresión regular y mensaje de expresión regular aún no se expone, aunque el adaptador conserva `configuracion_validacion` recibida.
 - La disponibilidad real de correo, migraciones, documento legal y formulario semilla debe comprobarse en el entorno desplegado. Las pruebas locales no envían correos ni crean cuentas reales.
 - Se debe realizar una prueba funcional controlada del ciclo completo: crear borrador, publicar, enviar como anónimo, recibir correo, activar, iniciar sesión, consultar “Mis formularios” y exportar desde administración.
 
 ### Backend general
 
-Los problemas P01–P20, su evidencia y estado están en [problemas-integracion.md](problemas-integracion.md). Los principales pendientes siguen siendo verificar en el servidor la exclusividad ciudadana, la revocación de sesiones tras rol/estado, la protección integral del último administrador, la ausencia de efectos secundarios en consultas GET, el detalle histórico de versiones de formularios, la carga segura de medios editoriales y una proyección pública mínima para actividades de iniciativas.
+No hay problemas técnicos activos demostrados en [problemas-integracion.md](problemas-integracion.md). P01–P21 se conservan como trazabilidad en [correcciones-backend-historico.md](correcciones-backend-historico.md). Angular ya adaptó versiones históricas, acciones editoriales y carga multipart; siguen pendientes pruebas autenticadas y migrar las vistas restantes.
 
 ## 5. Próximo trabajo recomendado
 
 1. Probar formularios de extremo a extremo en un entorno controlado y corregir diferencias observadas.
-2. Añadir el detalle de versión histórica al backend y conectarlo a la vista previa.
-3. Completar los controles avanzados de validación del constructor.
-4. Aprobar y cargar el contenido editorial inicial.
-5. Completar carga segura de medios de noticias y las páginas de confirmación/baja del boletín.
-6. Integrar ediciones, indicadores, cobertura, actividades y postulaciones administrativas; revisar el DTO público de actividades.
-7. Integrar casos georreferenciados en el mapa.
-8. Probar el reemplazo real de portada con una cuenta superadministradora controlada.
-9. Repetir revisión responsive, accesibilidad, temas, Docker y Nginx con datos reales.
+2. Completar los controles avanzados de validación del constructor.
+3. Aprobar y cargar el contenido editorial inicial.
+4. Probar contra el servidor la carga multipart ya conectada y construir las páginas de confirmación/baja del boletín.
+5. Integrar indicadores, cobertura, actividades y postulaciones administrativas; revisar el DTO público de actividades.
+6. Integrar casos georreferenciados en el mapa.
+7. Probar el reemplazo real de portada con una cuenta superadministradora controlada.
+8. Repetir revisión responsive, accesibilidad, temas, Docker y Nginx con datos reales.
 
 ## 6. Verificación local actual
 
-- `npm run build`: correcto el 11 de noviembre de 2026.
+- `npm run build`: correcto el 12 de noviembre de 2026.
 - `npm run test:api`: trece suites correctas.
 - La suite de formularios comprueba listado administrativo, siete tipos de pregunta, validación local, payload público, `Idempotency-Key`, activación/reenvío, historial ciudadano, ciclo de publicación y rutas de exportación.
 - La suite de portada comprueba la lectura pública, las métricas verificadas, la consulta administrativa y el reemplazo multipart protegido.
@@ -157,10 +158,10 @@ Los problemas P01–P20, su evidencia y estado están en [problemas-integracion.
 
 - Vistas generales: aproximadamente 90 % construidas.
 - Integración de módulos respaldados por endpoints: aproximadamente 85 %.
-- Formularios dinámicos: conexión REST implementada; falta validación real completa y versión histórica.
+- Formularios dinámicos: conexión REST y versión histórica implementadas; falta validación real completa.
 - Portada institucional: lectura y administración conectadas; prueba real de archivo pendiente.
-- Noticias: lecturas públicas y administración REST conectadas; carga editorial, medios binarios y acciones por token pendientes.
-- Iniciativas: catálogo, detalle, postulación pública y CRUD textual administrativo de programas conectados; subrecursos y carga editorial pendientes.
+- Noticias: lecturas públicas, administración REST y medios binarios conectados; carga editorial inicial y acciones por token pendientes.
+- Iniciativas: catálogo, detalle, postulación pública, CRUD textual, ediciones y medios administrativos conectados; indicadores, cobertura, actividades, postulaciones administrativas y carga editorial inicial siguen pendientes.
 - Mapa: base real lista; datos georreferenciados pendientes.
 
 Las cifras son orientativas. El estado local no implica que los cambios estén publicados en `fundacionplus.site`.

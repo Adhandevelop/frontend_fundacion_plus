@@ -110,7 +110,7 @@ Recursos recomendados por noticia:
 - PDF solo si es institucional, revisado y apto para publicación.
 - Para video: archivo o URL de proveedor autorizado, miniatura y transcripción/resumen accesible.
 
-Pendiente del backend: endpoint multipart para recibir y validar el archivo real.
+Disponible desde `54dd730`: los endpoints administrativos de medios reciben `file` o `archivo`, validan formato y tamaño, almacenan de forma segura y devuelven una URL consumible. Falta conectar y probar la interfaz Angular.
 
 ## 6. Programas o iniciativas
 

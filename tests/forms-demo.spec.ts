@@ -48,6 +48,7 @@ const detailPromise=firstValueFrom(api.citizenDetail('submission-1'));
 backend.expectOne('/api/v1/me/forms/submissions/submission-1/').flush({id:'submission-1',formulario_titulo:'Censo Meta',numero_version:1,fecha_envio:'2026-11-11T01:00:00Z',respuestas:[{id:'answer-1',codigo_pregunta:'q0',enunciado_congelado:'Pregunta q0',tipo_campo_congelado:'texto_corto',valor:'Corto'}]});assert.equal((await detailPromise).answers[0].value,'Corto');
 
 const lifecyclePromise=firstValueFrom(api.lifecycle('form-1','publish'));backend.expectOne('/api/v1/admin/forms/form-1/publish/').flush({mensaje:'Publicado',estado:'publicado',numero_version:1});assert.equal((await lifecyclePromise).estado,'publicado');
+const historicalPromise=firstValueFrom(api.adminVersion('form-1',1,'censo-meta'));backend.expectOne('/api/v1/admin/forms/form-1/versions/1/').flush({id:'version-1',numero_version:1,es_vigente:true,titulo_congelado:'Censo Meta v1',descripcion_congelada:'Versión congelada',requiere_documento:true,permite_multiples_envios:false,publicado_en:'2026-11-11T00:00:00Z',preguntas:[questionDto('historical','texto_corto')]});const historical=await historicalPromise;assert.equal(historical.title,'Censo Meta v1');assert.equal(historical.questions[0].code,'historical');
 assert.equal(api.exportUrl('form-1',1),'/api/v1/admin/forms/form-1/submissions-export/?version=1');
 backend.verify();env.destroy();
 console.log('Dynamic forms integration checks passed: admin list, seven field types, validation, idempotent public submission, activation, citizen history and lifecycle routes.');
