@@ -22,5 +22,6 @@ Los puntos P01–P21 se conservan en [correcciones-backend-historico.md](correcc
 - Adaptar gradualmente Angular a auditoría paginada, historial de comentarios, dashboard por alcance y subrecursos de iniciativas.
 - Probar P19 con contenido publicado; la colección pública estaba vacía durante la última verificación.
 - Aclarar en el contrato del boletín el nombre/transporte del token y las respuestas de confirmación y baja antes de construir esas páginas.
+- Confirmar para actividades los campos y reglas de responsable, comunidad y coordenadas, incluidos permisos, elegibilidad y precisión pública.
 
 Estos puntos son validación, contenido o trabajo del frontend. Solo se abrirá un problema nuevo si una prueba contra la versión desplegada demuestra una respuesta incorrecta del backend.

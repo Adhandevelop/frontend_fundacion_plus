@@ -26,11 +26,15 @@ La galería general y la galería por edición consultan los medios anidados del
 
 `/admin/postulaciones` consume el listado paginado real, con búsqueda, estado e iniciativa solicitada como filtros del servidor. El detalle muestra contacto, territorio, consentimiento y resultado de revisión. Las decisiones usan PATCH sobre `/api/v1/admin/proposals/{id}/` con `estado`, `respuesta` e `iniciativa_generada`; el actor y la fecha quedan bajo responsabilidad del backend.
 
+## Actividades integradas
+
+La agenda por edición, el editor y la ficha consumen `/api/v1/admin/initiative-activities/`. Angular envía la edición por UUID, título, descripción, fechas convertidas desde hora de Bogotá a UTC, lugar y estado. Responsable, comunidad y coordenadas permanecen fuera del payload hasta confirmar sus nombres, elegibilidad, precisión y reglas de exposición.
+
 ## Aún demostrativo
 
 - Indicadores y sus metadatos.
 - Cobertura/comunidades y observaciones.
-- Actividades, responsables y ubicación.
+- Responsable, comunidad y ubicación de actividades.
 - Vínculos con casos.
 - Bandeja y decisión administrativa de postulaciones.
 

@@ -1,24 +1,17 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InitiativeActivitiesDemoService } from './services/initiative-activities-demo.service';
-import { ACTIVITY_LABELS, ACTIVITY_STATES, ActivityState, activityLocal } from './data/initiative-activity.demo';
+import { finalize, forkJoin, of } from 'rxjs';
+import { apiErrorMessage } from '../../../core/api/api-error';
+import { activityInstant, activityLocal } from './data/initiative-activity.demo';
+import { ACTIVITY_LABELS, AdminInitiative, AdminInitiativesApiService, InitiativeActivityState } from './services/admin-initiatives-api.service';
 
-@Component({selector: 'plus-activity-editor', standalone: true, imports: [RouterLink, ReactiveFormsModule], templateUrl: './activity-editor.component.html'})
+@Component({selector:'plus-activity-editor',standalone:true,imports:[RouterLink,ReactiveFormsModule],templateUrl:'./activity-editor.component.html'})
 export class ActivityEditorComponent {
-  readonly store = inject(InitiativeActivitiesDemoService);
-  private readonly route = inject(ActivatedRoute); private readonly router = inject(Router);
-  private readonly params = toSignal(this.route.paramMap, {initialValue: this.route.snapshot.paramMap});
-  readonly programId = computed(() => this.params().get('programId') ?? ''); readonly editionId = computed(() => this.params().get('editionId') ?? ''); readonly id = computed(() => this.params().get('activityId'));
-  readonly edition = computed(() => this.store.initiatives.edition(this.programId(),this.editionId()));
-  readonly record = computed(() => this.id() ? this.store.find(this.programId(),this.editionId(),this.id()!) : null);
-  readonly missing = computed(() => !this.edition() || this.id() !== null && !this.record());
-  readonly users = computed(() => this.store.users.users().filter(row => row.active || row.id === this.record()?.responsibleId));
-  readonly communities = computed(() => this.store.initiatives.territories.communities().filter(row => row.active || row.id === this.record()?.communityId));
-  readonly labels = ACTIVITY_LABELS; readonly states = ACTIVITY_STATES; readonly status = signal('');
-  private readonly builder = inject(FormBuilder).nonNullable;
-  readonly form = this.builder.group({title: ['', [Validators.required, Validators.pattern(/\S/), Validators.maxLength(200)]], description: [''], start: ['', Validators.required], end: [''], place: ['', Validators.maxLength(200)], state: this.builder.control<ActivityState>('programada', Validators.required), responsibleId: [''], communityId: [''], latitude: this.builder.control<number | null>(null, [Validators.min(-90), Validators.max(90)]), longitude: this.builder.control<number | null>(null, [Validators.min(-180), Validators.max(180)])});
-  constructor() {effect(() => {const row = this.record(); this.form.reset({title: row?.title ?? '', description: row?.description ?? '', start: activityLocal(row?.start ?? null), end: activityLocal(row?.end ?? null), place: row?.place ?? '', state: row?.state ?? 'programada', responsibleId: row?.responsibleId ?? '', communityId: row?.communityId ?? '', latitude: row?.latitude ?? null, longitude: row?.longitude ?? null}); this.status.set('');}, {allowSignalWrites: true});}
-  save() {this.form.markAllAsTouched(); if (this.form.invalid || this.missing()) {this.status.set('Revisa título, fecha inicial, límites y coordenadas.'); return;} const result = this.store.save(this.programId(),this.editionId(),this.form.getRawValue(),this.id() ?? undefined); if (!result.ok) {this.status.set('Revisa fechas válidas y ordenadas, ambas coordenadas o ninguna, responsable y comunidad disponibles.'); return;} void this.router.navigate(['/admin/iniciativas',this.programId(),'ediciones',this.editionId(),'actividades',result.id], {queryParams: {resultado: 'guardado'}});}
+ private readonly api=inject(AdminInitiativesApiService);private readonly destroy=inject(DestroyRef);private readonly route=inject(ActivatedRoute);private readonly router=inject(Router);private readonly builder=inject(FormBuilder).nonNullable;
+ readonly programId=this.route.snapshot.paramMap.get('programId')??'';readonly editionId=this.route.snapshot.paramMap.get('editionId')??'';readonly id=this.route.snapshot.paramMap.get('activityId');readonly program=signal<AdminInitiative|null>(null);readonly loading=signal(true);readonly saving=signal(false);readonly missing=signal(false);readonly status=signal('');readonly labels=ACTIVITY_LABELS;readonly states=Object.keys(ACTIVITY_LABELS) as InitiativeActivityState[];
+ readonly form=this.builder.group({title:['',[Validators.required,Validators.pattern(/\S/),Validators.maxLength(200)]],description:[''],start:['',Validators.required],end:[''],place:['',Validators.maxLength(200)],state:this.builder.control<InitiativeActivityState>('programada',Validators.required)});
+ constructor(){forkJoin({program:this.api.detail(this.programId),activity:this.id?this.api.activity(this.id):of(null)}).pipe(takeUntilDestroyed(this.destroy),finalize(()=>this.loading.set(false))).subscribe({next:({program,activity})=>{this.program.set(program);if(!program.editions.some(row=>row.id===this.editionId)||activity&&activity.editionId!==this.editionId){this.missing.set(true);return;}if(activity)this.form.setValue({title:activity.title,description:activity.description,start:activityLocal(activity.start),end:activityLocal(activity.end),place:activity.place,state:activity.state});},error:error=>{this.missing.set(true);this.status.set(apiErrorMessage(error));}});}
+ save(){this.form.markAllAsTouched();if(this.form.invalid||this.missing()||this.saving())return;const raw=this.form.getRawValue(),start=activityInstant(raw.start),end=raw.end?activityInstant(raw.end):null;if(!start||raw.end&&!end||end&&end<start){this.status.set('Revisa las fechas: deben ser válidas y la final no puede ser anterior a la inicial.');return;}const value={...raw,start,end:end??''};this.saving.set(true);this.status.set('');const request=this.id?this.api.updateActivity(this.id,this.editionId,value):this.api.createActivity(this.editionId,value);request.pipe(takeUntilDestroyed(this.destroy),finalize(()=>this.saving.set(false))).subscribe({next:row=>void this.router.navigate(['/admin/iniciativas',this.programId,'ediciones',this.editionId,'actividades',row.id],{queryParams:{resultado:'guardado'}}),error:error=>this.status.set(apiErrorMessage(error))});}
 }
