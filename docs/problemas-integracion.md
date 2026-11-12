@@ -2,15 +2,15 @@
 
 Actualizado: 12 de noviembre de 2026.
 
-Este documento contiene únicamente problemas técnicos abiertos y comprobados. P22 fue cerrado por el backend en `d5219f3`; permanece activa P23.
+Este documento contiene únicamente problemas técnicos abiertos y comprobados. En este momento no hay incidencias activas demostradas; P23 fue cerrado por el backend en `ee000bc` y adaptado en Angular.
 
-Los puntos P01–P22 se conservan en [correcciones-backend-historico.md](correcciones-backend-historico.md). Las funcionalidades que esperan adaptación o pruebas del frontend se registran en [estado-integracion-frontend-backend.md](estado-integracion-frontend-backend.md) y no deben presentarse como errores del backend.
+Los puntos P01–P23 se conservan en [correcciones-backend-historico.md](correcciones-backend-historico.md). Las funcionalidades que esperan adaptación o pruebas del frontend se registran en [estado-integracion-frontend-backend.md](estado-integracion-frontend-backend.md) y no deben presentarse como errores del backend.
 
 ## Resumen activo
 
 | Prioridad | Punto | Problema | Acción requerida |
 |---|---|---|---|
-| Media | P23 | `InitiativeActivity` admite `responsable` y `ubicacion`, pero el contrato no ofrece una consulta de responsables elegibles para una actividad ni define la representación de escritura aceptada para el `Point` PostGIS. Enviar usuarios generales o una cadena geográfica supuesta sería inseguro. | Documentar un selector de responsables elegibles bajo el permiso de iniciativas y el DTO de coordenadas aceptado (`GeoJSON`, longitud/latitud u otro), con validación SRID 4326. |
+| — | — | No hay incidencias activas demostradas. | Continuar pruebas funcionales contra el servidor desplegado. |
 
 ## Pendientes que no son errores del backend
 
@@ -19,9 +19,11 @@ Los puntos P01–P22 se conservan en [correcciones-backend-historico.md](correcc
 - Aprobar los textos, cifras e imágenes antes de ejecutar la carga editorial sin `--draft`.
 - Realizar pruebas autenticadas controladas de permisos, revocación y último administrador.
 - Probar el recorrido completo de formularios con correo y activación.
-- Adaptar gradualmente Angular a auditoría paginada, historial de comentarios, dashboard por alcance y subrecursos de iniciativas.
+- El historial de moderación de comentarios continúa sin ruta GET ni DTO documentado; Angular no puede reconstruirlo desde el comentario actual. Solicitar una colección paginada por comentario con actor, decisión, motivo visible/interno y fecha.
+- Validar contra el servidor los ámbitos de responsables ya conectados y adaptar el dashboard por alcance cuando exista una representación diferenciada documentada.
 - Probar P19 con contenido publicado; la colección pública estaba vacía durante la última verificación.
-- Aclarar en el contrato del boletín el nombre/transporte del token y las respuestas de confirmación y baja antes de construir esas páginas.
-- Confirmar para actividades los campos y reglas de responsable, comunidad y coordenadas, incluidos permisos, elegibilidad y precisión pública.
+- Probar con enlaces reales de Resend las nuevas páginas de confirmación y baja del boletín, incluyendo token inválido, vencido y reutilizado.
+- Probar con cuentas institucionales reales el selector de responsables y una actividad con/sin coordenadas.
+- El listado y la baja de casos seguidos ya están conectados. Falta exponer la acción de seguir desde un detalle público real; la ficha `/casos/:radicado` todavía conserva el caso demostrativo y no debe enviar su código ficticio al backend.
 
 Estos puntos son validación, contenido o trabajo del frontend. Solo se abrirá un problema nuevo si una prueba contra la versión desplegada demuestra una respuesta incorrecta del backend.

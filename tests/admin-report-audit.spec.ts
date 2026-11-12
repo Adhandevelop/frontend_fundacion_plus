@@ -22,7 +22,7 @@ const env=createEnvironmentInjector([
   {provide:API_BASE_URL,useValue:'/api/v1'},
   {provide:DOCUMENT,useValue:{createElement:()=>({click:()=>downloads++})}},
   {provide:Router,useValue:{navigate:()=>Promise.resolve(true)}},
-  {provide:ActivatedRoute,useValue:{queryParamMap:queryParams}},
+  {provide:ActivatedRoute,useValue:{queryParamMap:queryParams,snapshot:{queryParamMap:convertToParamMap({})}}},
   AuthService,AdminReportApiService,AdminAuditApiService,
 ],undefined as never);
 const backend=env.get(HttpTestingController),auth=env.get(AuthService);
@@ -58,17 +58,15 @@ report.download();backend.expectNone(req=>req.url.endsWith('/export/'));assert.e
 const audit=runInInjectionContext(env,()=>new AdminAuditComponent());
 const event:AuditEvent={event_ref:'accesos:550e8400-e29b-41d4-a716-446655440000',source:'auditoria_accesos',action:'login',module:'auth',entity:'usuarios',entity_id:'user-test',actor:'user-test',actor_nombre:'Equipo de prueba',result:'exitoso',description:'Prueba HTTP simulada',changed_columns:null,timestamp:'2026-11-09T04:59:59Z'};
 const second:AuditEvent={...event,event_ref:'casos:550e8400-e29b-41d4-a716-446655440001',source:'auditoria_casos',action:'avance',module:'casos',entity:'casos',entity_id:'case-test',timestamp:'2026-11-09T05:00:00Z'};
-backend.expectOne('/api/v1/admin/audit-events/').flush({count:500,results:[event,second],kpis:{total_events:500}});
-assert.equal(audit.filtered().length,2);assert.equal(audit.pages(),1);assert.equal(audit.visible().length,2);
-audit.change('query','equipo');assert.equal(audit.filtered().length,2);
-audit.change('action','avance');assert.equal(audit.filtered().length,1);
-audit.reset();audit.change('from','2026-11-09');assert.equal(audit.filtered().length,1);
-audit.change('to','2026-11-08');assert.equal(audit.invalidRange(),true);assert.equal(audit.filtered().length,0);audit.reset();
+let auditRequest=backend.expectOne(req=>req.url==='/api/v1/admin/audit-events/');assert.equal(auditRequest.request.params.get('page'),'1');assert.equal(auditRequest.request.params.get('page_size'),'25');auditRequest.flush({count:500,results:[event,second],kpis:{total_events:500}});
+assert.equal(audit.filtered().length,2);assert.equal(audit.pages(),20);assert.equal(audit.visible().length,2);
+audit.change('query','equipo');assert.equal(audit.filtered().length,2);audit.change('query','sin coincidencia');assert.equal(audit.filtered().length,0);audit.change('query','');
+audit.change('action','avance');audit.change('result','exitoso');audit.change('from','2026-11-09');audit.change('to','2026-11-09');audit.apply();auditRequest=backend.expectOne(req=>req.url==='/api/v1/admin/audit-events/');assert.equal(auditRequest.request.params.get('action'),'avance');assert.equal(auditRequest.request.params.get('resultado'),'exitoso');assert.equal(auditRequest.request.params.get('fecha_desde'),'2026-11-09');auditRequest.flush({count:1,results:[second],kpis:{total_events:1}});
+audit.change('to','2026-11-08');assert.equal(audit.invalidRange(),true);audit.apply();backend.expectNone(req=>req.url==='/api/v1/admin/audit-events/');assert.ok(audit.error());audit.reset();backend.expectOne(req=>req.url==='/api/v1/admin/audit-events/').flush({count:500,results:[event,second],kpis:{total_events:500}});
 assert.equal(auditDateMatches(event,'2026-11-08','2026-11-08'),true);
 assert.equal(auditDateMatches(second,'2026-11-09','2026-11-09'),true);
 assert.equal(auditCaseId(event),null);assert.equal(auditCaseId(second),'case-test');
-queryParams.next(convertToParamMap({caso:'case-test'}));assert.equal(audit.filtered().length,1);audit.reset();
-backend.expectNone(req=>req.url==='/api/v1/admin/audit-events/'); // Local filters must not promise server filtering.
+audit.navigate(1);auditRequest=backend.expectOne(req=>req.url==='/api/v1/admin/audit-events/');assert.equal(auditRequest.request.params.get('page'),'2');auditRequest.flush({count:500,results:[],kpis:{total_events:500}});audit.page.set(1);
 
 audit.open(event);const detail=backend.expectOne('/api/v1/admin/audit-events/accesos%3A550e8400-e29b-41d4-a716-446655440000/');
 detail.flush({tipo_evento:'login',resultado:'exitoso',usuario:'user-test',direccion_ip:'PRIVATE-IP',user_agent:'PRIVATE-AGENT',datos_anteriores:{password:'PRIVATE-PASSWORD'},datos_nuevos:{token:'PRIVATE-TOKEN'}});
@@ -77,8 +75,8 @@ assert.deepEqual(auditMetadata({accion:{nested:'PRIVATE'},password:'PRIVATE',dat
 audit.open(event);const obsolete=backend.expectOne(req=>req.url.includes('/accesos%3A'));audit.open(second);assert.equal(obsolete.cancelled,true);
 const current=backend.expectOne(req=>req.url.includes('/casos%3A'));current.flush({tipo_accion:'avance',caso:'case-test'});assert.equal(audit.selected()?.event_ref,second.event_ref);
 audit.open(second);const hidden=backend.expectOne(req=>req.url.includes('/casos%3A'));audit.changeSource('seguridad');assert.equal(hidden.cancelled,true);assert.equal(audit.selected(),null);
-const source=backend.expectOne('/api/v1/admin/audit-events/?source=seguridad');assert.deepEqual(source.request.params.keys(),['source']);source.flush({count:0,results:[],kpis:{total_events:500}});assert.equal(audit.filtered().length,0);
+const source=backend.expectOne(req=>req.url==='/api/v1/admin/audit-events/');assert.equal(source.request.params.get('source'),'seguridad');assert.equal(source.request.params.get('page_size'),'25');source.flush({count:0,results:[],kpis:{total_events:500}});assert.equal(audit.filtered().length,0);
 const invalid=await firstValueFrom(env.get(AdminAuditApiService).detail('../users/')).catch(error=>error);assert.ok(invalid instanceof Error);backend.expectNone(req=>req.url.includes('../users/'));
-audit.load();backend.expectOne('/api/v1/admin/audit-events/?source=seguridad').flush({},{status:403,statusText:'Forbidden'});assert.ok(audit.error());
+audit.load();backend.expectOne(req=>req.url==='/api/v1/admin/audit-events/'&&req.params.get('source')==='seguridad').flush({},{status:403,statusText:'Forbidden'});assert.ok(audit.error());
 backend.expectNone(req=>req.method!=='GET');backend.verify();env.destroy();
-console.log('Reports/audit checks passed: whole-selection totals/CSV, applied filters, limited event scope, Bogotá dates, safe metadata and cancelled stale reads.');
+console.log('Reports/audit checks passed: whole-selection totals/CSV, server-side audit paging/filters, Bogotá dates, safe metadata and cancelled stale reads.');

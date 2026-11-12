@@ -14,6 +14,7 @@ const NAVIGATION:AdminNavigationItem[]=[
   {path:'/admin/informes',label:'Informes de casos',icon:'bar_chart',section:'reports',exact:false},
   {path:'/admin/auditoria',label:'Auditoría',icon:'history',section:'audit',exact:false},
   {path:'/admin/usuarios',label:'Usuarios y permisos',icon:'manage_accounts',section:'users',exact:false},
+  {path:'/admin/ambitos-responsables',label:'Ámbitos de responsables',icon:'rule_settings',section:'users',exact:false},
   {path:'/admin/comunidades',label:'Comunidades y territorios',icon:'location_city',section:'territories',exact:false},
   {path:'/admin/noticias',label:'Noticias',icon:'newspaper',section:'news',exact:false},
   {path:'/admin/iniciativas',label:'Iniciativas y ediciones',icon:'volunteer_activism',section:'initiatives',exact:false},

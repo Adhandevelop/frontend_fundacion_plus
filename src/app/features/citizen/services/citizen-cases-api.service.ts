@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs';
 import { API_BASE_URL } from '../../../core/api/api.config';
-import { CaseContribution, CaseEvidence, CaseHistory, CasePage, CaseState, CaseType, CitizenCase, CitizenDashboard, CreateCaseRequest } from './citizen-cases.models';
+import { CaseContribution, CaseEvidence, CaseHistory, CasePage, CaseState, CaseType, CitizenCase, CitizenDashboard, CreateCaseRequest, FollowedCase } from './citizen-cases.models';
 
 @Injectable({providedIn:'root'})
 export class CitizenCasesApiService {
@@ -26,4 +26,7 @@ export class CitizenCasesApiService {
   contribute(id:string,contenido:string,correction?:string) {
     return this.http.post<CaseContribution>(this.caseUrl(id)+'contributions/',correction?{contenido,id_solicitud_correccion:correction}:{contenido});
   }
+  followedCases(){return this.http.get<FollowedCase[]|{count:number;results:FollowedCase[]}>(`${this.base}/me/followed-cases/`).pipe(map(value=>Array.isArray(value)?value:value.results));}
+  follow(id:string){return this.http.put<FollowedCase>(`${this.base}/me/followed-cases/${encodeURIComponent(id)}/`,{});}
+  unfollow(id:string){return this.http.delete<void>(`${this.base}/me/followed-cases/${encodeURIComponent(id)}/`);}
 }

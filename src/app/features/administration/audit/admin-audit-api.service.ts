@@ -8,11 +8,12 @@ export interface AuditEvent {
   actor:string|null;actor_nombre:string|null;result:string;description:string|null;changed_columns:string[]|null;timestamp:string;
 }
 export interface AuditSelection {count:number;results:AuditEvent[];kpis:{total_events:number;eventos:number;accesos:number;casos:number;permisos:number;seguridad:number}}
+export interface AuditFilters {source:string;action:string;result:string;caseId:string;from:string;to:string;page:number;pageSize:number}
 @Injectable({providedIn:'root'})
 export class AdminAuditApiService {
   private readonly http=inject(HttpClient);
   private readonly base=inject(API_BASE_URL);
-  list(source:string){return this.http.get<AuditSelection>(`${this.base}/admin/audit-events/`,{params:source?{source}:{}});}
+  list(filters:AuditFilters){const params:Record<string,string|number>={page:filters.page,page_size:filters.pageSize};if(filters.source)params['source']=filters.source;if(filters.action)params['action']=filters.action;if(filters.result)params['resultado']=filters.result;if(filters.caseId)params['case_id']=filters.caseId;if(filters.from)params['fecha_desde']=filters.from;if(filters.to)params['fecha_hasta']=filters.to;return this.http.get<AuditSelection>(`${this.base}/admin/audit-events/`,{params});}
   detail(reference:string){
     if(!/^(eventos|accesos|casos|permisos|seguridad):[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(reference))return throwError(()=>new Error('Referencia de auditoría no válida.'));
     return this.http.get<Record<string,unknown>>(`${this.base}/admin/audit-events/${encodeURIComponent(reference)}/`);

@@ -14,6 +14,8 @@ Actualizado: 11 de noviembre de 2026.
 
 Las pruebas HTTP verifican paginación/filtro, payload de creación sin `slug` inventado y PATCH de publicación/destacado. No se realizaron escrituras en producción.
 
+El contrato vigente de `InitiativeMediaSerializer` relaciona cada archivo con una iniciativa y, opcionalmente, una edición; no contiene `actividad`. Por ello la galería anual no ofrece una asociación ficticia con jornadas específicas. Esa capacidad requiere primero una relación y DTO explícitos en backend.
+
 ## Ediciones integradas
 
 Las ediciones recibidas dentro del detalle se muestran con año, nombre, temporada, estado y conteos de indicadores, comunidades y actividades. El editor conectado guarda año, fechas, temporada, descripción y estado operativo; valida localmente el orden de las fechas y deja la unicidad anual definitiva al backend.
@@ -28,7 +30,7 @@ La galería general y la galería por edición consultan los medios anidados del
 
 ## Actividades integradas
 
-La agenda por edición, el editor y la ficha consumen `/api/v1/admin/initiative-activities/`. Angular envía la edición y comunidad opcional por UUID, título, descripción, fechas convertidas desde hora de Bogotá a UTC, lugar y estado. El listado y detalle presentan `responsable_nombre` y `comunidad_nombre`. Responsable y coordenadas permanecen fuera del payload hasta confirmar elegibilidad, formato de escritura, precisión y reglas de exposición.
+La agenda por edición, el editor y la ficha consumen `/api/v1/admin/initiative-activities/`. Angular envía edición, comunidad y responsable opcionales por UUID, título, descripción, fechas convertidas desde hora de Bogotá a UTC, lugar, estado y ubicación opcional. El responsable procede de `/initiative-activities/eligible-responsibles/`, limitado a cuentas institucionales activas. La ubicación se valida dentro de Colombia y se envía como GeoJSON `Point`, SRID 4326, en orden `[longitud, latitud]`.
 
 ## Indicadores integrados
 
@@ -40,7 +42,6 @@ Los vínculos con casos consultan `/api/v1/admin/initiative-case-links/?edicion=
 
 ## Aún demostrativo
 
-- Responsable y ubicación geográfica editable de actividades.
 
 Estos campos todavía no se presentan como datos guardados ni como publicación institucional hasta completar su conexión.
 

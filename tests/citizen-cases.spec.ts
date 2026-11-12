@@ -33,6 +33,10 @@ list.flush({count:6,next:null,previous:'previous',results:[caso]});assert.equal(
 const detail=firstValueFrom(api.detail(caso.codigo));backend.expectOne('/api/v1/me/cases/PLUS-TEST-00001/').flush(caso);assert.equal((await detail).id_caso,caso.id_caso);
 const history=firstValueFrom(api.history(caso.id_caso));backend.expectOne(`/api/v1/me/cases/${caso.id_caso}/history/`).flush({id_caso:caso.id_caso,codigo:caso.codigo,seguimientos:[],historial_estados:[]});assert.deepEqual((await history).historial_estados,[]);
 const stats=firstValueFrom(api.dashboard());backend.expectOne('/api/v1/me/dashboard/').flush({total_cases:0,pendientes_publicacion:0,en_gestion:0,resueltos_o_cerrados:0});assert.equal((await stats).total_cases,0);
+const followedRow={id:'follow-uuid',id_seguimiento_usuario:'follow-uuid',id_caso:caso.id_caso,codigo:caso.codigo,titulo:caso.titulo,activo:true,fecha_creacion:'2026-11-12T10:00:00Z',fecha_baja:null};
+const followed=firstValueFrom(api.followedCases());backend.expectOne('/api/v1/me/followed-cases/').flush([followedRow]);assert.equal((await followed)[0].codigo,caso.codigo);
+const follow=firstValueFrom(api.follow(caso.id_caso));const followRequest=backend.expectOne(`/api/v1/me/followed-cases/${caso.id_caso}/`);assert.equal(followRequest.request.method,'PUT');assert.deepEqual(followRequest.request.body,{});followRequest.flush(followedRow);await follow;
+const unfollow=firstValueFrom(api.unfollow(caso.id_caso));const unfollowRequest=backend.expectOne(`/api/v1/me/followed-cases/${caso.id_caso}/`);assert.equal(unfollowRequest.request.method,'DELETE');unfollowRequest.flush(null,{status:204,statusText:'No Content'});await unfollow;
 const contribution=firstValueFrom(api.contribute(caso.id_caso,'Información de prueba','correction-uuid'));
 const contributionRequest=backend.expectOne(`/api/v1/me/cases/${caso.id_caso}/contributions/`);assert.deepEqual(contributionRequest.request.body,{contenido:'Información de prueba',id_solicitud_correccion:'correction-uuid'});contributionRequest.flush({id_aporte:'contribution-uuid'});await contribution;
 const download=firstValueFrom(api.download(caso.id_caso,'evidence-uuid'));
@@ -81,4 +85,4 @@ another.submit();backend.expectOne('/api/v1/me/cases/').flush({},{status:500,sta
 const table=runInInjectionContext(env,()=>new CitizenCaseTableComponent());backend.expectOne(request=>request.url==='/api/v1/me/cases/').flush({count:0,next:null,previous:null,results:[]});backend.expectOne('/api/v1/catalogs/case-statuses/').flush([]);assert.equal(table.result().count,0);assert.deepEqual(table.result().results,[]);assert.equal(table.pages(),1);
 table.filter('status','en_proceso');const filtered=backend.expectOne(request=>request.url==='/api/v1/me/cases/');assert.equal(filtered.request.params.get('estado'),'en_proceso');filtered.flush({count:1,next:null,previous:null,results:[caso]});assert.equal(table.result().results.length,1);
 backend.verify();env.destroy();
-console.log('Citizen cases checks passed: paging, real form, consent, ownership isolation, partial uploads, protected downloads, contributions and empty states.');
+console.log('Citizen cases checks passed: paging, followed cases, real form, consent, ownership isolation, partial uploads, protected downloads, contributions and empty states.');

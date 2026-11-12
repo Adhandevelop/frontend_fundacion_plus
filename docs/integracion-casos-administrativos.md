@@ -11,7 +11,7 @@ Fecha: 9 de noviembre de 2026. Continúa la integración REST manteniendo los po
 - Revisión de evidencia: descripción, audiencia y estado de revisión; descarga binaria autenticada desde la ruta administrativa.
 - Cada escritura necesita validación y revisión de un resumen antes de Confirmar y guardar. Los botones de gestión dependen de `allowed_actions` del expediente; el backend sigue autorizando la operación.
 
-No están conectados en esta entrega el chat administrativo, la subida de evidencias del equipo, la radicación institucional, alertas tempranas y contenidos administrativos. No se muestran como si sus servicios de demostración editaran los casos reales. Informes y auditoría reciente se conectaron posteriormente: ver [alcance y límites](integracion-informes-auditoria.md). También se integraron el [directorio de comunidades](integracion-territorios.md), la [moderación de comentarios](integracion-moderacion-comentarios.md) y [usuarios y roles](integracion-usuarios.md).
+No están conectados en esta entrega el chat administrativo, la subida de evidencias del equipo, la radicación institucional, alertas tempranas y contenidos administrativos. No se muestran como si sus servicios de demostración editaran los casos reales. Informes y auditoría paginada se conectaron posteriormente: ver [alcance y límites](integracion-informes-auditoria.md). También se integraron el [directorio de comunidades](integracion-territorios.md), la [moderación de comentarios](integracion-moderacion-comentarios.md) y [usuarios y roles](integracion-usuarios.md).
 
 ## Arquitectura y contratos
 
@@ -59,5 +59,7 @@ Consultas de producción con la cuenta administrativa de prueba autorizada:
 | `/me/cases/?page=1&page_size=1` con rol administrativo | 200; confirma P01, respuesta vacía |
 
 Se cerró la sesión al terminar. No se modificaron casos, asignaciones, publicaciones, seguimientos, resoluciones o evidencias reales; tampoco se crearon usuarios ni se enviaron correos. No hubo un expediente real con el que verificar acciones: las escrituras se probaron con HttpTestingController. Sigue pendiente una prueba operativa autorizada tras cargar territorios y un caso de prueba, y la revisión visual en navegador.
+
+El dashboard administrativo incorpora ahora “Añadir caso” junto a “Gestionar casos”. La ruta `/admin/casos/nuevo` permanece dentro del layout administrativo, carga tipos, estados y la jerarquía territorial, y crea mediante `POST /api/v1/admin/cases/`; al responder redirige al expediente generado. La prueba HTTP confirma el payload, pero aún no se ha ejecutado una creación real en producción.
 
 Los cambios son locales y requieren subida y despliegue del frontend. Los módulos restantes pueden integrarse mientras el backend atiende los problemas documentados.

@@ -28,7 +28,7 @@ La confirmación captura el identificador, estado y payload. Se bloquean dobles 
 
 ## Límites y pruebas
 
-El detalle no devuelve motivos, revisor, fecha de decisión ni historial. Se retiró el historial local de ejemplo. Se ofrece un enlace a auditoría reciente del caso con la advertencia de que está limitada; no acredita un historial completo de ese comentario. Ver P07, P12 y P14 en [problemas-integracion.md](problemas-integracion.md).
+El detalle no devuelve motivos, revisor, fecha de decisión ni historial. Se retiró el historial local de ejemplo. Se ofrece un enlace a la auditoría paginada del caso, pero esa consulta no sustituye un historial específico de decisiones del comentario. P12 ya está adaptado; la conexión del historial de P14 continúa pendiente.
 
 `npm run test:api`: seis suites correctas, incluyendo filtros/paginación de comentarios, UUID inválido, páginas desaparecidas, revisión antes de escribir, motivo interno frente a compartido, bloqueo de doble envío, errores 400/500, aislamiento al navegar y restricciones por rol. Datos de prueba exclusivamente en memoria.
 

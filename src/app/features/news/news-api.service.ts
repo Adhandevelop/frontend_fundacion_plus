@@ -9,6 +9,7 @@ interface NewsMediaDto {tipo_archivo:string;ruta_archivo:string;texto_alternativ
 interface NewsDetailDto extends NewsListDto {contenido:string;multimedia:NewsMediaDto[]}
 interface NewsCategoryDto {id:string;nombre:string;slug:string;activa:boolean}
 interface Page<T>{count:number;next:string|null;previous:string|null;results:T[]}
+export interface NewsletterActionResponse {estado?:string;message?:string;mensaje?:string}
 
 const date=(value:string|null)=>value?new Intl.DateTimeFormat('es-CO',{day:'2-digit',month:'long',year:'numeric',timeZone:'America/Bogota'}).format(new Date(value)):'';
 const article=(value:NewsListDto,index=0):NewsDemo=>({id:value.id,slug:value.slug,title:value.titulo,summary:value.extracto,image:value.portada??'',category:value.categoria_nombre,date:date(value.fecha_publicacion??value.fecha_creacion),publishedAt:value.fecha_publicacion??value.fecha_creacion,order:index,featured:value.destacada,demo:false});
@@ -20,4 +21,6 @@ export class NewsApiService {
  categories(){return this.http.get<NewsCategoryDto[]>(`${this.base}/public/news/categories/`).pipe(map(value=>value.filter(item=>item.activa).map(item=>item.nombre)));}
  detail(slug:string){return this.http.get<NewsDetailDto>(`${this.base}/public/news/${encodeURIComponent(slug)}/`).pipe(map(value=>{const mapped=article(value);const cover=value.multimedia.find(item=>item.es_portada)||value.multimedia.find(item=>item.tipo_archivo==='imagen');return {...mapped,content:value.contenido,image:cover?.ruta_archivo||mapped.image,imageAlt:cover?.texto_alternativo||value.titulo};}));}
  subscribe(name:string,email:string){return this.http.post<{mensaje?:string;message?:string}>(`${this.base}/public/newsletter/subscribe/`,{nombre:name.trim(),correo:email.trim(),acepta_tratamiento_datos:true});}
+ confirmSubscription(token:string){return this.http.post<NewsletterActionResponse>(`${this.base}/public/newsletter-subscriptions/confirm/`,{token});}
+ unsubscribe(token:string,email:string){return this.http.post<NewsletterActionResponse>(`${this.base}/public/newsletter-subscriptions/unsubscribe/`,{token,correo:email.trim()});}
 }

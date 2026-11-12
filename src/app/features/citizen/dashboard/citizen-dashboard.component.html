@@ -16,7 +16,7 @@
         <article class="cit-panel border rounded-xl p-5"><p class="text-body-sm">Resueltos o cerrados</p><strong class="text-headline-md">{{data.resueltos_o_cerrados}}</strong></article>
         <article class="cit-panel border rounded-xl p-5"><p class="text-body-sm">Correcciones abiertas</p><strong class="text-headline-md">{{data.open_correction_requests}}</strong></article>
       </div>
-      <div class="grid sm:grid-cols-3 gap-4 mt-4"><a routerLink="/ciudadano/mensajes" class="cit-panel border rounded-xl p-4"><strong>{{data.unread_messages}}</strong> mensajes sin leer</a><a routerLink="/ciudadano/notificaciones" class="cit-panel border rounded-xl p-4"><strong>{{data.unread_notifications}}</strong> notificaciones sin leer</a><article class="cit-panel border rounded-xl p-4"><strong>{{data.followed_cases_count}}</strong> casos seguidos</article></div>
+      <div class="grid sm:grid-cols-3 gap-4 mt-4"><a routerLink="/ciudadano/mensajes" class="cit-panel border rounded-xl p-4"><strong>{{data.unread_messages}}</strong> mensajes sin leer</a><a routerLink="/ciudadano/notificaciones" class="cit-panel border rounded-xl p-4"><strong>{{data.unread_notifications}}</strong> notificaciones sin leer</a><a routerLink="/ciudadano/casos-seguidos" class="cit-panel border rounded-xl p-4"><strong>{{data.followed_cases_count}}</strong> casos seguidos</a></div>
     </section>
   }
   <section class="cit-panel border rounded-xl overflow-hidden">

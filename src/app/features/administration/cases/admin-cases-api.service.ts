@@ -10,6 +10,7 @@ export class AdminCasesApiService {
   private readonly base=inject(API_BASE_URL);
   private url(id:string){return `${this.base}/admin/cases/${encodeURIComponent(id)}/`;}
   dashboard(){return this.http.get<AdminDashboard>(`${this.base}/admin/dashboard/`);}
+  create(payload:{titulo:string;descripcion:string;tipo_caso:string;comunidad:string;estado:string;prioridad:string;estado_publicacion:string;direccion_referencia:string|null;familias_afectadas:number;meses_afectacion:number}){return this.http.post<AdminCase>(`${this.base}/admin/cases/`,payload);}
   list(params:AdminCaseFilters){return this.http.get<AdminCasePage|AdminCase[]>(`${this.base}/admin/cases/`,{params:{...params}}).pipe(map(value=>Array.isArray(value)?{count:value.length,next:null,previous:null,results:value}:value));}
   detail(id:string){return this.http.get<AdminCase>(this.url(id));}
   action(id:string,action:AdminAction){return action.kind==='evidence'?this.http.patch<unknown>(this.url(id)+`evidence/${encodeURIComponent(action.evidenceId)}/`,action.payload):this.http.post<unknown>(this.url(id)+action.kind+'/',action.payload);}

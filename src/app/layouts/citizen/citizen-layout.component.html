@@ -13,6 +13,7 @@
       <nav id="citizen-nav" aria-label="Navegación ciudadana" class="grid gap-2 py-4" (click)="menu.set(false)">
         <a routerLink="/ciudadano" ariaCurrentWhenActive="page" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" [routerLinkActiveOptions]="{exact:true}" class="px-3 py-2 rounded">Inicio</a>
         <a routerLink="/ciudadano/casos" ariaCurrentWhenActive="page" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" [routerLinkActiveOptions]="{exact:true}" class="px-3 py-2 rounded">Mis casos</a>
+        <a routerLink="/ciudadano/casos-seguidos" ariaCurrentWhenActive="page" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" class="px-3 py-2 rounded">Casos que sigo</a>
         <a routerLink="/ciudadano/casos/nuevo" ariaCurrentWhenActive="page" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" class="px-3 py-2 rounded">Radicar un caso</a>
         <a routerLink="/ciudadano/mapa" ariaCurrentWhenActive="page" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" class="px-3 py-2 rounded">Mapa de casos</a>
         <a routerLink="/ciudadano/mensajes" ariaCurrentWhenActive="page" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" class="px-3 py-2 rounded flex justify-between gap-2"><span>Mensajes</span>@if(counters.messages();as count){<span class="bg-yellow-400 text-black rounded-full px-2 text-label-sm">{{count}}</span>}</a>

@@ -8,17 +8,17 @@
 
 > **Iniciativas conectadas parcialmente:** catálogo, categorías, panel de detalle/galería y postulación comunitaria consumen REST. En administración, listado, ficha, creación, edición y publicación del programa ya son reales; las ediciones se leen desde el detalle. El backend ya redujo el DTO público; los editores de subrecursos continúan en adaptación.
 
-> **Noticias conectadas:** listado, categorías, detalle y medios públicos consumen `/public/news`; el boletín envía suscripciones reales. La administración ya usa CRUD y estados del backend. Confirmación/baja por token, carga binaria segura de medios y contenido inicial aprobado permanecen pendientes.
+> **Noticias conectadas:** listado, categorías, detalle y medios públicos consumen `/public/news`; el boletín envía suscripciones y ya resuelve confirmación/baja por token en `/boletin/confirmar` y `/boletin/baja`. La administración usa CRUD y carga binaria segura. Permanecen pendientes la prueba real y el contenido inicial aprobado.
 
 > **Portada institucional conectada:** el inicio consulta fotografía, institución y métricas verificadas desde `/public/home/`. Solo una cuenta con `can_manage_homepage` puede abrir `/admin/portada` y reemplazar la imagen. La escritura real con un archivo controlado sigue pendiente de prueba en el servidor.
 
 > **Formularios dinámicos conectados:** listado/editor, ciclo de vida, vista previa, envío público idempotente, activación, respuestas administrativas y seguimiento ciudadano consumen `apps.dynamic_forms`. Falta la prueba real completa y el detalle de versiones históricas. Ver [formularios-demostracion.md](formularios-demostracion.md).
 
-> **Informes y auditoría reciente conectados:** agregados de toda la selección, tabla paginada y CSV del backend; consulta de eventos recientes con filtros locales y detalle restringido. La auditoría no representa un historial exhaustivo. Ver [integracion-informes-auditoria.md](integracion-informes-auditoria.md).
+> **Informes y auditoría conectados:** agregados de toda la selección, tabla paginada y CSV del backend; auditoría con paginación y filtros server-side, búsqueda local por página y detalle restringido. Ver [integracion-informes-auditoria.md](integracion-informes-auditoria.md).
 
 > **Comunidades conectadas:** directorio/ficha, creación, edición y activación/desactivación consultan REST. No incluyen CRUD departamental/municipal ni edición cartográfica. Los catálogos del servidor ya devuelven datos; falta la prueba funcional controlada. Ver [integracion-territorios.md](integracion-territorios.md) y el estado actualizado P02 en [problemas-integracion.md](problemas-integracion.md).
 
-> **Usuarios y roles conectados:** directorio paginado, ficha, catálogo de roles, creación y edición de contacto; acciones separadas de rol único y estado con revisión. El frontend limita las escrituras a administrador sobre otras cuentas; ámbitos y correcciones del servidor P15/P16 pendientes. Ver [integracion-usuarios.md](integracion-usuarios.md).
+> **Usuarios, roles y ámbitos conectados:** directorio paginado, ficha, catálogo de roles, creación y edición de contacto; acciones separadas de rol único y estado con revisión. `/admin/ambitos-responsables` lista, crea y activa/desactiva ámbitos por comunidad y tipo de caso. Falta prueba real autorizada. Ver [integracion-usuarios.md](integracion-usuarios.md).
 
 > **Moderación de comentarios conectada:** cola paginada y filtros reales, ficha, aprobación/rechazo/ocultamiento/retorno a pendiente con confirmación y motivo interno por defecto. El formulario público sigue pendiente; no hay historial específico de decisiones en el contrato actual. Ver [integracion-moderacion-comentarios.md](integracion-moderacion-comentarios.md).
 
@@ -42,8 +42,8 @@ Revisión consolidada el 11 de noviembre de 2026. Basada en `app.routes.ts`, com
 | Usuarios | Listado, detalle, creación/edición, estado y referencia de roles. | Demo anterior al DDL: pendiente adaptar nombres/apellidos, un rol y tres estados tras acordar el contrato. |
 | Territorio | Directorio de comunidades, detalle, creación/edición y estado, con selección departamento/municipio. | Añadido en esta revisión. Sin geometrías, DANE oficiales, edición de municipios/departamentos ni ámbitos de responsables. |
 | Noticias administrativas | Listado, creación/edición de borradores, vista previa, portada local, revisión, rechazo, publicación y destacado simulados. | Añadido tras el catálogo territorial. Independiente del portal, sin programación, galería múltiple ni publicación real. Ver `noticias-administrativas.md`. |
-| Iniciativas administrativas | Programas, ediciones, indicadores, cobertura/comunidades, vínculos y candidatos de casos, actividades con comunidad, medios y postulaciones conectados. | Faltan responsable/coordenadas de actividades y prueba real del catálogo paginado. Ver `iniciativas-administrativas.md`. |
-| Jornadas y medios | Agenda, creación/edición y ficha de actividad REST; galería general/anual y carga multipart. | Campos básicos integrados. Falta confirmar responsable, comunidad, coordenadas y vínculo opcional de archivo a actividad. |
+| Iniciativas administrativas | Programas, ediciones, indicadores, cobertura/comunidades, vínculos y candidatos de casos, actividades completas, medios y postulaciones conectados. | Falta prueba real de selectores paginados y GeoPoint. Ver `iniciativas-administrativas.md`. |
+| Jornadas y medios | Agenda, creación/edición y ficha de actividad REST con responsable, comunidad y coordenadas; galería general/anual y carga multipart. | Falta asociación opcional de archivo a una actividad específica. |
 | Postulaciones | Bandeja, filtros, ficha y revisión con respuesta e iniciativa de resultado. | Integrado con `/api/v1/admin/proposals/`; falta prueba autenticada con solicitudes controladas. |
 | Moderación de comentarios | Cola con filtros/paginación, detalle, aprobación/rechazo/ocultamiento, retorno a revisión e historial de decisiones; proyección pública restringida de ejemplo. | Añadido después de postulaciones. Sin publicación, avisos ni auditoría reales; separado de mensajes/aportes privados. Ver `moderacion-comentarios-demostracion.md`. |
 
@@ -51,11 +51,11 @@ Revisión consolidada el 11 de noviembre de 2026. Basada en `app.routes.ts`, com
 
 | Prioridad | Vista o recorrido pendiente | Puede adelantarse con datos estáticos | Dependencia para terminarlo |
 |---|---|---|---|
-| 2 | Ámbitos de responsables: listado/formulario por comunidad y tipo de caso. | Sí. | Semántica de combinación de ámbitos y elegibilidad; no son la asignación efectiva del caso. |
+| 2 | Ámbitos de responsables: listado/formulario por comunidad y tipo de caso. | Integrado. | Falta prueba autenticada; no son la asignación efectiva del caso. |
 | 3 | Noticia pública completa con URL propia y estado no disponible. | Estructura sí; solo mostrar contenido de ejemplo existente o claramente ficticio, sin inventar comunicados oficiales. | Contrato/noticia completa autorizada. |
 | 3 | Convertir el detalle desplegable de iniciativa en URL propia si se requiere compartir/enlazar directamente. | Ediciones, indicadores, cobertura, actividades, casos aprobados y galería ya están conectados. | Verificar la proyección desplegada con contenido real y decidir si el detalle expandido es suficiente. |
-| 3 | Casos seguidos: listado personal y estado de suscripción por caso. | Sí, sin activar avisos reales. | AMP-03 y política de novedades públicas. |
-| 3 | Resultados de alta/confirmación/baja del boletín y verificación de correo. | Estados visuales sí. | Definir nombre/transporte del token, expiración y DTO de resultado. |
+| 3 | Casos seguidos: listado personal y estado de suscripción por caso. | Listado y baja integrados en `/ciudadano/casos-seguidos`. | Falta conectar el botón seguir al detalle público real y probar avisos. |
+| 3 | Resultados de alta/confirmación/baja del boletín y verificación de correo. | Integrado con token en query string. | Probar enlaces reales, expiración y reutilización en el entorno desplegado. |
 | 4 | Radicado institucional desde dashboard. | Estructura reutilizable de radicación, una vez fijados remitente/representación. | Reglas de actuación institucional, propietario y aceptación; el botón sigue deshabilitado. |
 | 4 | Emisión y consulta de alertas tempranas. | Estructura visual tras definir destinatarios/canales/flujo. | Alcance funcional y AMP-16; no confundir con notificación de caso. |
 | 4 | Configuración institucional y documentos legales. | Formulario/previsualización sí, sin dar por válidos textos legales ficticios. | Claves editables y textos/versiones aprobados. |
@@ -79,4 +79,4 @@ Se realizó una primera [revisión de navegación y temas en Chrome local](revis
 
 Revisión visual en navegador de escritorio/móvil y claro/oscuro, navegación por teclado, foco, errores de formulario y estados vacíos. La compilación y las comprobaciones de lógica realizadas no sustituyen esta revisión. Después de conectar API: cargas, errores HTTP, conflictos, permisos por objeto, archivos y recuperación tras recarga.
 
-El siguiente bloque recomendado es **responsable y georreferenciación de actividades**, seguido de detalles públicos completos de noticias e iniciativas. Indicadores, observaciones de cobertura, vínculos básicos con casos y comunidad de actividad ya usan REST; quedan elegibilidad del responsable, formato de coordenadas, paginación de candidatos y asociación opcional de medios a jornadas.
+El siguiente bloque recomendado es **historial de moderación de comentarios**, seguido de pruebas reales de noticias e iniciativas. Indicadores, cobertura, vínculos con casos y actividades completas ya usan REST; queda la asociación opcional de medios a jornadas.

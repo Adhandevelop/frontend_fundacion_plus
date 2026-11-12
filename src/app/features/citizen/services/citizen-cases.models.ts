@@ -1,4 +1,5 @@
 export interface CaseType {id_tipo_caso: string; nombre: string; categoria: string; naturaleza: string; activo: boolean}
+export interface FollowedCase {id:string;id_seguimiento_usuario:string;id_caso:string;codigo:string;titulo:string;activo:boolean;fecha_creacion:string;fecha_baja:string|null}
 export interface CaseState {id_estado: string; nombre: string; descripcion: string | null}
 export interface CaseEvidence {
   id_evidencia: string; nombre_original: string | null; descripcion: string | null;

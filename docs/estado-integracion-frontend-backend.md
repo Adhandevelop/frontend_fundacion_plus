@@ -33,7 +33,7 @@ Este es el registro consolidado del frontend Angular. “Integrado” significa 
 - Comunidades: listado, creación, edición y activación/desactivación.
 - Comentarios: cola, detalle y decisión de moderación.
 - Informes de casos y exportación CSV.
-- Auditoría reciente y detalle seguro de metadatos.
+- Auditoría paginada con filtros server-side y detalle seguro de metadatos.
 - Gestión exclusiva de la fotografía principal para cuentas con `can_manage_homepage`.
 
 ### Portada institucional
@@ -52,6 +52,7 @@ Este es el registro consolidado del frontend Angular. “Integrado” significa 
 - Búsqueda, categoría, orden y paginación visual operan sobre la colección recibida.
 - Si no existen noticias publicadas o falla la consulta, se conservan los mockups como respaldo marcado explícitamente; no se presentan como información oficial.
 - La suscripción al boletín consume `/api/v1/public/newsletter/subscribe/`, envía consentimiento y comunica que debe confirmarse por correo.
+- `/boletin/confirmar?token=...` confirma mediante `POST /api/v1/public/newsletter-subscriptions/confirm/`; `/boletin/baja?token=...&correo=...` solicita el correo y ejecuta la baja mediante el contrato documentado.
 - No se implementaron todavía las rutas de confirmación/baja. Los endpoints existen, pero la documentación disponible no fija el nombre/transporte del token ni el DTO de resultado; se evita inventar ese contrato.
 - La administración editorial consulta listado, categorías y detalle reales.
 - Creación y edición escriben título, categoría, extracto, contenido y destacado.
@@ -72,7 +73,7 @@ Este es el registro consolidado del frontend Angular. “Integrado” significa 
 - El `slug` administrativo es de solo lectura en Angular porque lo genera y garantiza el backend.
 - Las ediciones anidadas se muestran desde la ficha real y su creación/edición ya consume `/admin/initiative-editions/`. Los medios generales y por edición también son REST.
 - La bandeja de postulaciones consulta `/admin/proposals/`, filtra en servidor, abre el detalle y guarda estado, respuesta e iniciativa generada mediante PATCH. No envía actor ni fecha de revisión desde el cliente.
-- Las actividades administrativas ya consultan, crean y actualizan `/admin/initiative-activities/` con relación explícita a la edición, comunidad opcional activa, fechas UTC, lugar y estado. El listado y el detalle muestran responsable y comunidad devueltos por la API. La asignación de responsable y las coordenadas esperan un contrato de elegibilidad y escritura.
+- Las actividades administrativas ya consultan, crean y actualizan `/admin/initiative-activities/` con edición, comunidad activa y responsable institucional opcionales, fechas UTC, lugar, estado y GeoJSON Point SRID 4326. Angular valida coordenadas dentro de Colombia y conserva el orden `[longitud, latitud]`.
 - Los indicadores por edición ya consultan y escriben `/admin/initiative-metrics/`: valor decimal como texto, unidad, descripción, icono, tipo de medición, orden y fecha de corte.
 - La cobertura por edición ya consulta, crea, edita y elimina vínculos de `/admin/initiative-communities/`; el selector usa comunidades administrativas activas y conserva las observaciones territoriales.
 - Los casos vinculados ya se consultan por `?edicion=` y se administran mediante `/admin/initiative-case-links/`, con los tipos `hallazgo`, `seguimiento`, `resultado` y `otro`. El selector usa `/candidates/`, recibe únicamente casos aprobados no vinculados, permite búsqueda y paginación y ya no depende del permiso general de administración de casos.
@@ -104,7 +105,6 @@ No se envían contraseñas por correo. El backend genera un enlace de un solo us
 ### Contenido editorial pendiente
 
 - Bloques secundarios de la página principal y nosotros.
-- Responsable y ubicación geográfica editable de actividades.
 - Inventario inicial reproducible de contenido e imágenes.
 
 Estas pantallas todavía usan contenido de diseño. Falta aprobación institucional, carga inicial en la base de datos y conexión REST. No conviene conectar una colección vacía porque degradaría el sitio publicado.
@@ -137,15 +137,17 @@ Falta que el backend entregue coordenadas o GeoJSON verificable, visibilidad pú
 
 ### Backend general
 
-La limitación P23 sobre responsable/geometría de actividades está registrada en [problemas-integracion.md](problemas-integracion.md). P01–P22 se conservan como trazabilidad en [correcciones-backend-historico.md](correcciones-backend-historico.md). Angular ya adaptó versiones históricas, acciones editoriales, carga multipart y subrecursos principales de iniciativas; siguen pendientes pruebas autenticadas y migrar las vistas restantes.
+No hay problemas técnicos activos demostrados en [problemas-integracion.md](problemas-integracion.md). P01–P23 se conservan como trazabilidad en [correcciones-backend-historico.md](correcciones-backend-historico.md). Angular ya adaptó versiones históricas, acciones editoriales, carga multipart y subrecursos principales de iniciativas; siguen pendientes pruebas autenticadas y migrar las vistas restantes.
+
+La administración también puede registrar expedientes desde el botón amarillo “Añadir caso” del dashboard. El formulario `/admin/casos/nuevo` usa catálogos oficiales y `POST /api/v1/admin/cases/`, sin entrar al módulo ciudadano.
 
 ## 5. Próximo trabajo recomendado
 
 1. Probar formularios de extremo a extremo en un entorno controlado y corregir diferencias observadas.
 2. Completar los controles avanzados de validación del constructor.
 3. Aprobar y cargar el contenido editorial inicial.
-4. Probar contra el servidor la carga multipart ya conectada y construir las páginas de confirmación/baja del boletín.
-5. Completar responsable y coordenadas de actividades y probar la ficha pública y los candidatos paginados contra el servidor desplegado.
+4. Probar contra el servidor la carga multipart y los enlaces de confirmación/baja del boletín ya conectados.
+5. Probar responsables, coordenadas de actividades, ficha pública y candidatos paginados contra el servidor desplegado.
 6. Integrar casos georreferenciados en el mapa.
 7. Probar el reemplazo real de portada con una cuenta superadministradora controlada.
 8. Repetir revisión responsive, accesibilidad, temas, Docker y Nginx con datos reales.
@@ -167,8 +169,17 @@ La limitación P23 sobre responsable/geometría de actividades está registrada 
 - Integración de módulos respaldados por endpoints: aproximadamente 85 %.
 - Formularios dinámicos: conexión REST y versión histórica implementadas; falta validación real completa.
 - Portada institucional: lectura y administración conectadas; prueba real de archivo pendiente.
-- Noticias: lecturas públicas, administración REST y medios binarios conectados; carga editorial inicial y acciones por token pendientes.
-- Iniciativas: catálogo, detalle, postulación pública, CRUD textual, ediciones, medios, indicadores, cobertura, vínculos con casos, actividades con comunidad y revisión administrativa de postulaciones conectados; responsable/coordenadas de actividades y carga editorial inicial siguen pendientes.
+- Noticias: lecturas públicas, ciclo del boletín, administración REST y medios binarios conectados; carga editorial inicial y pruebas reales pendientes.
+- Iniciativas: catálogo, detalle, postulación pública, CRUD textual, ediciones, medios, indicadores, cobertura, vínculos con casos, actividades con comunidad/responsable/GeoPoint y revisión administrativa de postulaciones conectados; carga editorial inicial y pruebas reales siguen pendientes.
 - Mapa: base real corregida localmente; falta desplegar/verificar el arreglo y siguen pendientes los datos georreferenciados.
 
 Las cifras son orientativas. El estado local no implica que los cambios estén publicados en `fundacionplus.site`.
+
+### Ámbitos de responsables
+
+- Se añadió `/admin/ambitos-responsables` con paginación REST sobre `GET /api/v1/admin/scope-assignments/`.
+- Permite crear ámbitos combinando responsable activo, comunidad opcional y tipo de caso opcional, y activar o desactivar una asignación mediante `PATCH`.
+- Los selectores consultan usuarios activos, comunidades activas y el catálogo oficial de tipos de caso. La pantalla también está enlazada desde Usuarios y desde la navegación administrativa.
+- Queda pendiente la prueba autenticada contra producción y confirmar si el backend desea impedir explícitamente el ámbito completamente global; el frontend exige actualmente al menos comunidad o tipo para evitar asignaciones accidentales demasiado amplias.
+
+El portal ciudadano incluye `/ciudadano/casos-seguidos`, consulta `GET /api/v1/me/followed-cases/` y permite dejar de seguir con `DELETE`. El servicio también implementa `PUT` para activar seguimiento; el botón público se incorporará cuando el detalle público deje de ser la demostración estática y entregue un UUID real.
