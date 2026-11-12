@@ -21,6 +21,7 @@ export class AdminCaseTableComponent implements OnInit {
   private territoryRevision=0;
   readonly compact=input(false);
   readonly assignedOnly=input(false);
+  readonly createdOnly=input(false);
   readonly query=signal('');readonly state=signal('');readonly priority=signal('');readonly publication=signal('');readonly category=signal('');readonly department=signal('');readonly municipality=signal('');
   readonly states=signal<CaseState[]>([]);readonly types=signal<CaseType[]>([]);readonly departments=signal<Department[]>([]);readonly municipalities=signal<Municipality[]>([]);
   readonly page=signal(1);readonly pageSize=computed(()=>this.compact()?5:10);
@@ -32,7 +33,7 @@ export class AdminCaseTableComponent implements OnInit {
     this.searches.pipe(debounceTime(250),distinctUntilChanged(),takeUntilDestroyed(this.destroy)).subscribe(()=>{this.page.set(1);this.reload();});
     this.refresh.pipe(switchMap(()=>{
       this.loading.set(true);this.error.set('');
-      return this.api.list({page:this.page(),page_size:this.pageSize(),search:this.query().trim(),estado:this.state(),prioridad:this.priority(),estado_publicacion:this.publication(),id_tipo_caso:this.category(),id_departamento:this.department(),id_municipio:this.municipality(),...(this.assignedOnly()?{scope:'assigned' as const,assigned_to_me:true}:{})}).pipe(catchError(error=>{this.error.set(apiErrorMessage(error));return of(null);}),finalize(()=>this.loading.set(false)));
+      return this.api.list({page:this.page(),page_size:this.pageSize(),search:this.query().trim(),estado:this.state(),prioridad:this.priority(),estado_publicacion:this.publication(),id_tipo_caso:this.category(),id_departamento:this.department(),id_municipio:this.municipality(),...(this.assignedOnly()?{scope:'assigned' as const,assigned_to_me:true}:{}),...(this.createdOnly()?{created_by_me:true}:{})}).pipe(catchError(error=>{this.error.set(apiErrorMessage(error));return of(null);}),finalize(()=>this.loading.set(false)));
     }),takeUntilDestroyed(this.destroy)).subscribe(value=>{if(value)this.result.set(value);});
   }
   ngOnInit(){this.reload();this.loadCatalogs();}

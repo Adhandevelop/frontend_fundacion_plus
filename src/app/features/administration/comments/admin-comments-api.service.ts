@@ -20,6 +20,8 @@ export interface AdminComment {
 export interface CommentPage {count: number; results: AdminComment[]}
 export interface CommentFilters {estado_moderacion: string; caso: string}
 export interface CommentDecision {estado_moderacion: CommentState; motivo: string; notificar_motivo: boolean}
+export interface CommentHistoryItem {id:string;actor_id:string;actor_nombre:string;fecha:string;decision:CommentState;estado_anterior:CommentState;estado_nuevo:CommentState;motivo:string;descripcion:string}
+export interface CommentHistory {comment_id:string;count:number;results:CommentHistoryItem[];history?:CommentHistoryItem[]}
 export const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 @Injectable({providedIn: 'root'})
@@ -34,4 +36,5 @@ export class AdminCommentsApiService {
   moderate(id: string, decision: CommentDecision) {
     return this.http.post<AdminComment>(`${this.base}/admin/comments/${encodeURIComponent(id)}/moderation/`, decision);
   }
+  history(id:string){return this.http.get<CommentHistory>(`${this.base}/admin/comments/${encodeURIComponent(id)}/history/`);}
 }

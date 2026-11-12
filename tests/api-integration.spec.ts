@@ -115,7 +115,7 @@ auth.updateUser({...user,permissions:citizenPermissions});assert.equal(auth.defa
 await verifyPortal(citizenRoute,true);await verifyPortal(adminRoute,false);
 for(const role of ['representante','moderador']) {
   auth.updateUser({...user,primary_role:role,permissions:adminPermissions});
-  const sections=role==='representante'?['','perfil','casos','casos-asignados','mapa','informes']:['','perfil','casos','casos-asignados','mapa','informes','noticias','iniciativas','postulaciones','comentarios'];
+  const sections=role==='representante'?['','perfil','casos','casos-asignados','mis-casos','mapa','informes']:['','perfil','casos','casos-asignados','mis-casos','mapa','informes','noticias','iniciativas','postulaciones','comentarios'];
   await verifyPortal(adminRoute,path=>sections.includes(path.split('/')[0]));await verifyPortal(citizenRoute,false);
 }
 auth.updateUser({...user,permissions:adminPermissions}); // Conflicting citizen/admin data fails closed.

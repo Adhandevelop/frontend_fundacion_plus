@@ -1,9 +1,9 @@
-<section class="relative overflow-hidden rounded-xl border mp-border-outline-variant-60 bg-slate-100 shadow-md" aria-labelledby="map-region-title">
+<section class="relative overflow-hidden rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-100 dark:bg-surface-container shadow-md" aria-labelledby="map-region-title">
   <h2 id="map-region-title" class="sr-only">Mapa interactivo de Villavicencio y el Meta</h2>
-  <div #map class="plus-leaflet-map" role="application" aria-label="Mapa interactivo de Villavicencio y el departamento del Meta"></div>
+  <div #map class="plus-leaflet-map w-full h-[440px] md:h-[520px] bg-slate-200 dark:bg-slate-800 z-0" [style.height]="mapHeight" role="application" aria-label="Mapa interactivo de Villavicencio y el departamento del Meta"></div>
   <div class="absolute left-3 top-3 z-[500] flex max-w-[calc(100%-1.5rem)] flex-wrap gap-2">
-    <button type="button" class="rounded-lg border border-slate-300 bg-white/95 px-3 py-2 text-sm font-semibold text-slate-900 shadow-md backdrop-blur hover:bg-yellow-300" (click)="showVillavicencio()">Villavicencio</button>
-    <button type="button" class="rounded-lg border border-slate-300 bg-white/95 px-3 py-2 text-sm font-semibold text-slate-900 shadow-md backdrop-blur hover:bg-yellow-300" (click)="showMeta()">Ver todo el Meta</button>
+    <button type="button" class="rounded-lg border border-slate-300 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 px-3 py-2 text-sm font-semibold text-slate-900 dark:text-slate-100 shadow-md backdrop-blur hover:bg-yellow-300 dark:hover:bg-yellow-400 dark:hover:text-slate-900 transition-colors" (click)="showVillavicencio()">Villavicencio</button>
+    <button type="button" class="rounded-lg border border-slate-300 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 px-3 py-2 text-sm font-semibold text-slate-900 dark:text-slate-100 shadow-md backdrop-blur hover:bg-yellow-300 dark:hover:bg-yellow-400 dark:hover:text-slate-900 transition-colors" (click)="showMeta()">Ver todo el Meta</button>
   </div>
   <p class="absolute bottom-7 left-3 z-[500] max-w-[calc(100%-1.5rem)] rounded-md bg-slate-950/85 px-3 py-2 text-xs text-white shadow" role="status" aria-live="polite">{{status}}</p>
 </section>

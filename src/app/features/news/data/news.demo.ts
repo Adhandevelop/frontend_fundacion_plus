@@ -3,7 +3,7 @@ export interface NewsDemo {id:string;slug?:string;title:string;summary:string;co
 export const NEWS_DEMO: readonly NewsDemo[] = [
   {
     "id": "publicacion-0",
-    "title": "Luis Alberto Muñoz Granada lidera mesa técnica interinstitucional para seguimiento a compromisos viales y de salud en el Atrato",
+    "title": "Juan David Martínez Bolaño lidera mesa técnica interinstitucional para seguimiento a compromisos viales y de salud en el Atrato",
     "summary": "En el marco del mandato cívico y las competencias conferidas por la Ley 850 de 2003, la Corporación Pluralismo Social articuló un espacio de interlocución vinculante entre comités comunitarios de base, delegados de ministerios y contratistas ejecutores. Durante la jornada se establecieron cronogramas de entrega con penalidades contractuales y verificación satelital de avances.",
     "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuCXBDSJe05exet7bTIy_rj083HnCNmvQj5ciwQ57zGVgGHldKahqK7pbhRlTw-7Ws0Eofu74IkHzaEyG-8qIwP8fVztRkg5XLXiDAQKtaaS7LkulVod7DSTFQkrNM5i2s4j-_cru67YriEvVPxJCspWXPWiYs_0aU7iXSvev8Cw1eqZ0k2u2ywg0SlRNDXy0sd77JQY_76CwKDDubxSRHjlp_I2WJ1PiJEJnYf7IDJw",
     "category": "Actividades de Representación",
@@ -23,7 +23,7 @@ export const NEWS_DEMO: readonly NewsDemo[] = [
   },
   {
     "id": "publicacion-2",
-    "title": "Luis Alberto Muñoz Granada participa en el Encuentro Regional de Veedurías y Transparencia Pública",
+    "title": "Juan David Martínez Bolaño participa en el Encuentro Regional de Veedurías y Transparencia Pública",
     "summary": "Durante el panel central, el representante de PLUS expuso la metodología de georreferenciación de recursos del OCAD PAZ y los retos de seguridad para los líderes de control social territorial.",
     "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuAKTpwFFyb_YM5NiKZ0Akiby1RiIBc99OUOsAcOzD75pe7FiuTY6iQCrINoRRopGOi04yK4o1KRb677H5MPtIHosvWDQnuAnS_RjKYm6u7LmwCZfrhGphUKHDzShRNA74PSQVMwIKbu0yfF4zXC4z_FS9X6sqJWquuw23okSH_BeA0ZX_SvNB9or_vwc3uuBB8SMkrFATMjbwhzKOBEoFjAvQqWDd4S21eqx-Gnqmfb",
     "category": "Actividades de Representación",

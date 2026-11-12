@@ -37,8 +37,9 @@ list.reset();const obsolete=backend.expectOne(req=>req.url==='/api/v1/admin/comm
 backend.expectOne(req=>req.url==='/api/v1/admin/comments/').flush({},{status:403,statusText:'Forbidden'});assert.ok(list.error());
 
 const row={id_comentario:'comment-a',caso:caseId,caso_codigo:'PLUS-TEST',usuario:'person-test',autor_nombre:'Persona de prueba',contenido:'Texto solo en memoria de pruebas.',estado_moderacion:'pendiente',fecha_creacion:'2026-11-09T10:00:00Z'};
+const history=(id:string)=>backend.expectOne(`/api/v1/admin/comments/${id}/history/`).flush({comment_id:id,count:0,results:[],history:[]});
 const detail=runInInjectionContext(env,()=>new CommentDetailComponent());
-backend.expectOne('/api/v1/admin/comments/comment-a/').flush(row);
+backend.expectOne('/api/v1/admin/comments/comment-a/').flush(row);history('comment-a');
 assert.equal(detail.canModerate(),true);assert.equal(detail.actions().includes('pendiente'),false);
 detail.begin('rechazado');assert.equal(detail.review(),null);assert.ok(detail.status());
 detail.form.controls.reason.setValue('Motivo exclusivamente interno');detail.begin('rechazado');
@@ -50,20 +51,20 @@ detail.confirm();detail.confirm();const decision=backend.expectOne('/api/v1/admi
 assert.equal(decision.request.headers.get('Authorization'),'Bearer comments-access');
 assert.deepEqual(decision.request.body,{estado_moderacion:'rechazado',motivo:'Motivo exclusivamente interno',notificar_motivo:false});
 decision.flush({...row,estado_moderacion:'rechazado'});
-backend.expectOne('/api/v1/admin/comments/comment-a/').flush({...row,estado_moderacion:'rechazado'});
+backend.expectOne('/api/v1/admin/comments/comment-a/').flush({...row,estado_moderacion:'rechazado'});history('comment-a');
 assert.equal(detail.saving(),false);assert.equal(detail.review(),null);assert.equal(detail.form.controls.notifyReason.value,false);
 detail.form.setValue({reason:'Motivo expresamente compartido',notifyReason:true});detail.begin('oculto');detail.confirm();
 const shared=backend.expectOne('/api/v1/admin/comments/comment-a/moderation/');assert.equal(shared.request.body.notificar_motivo,true);
 shared.flush({},{status:400,statusText:'Bad request'});assert.equal(detail.uncertain(),false);assert.equal(detail.saving(),false);
 detail.begin('oculto');detail.confirm();backend.expectOne('/api/v1/admin/comments/comment-a/moderation/').flush({},{status:500,statusText:'Server error'});
 assert.equal(detail.uncertain(),true);detail.begin('aprobado');detail.confirm();backend.expectNone(req=>req.method==='POST');
-detail.load();backend.expectOne('/api/v1/admin/comments/comment-a/').flush(row);assert.equal(detail.uncertain(),false);
+detail.load();backend.expectOne('/api/v1/admin/comments/comment-a/').flush(row);history('comment-a');assert.equal(detail.uncertain(),false);
 // A successful write for A arriving after navigation must never reload or change B.
 detail.form.reset();detail.begin('aprobado');detail.confirm();const late=backend.expectOne('/api/v1/admin/comments/comment-a/moderation/');
-params.next(convertToParamMap({id:'comment-b'}));backend.expectOne('/api/v1/admin/comments/comment-b/').flush({...row,id_comentario:'comment-b'});
+params.next(convertToParamMap({id:'comment-b'}));backend.expectOne('/api/v1/admin/comments/comment-b/').flush({...row,id_comentario:'comment-b'});history('comment-b');
 late.flush({...row,estado_moderacion:'aprobado'});assert.equal(detail.row()?.id_comentario,'comment-b');assert.equal(detail.saving(),false);backend.expectNone('/api/v1/admin/comments/comment-a/');
 await login('representante');assert.equal(detail.canModerate(),false);detail.begin('aprobado');detail.confirm();backend.expectNone(req=>req.method==='POST');
 await login('moderador');assert.equal(detail.canModerate(),true);
-detail.load();backend.expectOne('/api/v1/admin/comments/comment-b/').flush({},{status:404,statusText:'Not found'});assert.ok(detail.error());detail.begin('aprobado');detail.confirm();backend.expectNone(req=>req.method==='POST');
+detail.load();history('comment-b');backend.expectOne('/api/v1/admin/comments/comment-b/').flush({},{status:404,statusText:'Not found'});assert.ok(detail.error());detail.begin('aprobado');detail.confirm();backend.expectNone(req=>req.method==='POST');
 backend.verify();env.destroy();
-console.log('Comment moderation checks passed: server pagination/filters, review before writes, internal/shared reasons, role restrictions, uncertain responses and navigation isolation.');
+console.log('Comment moderation checks passed: server pagination/filters, decision history, review before writes, internal/shared reasons, role restrictions, uncertain responses and navigation isolation.');

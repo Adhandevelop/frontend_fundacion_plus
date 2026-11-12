@@ -3,12 +3,12 @@ import { DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize, Subscription } from 'rxjs';
+import { finalize, forkJoin, Subscription } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../../core/auth/auth.service';
 import { apiErrorMessage } from '../../../core/api/api-error';
 import { canAccessAdminSection } from '../../../core/auth/admin-access.policy';
-import { AdminComment, AdminCommentsApiService, COMMENT_LABELS, COMMENT_STATES, CommentDecision, CommentState } from './admin-comments-api.service';
+import { AdminComment, AdminCommentsApiService, COMMENT_LABELS, COMMENT_STATES, CommentDecision, CommentHistoryItem, CommentState } from './admin-comments-api.service';
 
 interface DecisionReview {id: string; caseCode: string; previous: CommentState; payload: CommentDecision}
 
@@ -21,6 +21,7 @@ export class CommentDetailComponent {
   private revision = 0;
   readonly id = signal('');
   readonly row = signal<AdminComment | null>(null);
+  readonly history=signal<CommentHistoryItem[]>([]);
   readonly loading = signal(true);
   readonly saving = signal(false);
   readonly error = signal('');
@@ -45,11 +46,11 @@ export class CommentDetailComponent {
     if (this.saving()) return;
     const revision = ++this.revision;
     this.request?.unsubscribe(); this.review.set(null); this.loading.set(true); this.error.set('');
-    this.request = this.api.get(this.id()).pipe(
+    this.request = forkJoin({comment:this.api.get(this.id()),history:this.api.history(this.id())}).pipe(
       takeUntilDestroyed(this.destroy), finalize(() => {if (revision === this.revision) this.loading.set(false);}),
     ).subscribe({next: value => {
       if (revision !== this.revision) return;
-      this.row.set(value); this.uncertain.set(false);
+      this.row.set(value.comment);this.history.set(value.history.results??value.history.history??[]); this.uncertain.set(false);
     }, error: error => {if (revision === this.revision) this.error.set(apiErrorMessage(error));}});
   }
   begin(target: CommentState) {

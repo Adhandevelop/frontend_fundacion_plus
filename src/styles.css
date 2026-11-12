@@ -37,7 +37,11 @@ main[tabindex="-1"]:focus {outline:none;}
 .plus-form-input[aria-invalid=true] {border-color:#b91c1c;}
 .dark .plus-form-input[aria-invalid=true] {border-color:#fca5a5;}
 .plus-form-primary {display:inline-flex;justify-content:center;align-items:center;min-height:44px;padding:.6rem 1rem;border-radius:.5rem;background:#facc15;color:#0f172a;font-weight:600;font-size:14px;}
-plus-admin-forms,plus-form-editor,plus-form-preview,plus-form-responses,plus-public-form,plus-citizen-forms {display:block;min-width:0;}
+plus-admin-forms,plus-form-editor,plus-form-preview,plus-form-responses,plus-public-form,plus-citizen-forms,plus-map-canvas {display:block;min-width:0;}
+.plus-map-label {border:1px solid #0f172a;border-radius:.5rem;background:#fff;color:#0f172a;font-weight:700;box-shadow:0 4px 12px rgb(15 23 42 / .2);padding:2px 6px;}
+.leaflet-control-attribution {background:rgb(255 255 255 / .92) !important;color:#334155 !important;font-size:11px !important;}
+.leaflet-control-attribution a {color:#075985 !important;text-decoration:underline !important;}
+.leaflet-control-zoom a {color:#0f172a !important;background:#fff !important;}
 .carousel-tab-btn[aria-selected="true"] {@apply bg-primary-container text-on-primary-fixed border-transparent shadow-sm;}
 .carousel-dot-btn[aria-pressed="true"] {@apply w-8 bg-primary-container;}
 @media (max-width:640px) {h1 {font-size:30px!important;line-height:38px!important;} #mapa-casos [data-location] > .absolute.z-30 {left:1rem;right:1rem;width:auto;}}
