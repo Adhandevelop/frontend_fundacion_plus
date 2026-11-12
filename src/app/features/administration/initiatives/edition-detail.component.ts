@@ -1,33 +1,27 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InitiativeAdminDemoService } from './services/initiative-admin-demo.service';
-import { IndicatorDemo, PROGRAM_LABELS } from './data/initiative-admin.demo';
-import { communityTerritory } from '../territories/data/territories.demo';
-import { InitiativeMediaDemoService } from './services/initiative-media-demo.service';
+import { finalize, forkJoin } from 'rxjs';
+import { apiErrorMessage } from '../../../core/api/api-error';
+import { AdminInitiative, AdminInitiativeCommunity, AdminInitiativeMetric, AdminInitiativesApiService, INITIATIVE_STATE_LABELS, InitiativeMetricType } from './services/admin-initiatives-api.service';
+import { AdminCommunity, AdminTerritoriesApiService } from '../territories/admin-territories-api.service';
 
-@Component({selector: 'plus-edition-detail', standalone: true, imports: [RouterLink, ReactiveFormsModule], templateUrl: './edition-detail.component.html'})
+@Component({selector:'plus-edition-detail',standalone:true,imports:[RouterLink,ReactiveFormsModule],templateUrl:'./edition-detail.component.html'})
 export class EditionDetailComponent {
-  readonly store = inject(InitiativeAdminDemoService);
-  readonly media = inject(InitiativeMediaDemoService);
-  private readonly route = inject(ActivatedRoute);
-  private readonly params = toSignal(this.route.paramMap, {initialValue: this.route.snapshot.paramMap});
-  private readonly query = toSignal(this.route.queryParamMap, {initialValue: this.route.snapshot.queryParamMap});
-  readonly programId = computed(() => this.params().get('programId') ?? ''); readonly id = computed(() => this.params().get('editionId') ?? '');
-  readonly program = computed(() => this.store.program(this.programId())); readonly record = computed(() => this.store.edition(this.programId(),this.id()));
-  readonly labels = PROGRAM_LABELS; readonly territory = communityTerritory;
-  readonly status = signal(''); readonly editing = signal<string | undefined>(undefined);
-  readonly removing = signal<{kind: 'indicator' | 'community'; id: string} | null>(null);
-  readonly availableCommunities = computed(() => this.store.territories.communities().filter(row => row.active && !this.record()?.communityIds.includes(row.id)));
-  readonly coverage = computed(() => (this.record()?.communityIds ?? []).map(id => this.store.territories.find(id)).filter(row => row !== null));
-  private readonly builder = inject(FormBuilder).nonNullable;
-  readonly indicator = this.builder.group({name: ['', [Validators.required, Validators.pattern(/\S/), Validators.maxLength(100)]], value: ['0', [Validators.required, Validators.pattern(/^\d{1,12}(?:\.\d{1,2})?$/)]], unit: ['', Validators.maxLength(50)], measurement: this.builder.control<'estimado' | 'real'>('estimado', Validators.required), cutoff: ['']});
-  readonly community = this.builder.group({id: ['', Validators.required]});
-  constructor() {effect(() => {this.id(); this.programId(); const result = this.query().get('resultado'); this.indicator.reset(); this.community.reset(); this.editing.set(undefined); this.removing.set(null); this.status.set(result === 'guardado' ? 'Edición guardada en memoria. Sin publicación real.' : '');}, {allowSignalWrites: true});}
-  editIndicator(row: IndicatorDemo) {this.editing.set(row.id); this.indicator.reset(row); this.status.set('Indicador cargado en el formulario de edición.');}
-  cancelIndicator() {this.editing.set(undefined); this.indicator.reset();}
-  saveIndicator() {this.indicator.markAllAsTouched(); if (this.indicator.invalid || !this.store.saveIndicator(this.programId(),this.id(),this.indicator.getRawValue(),this.editing())) {this.status.set('Revisa nombre, valor no negativo con hasta dos decimales, unidad y fecha válida.'); return;} this.cancelIndicator(); this.status.set('Indicador guardado solo en esta edición de ejemplo.');}
-  addCommunity() {this.community.markAllAsTouched(); if (this.community.invalid || !this.store.addCommunity(this.programId(),this.id(),this.community.controls.id.value)) {this.status.set('Selecciona una comunidad activa que todavía no esté vinculada.'); return;} this.community.reset(); this.status.set('Cobertura de ejemplo actualizada. No se modificaron casos ni perfiles.');}
-  remove() {const target = this.removing(); if (!target) return; const ok = target.kind === 'indicator' ? this.store.removeIndicator(this.programId(),this.id(),target.id) : this.store.removeCommunity(this.programId(),this.id(),target.id); if (ok && this.editing() === target.id) this.cancelIndicator(); this.removing.set(null); this.status.set(ok ? 'Elemento retirado de esta edición de ejemplo.' : 'No se encontró el elemento en esta edición.');}
+ private readonly api=inject(AdminInitiativesApiService);private readonly territories=inject(AdminTerritoriesApiService);private readonly destroy=inject(DestroyRef);private readonly builder=inject(FormBuilder).nonNullable;private readonly route=inject(ActivatedRoute);readonly programId=this.route.snapshot.paramMap.get('programId')??'';readonly id=this.route.snapshot.paramMap.get('editionId')??'';readonly labels=INITIATIVE_STATE_LABELS;
+ readonly program=signal<AdminInitiative|null>(null);readonly metrics=signal<AdminInitiativeMetric[]>([]);readonly coverage=signal<AdminInitiativeCommunity[]>([]);readonly communityCatalog=signal<AdminCommunity[]>([]);readonly edition=computed(()=>this.program()?.editions.find(row=>row.id===this.id)??null);readonly availableCommunities=computed(()=>{const linked=new Set(this.coverage().map(row=>row.communityId));return this.communityCatalog().filter(row=>row.activo&&!linked.has(row.id_comunidad));});readonly editingCoverage=computed(()=>this.coverage().find(row=>row.id===this.editingCommunity())??null);readonly loading=signal(true);readonly saving=signal(false);readonly editing=signal('');readonly removing=signal('');readonly editingCommunity=signal('');readonly removingCommunity=signal('');readonly status=signal('');readonly error=signal('');
+ readonly form=this.builder.group({name:['',[Validators.required,Validators.pattern(/\S/),Validators.maxLength(100)]],value:['0',[Validators.required,Validators.pattern(/^\d{1,12}(?:\.\d{1,2})?$/)]],unit:['',Validators.maxLength(50)],description:[''],icon:['',Validators.maxLength(50)],measurement:this.builder.control<InitiativeMetricType>('estimado',Validators.required),order:[0,[Validators.required,Validators.min(0),Validators.pattern(/^\d+$/)]],cutoff:['']});
+ readonly communityForm=this.builder.group({communityId:['',Validators.required],notes:['',Validators.maxLength(1000)]});
+ constructor(){this.load();}
+ get annual(){return this.edition()!;}
+ load(){this.loading.set(true);forkJoin({program:this.api.detail(this.programId),metrics:this.api.metrics(this.id),coverage:this.api.communities(this.id),catalog:this.territories.list({municipio:'',tipo:'',activo:'true'},1,500)}).pipe(takeUntilDestroyed(this.destroy),finalize(()=>this.loading.set(false))).subscribe({next:value=>{this.program.set(value.program);this.metrics.set(value.metrics);this.coverage.set(value.coverage);this.communityCatalog.set(value.catalog.results);},error:error=>this.error.set(apiErrorMessage(error))});}
+ edit(row:AdminInitiativeMetric){this.editing.set(row.id);this.form.setValue({name:row.name,value:row.value,unit:row.unit,description:row.description,icon:row.icon,measurement:row.measurement,order:row.order,cutoff:row.cutoff});}
+ cancel(){this.editing.set('');this.form.reset({name:'',value:'0',unit:'',description:'',icon:'',measurement:'estimado',order:0,cutoff:''});}
+ save(){this.form.markAllAsTouched();if(this.form.invalid||this.saving())return;const value=this.form.getRawValue(),id=this.editing();this.saving.set(true);this.status.set('');const request=id?this.api.updateMetric(id,this.id,value):this.api.createMetric(this.id,value);request.pipe(takeUntilDestroyed(this.destroy),finalize(()=>this.saving.set(false))).subscribe({next:row=>{this.metrics.update(items=>[...items.filter(item=>item.id!==row.id),row].sort((a,b)=>a.order-b.order));this.cancel();this.status.set('Indicador guardado en PLUS.');},error:error=>this.status.set(apiErrorMessage(error))});}
+ remove(){const id=this.removing();if(!id||this.saving())return;this.saving.set(true);this.api.deleteMetric(id).pipe(takeUntilDestroyed(this.destroy),finalize(()=>this.saving.set(false))).subscribe({next:()=>{this.metrics.update(items=>items.filter(item=>item.id!==id));this.removing.set('');this.status.set('Indicador eliminado.');},error:error=>this.status.set(apiErrorMessage(error))});}
+ editCoverage(row:AdminInitiativeCommunity){this.editingCommunity.set(row.id);this.communityForm.setValue({communityId:row.communityId,notes:row.notes});}
+ cancelCoverage(){this.editingCommunity.set('');this.communityForm.reset({communityId:'',notes:''});}
+ saveCoverage(){this.communityForm.markAllAsTouched();if(this.communityForm.invalid||this.saving())return;const value=this.communityForm.getRawValue(),linkId=this.editingCommunity();this.saving.set(true);this.status.set('');const request=linkId?this.api.updateCommunity(linkId,this.id,value.communityId,value.notes):this.api.createCommunity(this.id,value.communityId,value.notes);request.pipe(takeUntilDestroyed(this.destroy),finalize(()=>this.saving.set(false))).subscribe({next:row=>{this.coverage.update(items=>[...items.filter(item=>item.id!==row.id),row].sort((a,b)=>a.communityName.localeCompare(b.communityName,'es')));this.cancelCoverage();this.status.set('Cobertura territorial guardada en PLUS.');},error:error=>this.status.set(apiErrorMessage(error))});}
+ removeCoverage(){const id=this.removingCommunity();if(!id||this.saving())return;this.saving.set(true);this.api.deleteCommunity(id).pipe(takeUntilDestroyed(this.destroy),finalize(()=>this.saving.set(false))).subscribe({next:()=>{this.coverage.update(items=>items.filter(item=>item.id!==id));this.removingCommunity.set('');this.status.set('Comunidad retirada de la cobertura.');},error:error=>this.status.set(apiErrorMessage(error))});}
 }

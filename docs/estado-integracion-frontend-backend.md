@@ -72,7 +72,7 @@ Este es el registro consolidado del frontend Angular. “Integrado” significa 
 - Las ediciones anidadas se muestran desde la ficha real y su creación/edición ya consume `/admin/initiative-editions/`. Los medios generales y por edición también son REST.
 - La bandeja de postulaciones consulta `/admin/proposals/`, filtra en servidor, abre el detalle y guarda estado, respuesta e iniciativa generada mediante PATCH. No envía actor ni fecha de revisión desde el cliente.
 - Las actividades administrativas ya consultan, crean y actualizan `/admin/initiative-activities/` con relación explícita a la edición, fechas UTC, lugar y estado. Responsable, comunidad y coordenadas esperan confirmación contractual.
-- Indicadores y cobertura todavía conservan implementación demostrativa.
+- Los indicadores por edición ya consultan y escriben `/admin/initiative-metrics/`: valor decimal como texto, unidad, descripción, icono, tipo de medición, orden y fecha de corte. La cobertura todavía conserva implementación pendiente.
 
 ### Formularios dinámicos
 
@@ -101,7 +101,7 @@ No se envían contraseñas por correo. El backend genera un enlace de un solo us
 ### Contenido editorial pendiente
 
 - Bloques secundarios de la página principal y nosotros.
-- Administración de indicadores y cobertura de iniciativas; campos avanzados de actividades.
+- Administración de cobertura de iniciativas; campos avanzados de actividades.
 - Inventario inicial reproducible de contenido e imágenes.
 
 Estas pantallas todavía usan contenido de diseño. Falta aprobación institucional, carga inicial en la base de datos y conexión REST. No conviene conectar una colección vacía porque degradaría el sitio publicado.
@@ -142,7 +142,7 @@ No hay problemas técnicos activos demostrados en [problemas-integracion.md](pro
 2. Completar los controles avanzados de validación del constructor.
 3. Aprobar y cargar el contenido editorial inicial.
 4. Probar contra el servidor la carga multipart ya conectada y construir las páginas de confirmación/baja del boletín.
-5. Integrar indicadores y cobertura; completar responsable/comunidad/coordenadas de actividades cuando se confirme su contrato y revisar el DTO público.
+5. Integrar cobertura; completar responsable/comunidad/coordenadas de actividades cuando se confirme su contrato y revisar el DTO público.
 6. Integrar casos georreferenciados en el mapa.
 7. Probar el reemplazo real de portada con una cuenta superadministradora controlada.
 8. Repetir revisión responsive, accesibilidad, temas, Docker y Nginx con datos reales.
@@ -165,7 +165,7 @@ No hay problemas técnicos activos demostrados en [problemas-integracion.md](pro
 - Formularios dinámicos: conexión REST y versión histórica implementadas; falta validación real completa.
 - Portada institucional: lectura y administración conectadas; prueba real de archivo pendiente.
 - Noticias: lecturas públicas, administración REST y medios binarios conectados; carga editorial inicial y acciones por token pendientes.
-- Iniciativas: catálogo, detalle, postulación pública, CRUD textual, ediciones, medios, actividades básicas y revisión administrativa de postulaciones conectados; indicadores, cobertura, campos avanzados de actividades y carga editorial inicial siguen pendientes.
+- Iniciativas: catálogo, detalle, postulación pública, CRUD textual, ediciones, medios, indicadores, actividades básicas y revisión administrativa de postulaciones conectados; cobertura, campos avanzados de actividades y carga editorial inicial siguen pendientes.
 - Mapa: base real corregida localmente; falta desplegar/verificar el arreglo y siguen pendientes los datos georreferenciados.
 
 Las cifras son orientativas. El estado local no implica que los cambios estén publicados en `fundacionplus.site`.

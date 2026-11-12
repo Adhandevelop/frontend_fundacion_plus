@@ -30,9 +30,12 @@ La galería general y la galería por edición consultan los medios anidados del
 
 La agenda por edición, el editor y la ficha consumen `/api/v1/admin/initiative-activities/`. Angular envía la edición por UUID, título, descripción, fechas convertidas desde hora de Bogotá a UTC, lugar y estado. Responsable, comunidad y coordenadas permanecen fuera del payload hasta confirmar sus nombres, elegibilidad, precisión y reglas de exposición.
 
+## Indicadores integrados
+
+La ficha de edición consulta y administra `/api/v1/admin/initiative-metrics/`. Conserva `valor` como cadena decimal, y permite nombre, unidad, descripción, icono, medición estimada/real, orden y fecha de corte. Crear, editar y eliminar se mantienen asociados al UUID de la edición.
+
 ## Aún demostrativo
 
-- Indicadores y sus metadatos.
 - Cobertura/comunidades y observaciones.
 - Responsable, comunidad y ubicación de actividades.
 - Vínculos con casos.
