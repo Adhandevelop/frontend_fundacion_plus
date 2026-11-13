@@ -18,8 +18,8 @@ export class CitizenCasesApiService {
   create(payload:CreateCaseRequest) {return this.http.post<CitizenCase>(`${this.base}/me/cases/`,payload);}
   types() {return this.http.get<CaseType[]>(`${this.base}/catalogs/case-types/`);}
   states() {return this.http.get<CaseState[]>(`${this.base}/catalogs/case-statuses/`);}
-  upload(id:string,file:File) {
-    const body=new FormData();body.append('file',file);
+  upload(id:string,file:File,description='') {
+    const body=new FormData();body.append('file',file,file.name);if(description.trim())body.append('descripcion',description.trim());
     return this.http.post<CaseEvidence>(this.caseUrl(id)+'evidence/',body);
   }
   download(id:string,evidence:string) {return this.http.get(this.caseUrl(id)+`evidence/${encodeURIComponent(evidence)}/download/`,{params:{download:'1'},responseType:'blob'});}

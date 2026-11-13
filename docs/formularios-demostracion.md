@@ -37,7 +37,6 @@ Actualizado: 11 de noviembre de 2026. El nombre histórico de este archivo se co
 ## Pendientes conocidos
 
 - Exponer las preguntas congeladas de una versión histórica para previsualizar formularios sin borrador.
-- Añadir controles avanzados del editor para fechas y expresiones regulares.
 - Probar el recorrido completo contra el servidor con correo accesible y datos ficticios controlados.
 - Confirmar que migraciones, política legal, formulario semilla y proveedor de correo están desplegados.
 
@@ -46,3 +45,5 @@ Actualizado: 11 de noviembre de 2026. El nombre histórico de este archivo se co
 - Compilación de producción correcta.
 - Suite HTTP aislada correcta para los siete tipos, envío, activación, consulta ciudadana y acciones administrativas.
 - El servicio temporal y los modelos `.demo` fueron eliminados.
+- El constructor permite configurar fechas mínima/máxima, expresión regular y mensaje personalizado. La vista previa y el envío validan estas reglas, además de longitudes, rangos numéricos y cantidades de selección.
+- El 12 de noviembre de 2026 se comprobó que `censo-comunitario-meta` está publicado con versión activa y política legal. El envío se dejó pendiente hasta disponer de un buzón controlado para comprobar la recepción y activación sin crear registros basura.

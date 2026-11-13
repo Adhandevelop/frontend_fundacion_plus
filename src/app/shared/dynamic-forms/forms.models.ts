@@ -33,7 +33,25 @@ export function submissionProblems(form:DynamicForm,input:FormSubmissionInput):F
     else if(question.type==='booleano')invalid=typeof value!=='boolean';
     else if(question.type==='fecha')invalid=typeof value!=='string'||!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(value)||Number.isNaN(Date.parse(value));
     else invalid=typeof value!=='string';
-    if(invalid)errors.push({field:question.id,label:question.label,message:'Completa la respuesta con un valor válido.'});
+    if(invalid){errors.push({field:question.id,label:question.label,message:'Completa la respuesta con un valor válido.'});continue;}
+    const rules=question.validation;
+    if(typeof value==='string'&&(question.type==='texto_corto'||question.type==='texto_largo')){
+      if(rules.min_length!==undefined&&value.length<rules.min_length)errors.push({field:question.id,label:question.label,message:`Escribe al menos ${rules.min_length} caracteres.`});
+      else if(rules.max_length!==undefined&&value.length>rules.max_length)errors.push({field:question.id,label:question.label,message:`Escribe máximo ${rules.max_length} caracteres.`});
+      else if(rules.regex_pattern){try{if(!new RegExp(rules.regex_pattern).test(value))errors.push({field:question.id,label:question.label,message:rules.regex_error_message||'La respuesta no tiene el formato esperado.'});}catch{errors.push({field:question.id,label:question.label,message:'La regla de formato de esta pregunta no es válida. Informa al administrador.'});}}
+    }
+    if(typeof value==='number'){
+      if(rules.min_value!==undefined&&value<rules.min_value)errors.push({field:question.id,label:question.label,message:`El valor mínimo es ${rules.min_value}.`});
+      else if(rules.max_value!==undefined&&value>rules.max_value)errors.push({field:question.id,label:question.label,message:`El valor máximo es ${rules.max_value}.`});
+    }
+    if(question.type==='fecha'&&typeof value==='string'){
+      if(rules.min_date&&value<rules.min_date)errors.push({field:question.id,label:question.label,message:`La fecha debe ser igual o posterior a ${rules.min_date}.`});
+      else if(rules.max_date&&value>rules.max_date)errors.push({field:question.id,label:question.label,message:`La fecha debe ser igual o anterior a ${rules.max_date}.`});
+    }
+    if(Array.isArray(value)){
+      if(rules.min_items!==undefined&&value.length<rules.min_items)errors.push({field:question.id,label:question.label,message:`Selecciona al menos ${rules.min_items} opciones.`});
+      else if(rules.max_items!==undefined&&value.length>rules.max_items)errors.push({field:question.id,label:question.label,message:`Selecciona máximo ${rules.max_items} opciones.`});
+    }
   }
   if(!input.consent)errors.push({field:'consent',label:'Autorización',message:'Debes aceptar la política de tratamiento de datos.'});
   return errors;
@@ -49,6 +67,13 @@ export function formProblems(form:DynamicForm):string[]{
   form.questions.forEach((question,index)=>{
     if(!/^[a-z0-9_]{2,50}$/.test(question.code)||!question.label.trim())errors.push(`Revisa el código y el enunciado de la pregunta ${index+1}.`);
     if((question.type==='seleccion_unica'||question.type==='seleccion_multiple')&&(question.options.length<2||question.options.some(option=>!option.value.trim()||!option.label.trim())||new Set(question.options.map(option=>option.value)).size!==question.options.length))errors.push(`La pregunta ${index+1} necesita al menos dos opciones con valores diferentes.`);
+    const rules=question.validation;
+    if(rules.min_length!==undefined&&rules.max_length!==undefined&&rules.min_length>rules.max_length)errors.push(`La longitud mínima de la pregunta ${index+1} no puede superar la máxima.`);
+    if(rules.min_value!==undefined&&rules.max_value!==undefined&&rules.min_value>rules.max_value)errors.push(`El valor mínimo de la pregunta ${index+1} no puede superar el máximo.`);
+    if(rules.min_items!==undefined&&rules.max_items!==undefined&&rules.min_items>rules.max_items)errors.push(`El mínimo de selecciones de la pregunta ${index+1} no puede superar el máximo.`);
+    if(rules.min_date&&rules.max_date&&rules.min_date>rules.max_date)errors.push(`La fecha mínima de la pregunta ${index+1} no puede ser posterior a la máxima.`);
+    if(rules.regex_pattern){try{new RegExp(rules.regex_pattern);}catch{errors.push(`La expresión regular de la pregunta ${index+1} no es válida.`);}}
+    if(rules.regex_error_message&&rules.regex_error_message.length>255)errors.push(`El mensaje de formato de la pregunta ${index+1} admite hasta 255 caracteres.`);
   });
   return errors;
 }

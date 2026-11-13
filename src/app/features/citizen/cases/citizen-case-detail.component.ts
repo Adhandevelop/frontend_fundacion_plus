@@ -26,12 +26,13 @@ export class CitizenCaseDetailComponent {
   readonly tab=signal('overview');
   readonly selectedFile=signal<File|null>(null);
   readonly label=caseStateLabel;
+  readonly evidenceForm=this.builder.group({name:['',[Validators.required,Validators.pattern(/\S/),Validators.maxLength(180)]],description:['',Validators.maxLength(2000)]});
   readonly contribution=this.builder.group({content:['',[Validators.required,Validators.pattern(/\S/),Validators.maxLength(5000)]],correction:['']});
   readonly tabs=[{id:'overview',label:'Resumen'},{id:'history',label:'Seguimiento'},{id:'evidence',label:'Evidencias'},{id:'contribution',label:'Aportar información'}];
   constructor(){
     const route=inject(ActivatedRoute);
     route.paramMap.pipe(takeUntilDestroyed(this.destroy)).subscribe(params=>{
-      this.reference=params.get('radicado') ?? '';this.pending.set(false);this.status.set('');this.selectedFile.set(null);this.contribution.reset();this.selectSection(route.snapshot.queryParamMap.get('seccion'));this.data.set(null);this.load();
+      this.reference=params.get('radicado') ?? '';this.pending.set(false);this.status.set('');this.selectedFile.set(null);this.evidenceForm.reset();this.contribution.reset();this.selectSection(route.snapshot.queryParamMap.get('seccion'));this.data.set(null);this.load();
     });
     route.queryParamMap.pipe(takeUntilDestroyed(this.destroy)).subscribe(params=>this.selectSection(params.get('seccion')));
   }
@@ -49,13 +50,15 @@ export class CitizenCaseDetailComponent {
   selectFile(event:Event){
     const input=event.target as HTMLInputElement;const file=input.files?.[0];input.value='';if(!file)return;
     if(!['jpg','jpeg','png','webp','pdf'].includes(file.name.split('.').pop()?.toLowerCase() ?? '') || file.size>15728640){this.status.set('Selecciona JPG, PNG, WEBP o PDF de hasta 15 MB.');return;}
-    this.selectedFile.set(file);this.status.set('Archivo seleccionado. Pulsa Subir evidencia para enviarlo.');
+    this.selectedFile.set(file);this.evidenceForm.controls.name.setValue(file.name.replace(/\.[^.]+$/,''));this.status.set('Archivo seleccionado. Asigna un nombre claro antes de enviarlo.');
   }
   upload(){
     const file=this.selectedFile(),caso=this.data();if(!file || !caso || this.pending() || !this.can('upload_evidence'))return;
+    this.evidenceForm.markAllAsTouched();if(this.evidenceForm.invalid)return;
+    const value=this.evidenceForm.getRawValue(),extension=file.name.match(/\.[A-Za-z0-9]+$/)?.[0]??'',safeName=value.name.trim().replace(/[\\/:*?"<>|]+/g,'-').replace(/\s+/g,' ').slice(0,180),namedFile=new File([file],`${safeName}${extension}`,{type:file.type,lastModified:file.lastModified});
     const revision=this.revision;this.pending.set(true);this.status.set('');
-    this.api.upload(caso.id_caso,file).pipe(takeUntilDestroyed(this.destroy),finalize(()=>{if(revision===this.revision)this.pending.set(false);})).subscribe({next:()=>{
-      if(revision!==this.revision)return;this.pending.set(false);this.selectedFile.set(null);this.status.set('Evidencia subida.');this.load();
+    this.api.upload(caso.id_caso,namedFile,value.description).pipe(takeUntilDestroyed(this.destroy),finalize(()=>{if(revision===this.revision)this.pending.set(false);})).subscribe({next:()=>{
+      if(revision!==this.revision)return;this.pending.set(false);this.selectedFile.set(null);this.evidenceForm.reset();this.status.set('Documento añadido al expediente.');this.load();
     },error:error=>{if(revision===this.revision)this.status.set(apiErrorMessage(error)+' Revisa las evidencias antes de reintentar para evitar duplicados.');}});
   }
   sendContribution(){

@@ -107,9 +107,9 @@ No se envían contraseñas por correo. El backend genera un enlace de un solo us
 ### Contenido editorial pendiente
 
 - Bloques institucionales de “Nosotros” y canales sociales oficiales.
-- Inventario inicial reproducible de contenido e imágenes.
+- Imágenes editoriales aprobadas para las noticias e iniciativas cargadas.
 
-La portada ya consulta noticias e iniciativas publicadas y enlaza sus fichas por `slug`; muestra estados vacíos cuando no hay contenido. Los bloques institucionales restantes requieren aprobación y fuente REST antes de retirar su contenido de diseño.
+La portada y los catálogos ya consultan noticias e iniciativas publicadas y enlazan sus fichas por `slug`. Los respaldos demostrativos fueron retirados: una colección vacía muestra un estado vacío real y un fallo de API muestra su error. Los bloques institucionales restantes requieren aprobación y fuente REST antes de retirar su contenido de diseño.
 
 ### Otros límites
 
@@ -147,11 +147,10 @@ El módulo `/admin/casos-asignados` muestra los expedientes asignados al usuario
 
 ## 5. Próximo trabajo recomendado
 
-1. Probar en el servidor el mapa, cuyo encuadre ya se ajusta a los resultados filtrados, y el expediente público conectado.
+1. Asignar una ubicación pública al caso aprobado `PLUS-2026-00001` y repetir la verificación de GeoJSON y mapa.
 2. Verificar con una cuenta ciudadana el seguimiento por UUID y el envío de comentarios a moderación desde la ficha pública.
-3. Probar formularios de extremo a extremo en un entorno controlado y corregir diferencias observadas.
-4. Completar los controles avanzados de validación del constructor.
-5. Aprobar y cargar el contenido editorial inicial.
+3. Probar formularios de extremo a extremo con un buzón controlado y corregir diferencias observadas.
+4. Aprobar y cargar imágenes para el contenido editorial inicial ya publicado.
 6. Probar contra el servidor la carga multipart, responsables, actividades y enlaces del boletín.
 7. Probar el reemplazo real de portada con una cuenta superadministradora controlada.
 8. Repetir revisión responsive, accesibilidad, temas, Docker y Nginx con datos reales.
@@ -166,6 +165,15 @@ El módulo `/admin/casos-asignados` muestra los expedientes asignados al usuario
 - La suite de iniciativas comprueba catálogo, categorías, detalle/galería, postulación comunitaria, listado administrativo, creación y transición editorial.
 - Las pruebas HTTP son simuladas y no escriben en producción.
 - No se realizó despliegue, commit ni prueba con credenciales reales en esta etapa.
+
+### Verificación controlada del 12 de noviembre de 2026
+
+- `GET /api/v1/public/cases/` devolvió un caso aprobado real y su detalle, historial, evidencias y comentarios respondieron correctamente.
+- `GET /api/v1/public/cases/geojson/` devolvió una colección válida con cero elementos porque el caso aprobado tiene `public_location: null`. La ausencia del marcador es coherente con el contrato y no constituye un fallo de Leaflet.
+- La portada configurada respondió `200` desde `/api/v1/public/media/site/hero/...`.
+- Existe un formulario publicado, `censo-comunitario-meta`, con versión activa y política legal 1.0. No se realizó el envío porque falta designar un buzón de prueba accesible para verificar realmente el enlace de activación y Resend.
+- El constructor ya expone y valida longitud, rangos numéricos, cantidad de selecciones, fechas mínima/máxima, expresión regular y su mensaje de error.
+- Los catálogos públicos dejaron de utilizar noticias e iniciativas demostrativas como respaldo.
 
 ## 7. Estimación orientativa
 

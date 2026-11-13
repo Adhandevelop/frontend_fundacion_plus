@@ -10,7 +10,18 @@ Los puntos P01–P23 se conservan en [correcciones-backend-historico.md](correcc
 
 | Prioridad | Punto | Problema | Acción requerida |
 |---|---|---|---|
-| — | — | No hay incidencias activas demostradas. | Continuar pruebas funcionales contra el servidor desplegado. |
+| Alta | P24 | Los archivos administrativos pueden subirse al expediente, pero `POST /admin/cases/{id}/progress/` no acepta archivos ni permite relacionar evidencias con el seguimiento creado. | Permitir multipart con `files`/`archivos`, o aceptar `evidence_ids`; devolver los archivos asociados dentro de cada seguimiento. |
+
+## P24 — Documentos asociados a respuestas y seguimientos
+
+El frontend permite que ciudadano y administrador añadan archivos con nombre comprensible y descripción al expediente usando los endpoints de evidencia existentes. Sin embargo, el contrato solo relaciona una evidencia con `caso`, `usuario` y opcionalmente `id_aporte`; no contempla `id_seguimiento`.
+
+Para que un documento administrativo forme parte inequívoca de una respuesta se solicita una de estas alternativas:
+
+- que `POST /api/v1/admin/cases/{id}/progress/` acepte `multipart/form-data`, campos `files`/`archivos` y metadatos por archivo; o
+- crear primero las evidencias y permitir `evidence_ids: UUID[]` al registrar el seguimiento.
+
+Cada evidencia necesita conservar `nombre_original`, `descripcion`, autor, fecha, audiencia, revisión y un `id_seguimiento` nullable. El DTO de seguimiento debe devolver `evidencias: CaseEvidenceSerializer[]`. La operación debe ser transaccional o documentar claramente el resultado parcial. No debe hacerse pública una evidencia por el solo hecho de que el seguimiento sea público.
 
 ## Pendientes que no son errores del backend
 

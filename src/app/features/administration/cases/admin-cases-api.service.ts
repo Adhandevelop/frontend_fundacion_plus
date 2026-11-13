@@ -18,5 +18,6 @@ export class AdminCasesApiService {
   followedCases(){return this.http.get<AdminFollowedCasePage>(`${this.base}/admin/followed-cases/`);}
   follow(id:string){return this.http.put(`${this.base}/admin/followed-cases/${encodeURIComponent(id)}/`,{});}
   unfollow(id:string){return this.http.delete<void>(`${this.base}/admin/followed-cases/${encodeURIComponent(id)}/`);}
+  uploadEvidence(id:string,file:File,description:string){const body=new FormData();body.append('file',file,file.name);if(description.trim())body.append('descripcion',description.trim());return this.http.post(this.url(id)+'evidence/',body);}
   download(id:string,evidence:string){return this.http.get(this.url(id)+`evidence/${encodeURIComponent(evidence)}/download/`,{params:{download:'1'},responseType:'blob'});}
 }
