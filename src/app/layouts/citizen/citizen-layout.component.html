@@ -2,7 +2,7 @@
   <a href="#citizen-content" class="plus-skip-link" (click)="content.focus()">Saltar al contenido</a>
   <header class="cit-panel border-b sticky top-0 z-40">
     <div class="max-w-[1500px] mx-auto px-4 lg:px-8 h-16 flex items-center justify-between gap-3">
-      <a routerLink="/ciudadano" class="inline-flex items-center gap-3"><span class="bg-primary-container text-black font-bold rounded-lg p-2">P+</span><span class="text-title-sm sm:text-title-md font-semibold">PLUS <span class="hidden sm:inline">Corporación Pluralismo Social</span></span></a>
+      <a routerLink="/ciudadano" class="inline-flex items-center gap-3"><img src="/assets/brand/plus-logo.png" alt="PLUS" class="w-10 h-10 rounded-lg object-contain"><span class="text-title-sm sm:text-title-md font-semibold">PLUS <span class="hidden sm:inline">Corporación Pluralismo Social</span></span></a>
       <div class="flex items-center gap-3"><a routerLink="/ciudadano/mapa" class="hidden sm:inline text-body-sm">Mapa de casos</a><button type="button" (click)="theme.toggle()" [attr.aria-pressed]="theme.dark()" aria-label="Cambiar tema de color" class="cit-button p-2"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false">@if(theme.dark()){<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/>}@else{<path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z"/>}</svg></button><button type="button" class="md:hidden cit-button" (click)="menu.set(!menu())" [attr.aria-expanded]="menu()" aria-controls="citizen-nav">Menú</button></div>
     </div>
   </header>
