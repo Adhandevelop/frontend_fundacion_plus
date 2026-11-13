@@ -19,9 +19,5 @@ export class HeroComponent {
 
   image(){return homepageImageUrl(this.home()?.institution);}
   alt(){return this.home()?.institution?.alt_text||'Fotografía ilustrativa de la Corporación PLUS';}
-  representativeName(){
-    const name=this.home()?.institution?.representative_name;
-    if(!name || /muñoz|granada/i.test(name)) return 'JUAN DAVID MARTINEZ BOLAÑO';
-    return name;
-  }
+  representativeName(){return this.home()?.institution?.representative_name||'JUAN DAVID MARTINEZ BOLAÑO';}
 }

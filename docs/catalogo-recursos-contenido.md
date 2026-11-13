@@ -19,7 +19,7 @@ El backend genera `image_url`, `relative_url`, `api_media_url`, `version` y `upd
 
 ## 2. Información institucional del inicio
 
-Actualmente se lee mediante `/api/v1/public/home/` y `SiteSetting`, pero solo la fotografía tiene editor especializado.
+Actualmente se lee mediante `/api/v1/public/home/` y `SiteSetting`. El backend parametrizó nombre, sigla, representante, cargo y misión en `44e62a5`; la fotografía mantiene su editor especializado. Falta una interfaz administrativa amigable en Angular para editar conjuntamente los cinco textos institucionales.
 
 | Campo esperado | Requerido | Observación |
 |---|---:|---|
