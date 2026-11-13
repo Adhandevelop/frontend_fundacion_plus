@@ -69,6 +69,7 @@ export const routes: Routes = [
     component: CitizenLayoutComponent,
     children: [
       {path: 'mapa', title: 'Mapa de casos ciudadano · PLUS', data: {mapContext: 'citizen'}, loadComponent: () => import('./features/map/public-map.component').then(m => m.PublicMapComponent)},
+      {path: 'casos-publicos/:radicado', title: 'Caso público · PLUS', data: {caseContext: 'citizen'}, loadComponent: () => import('./features/cases/public-case.component').then(m => m.PublicCaseComponent)},
       {path: 'casos/nuevo', title: 'Radicar un caso · PLUS', loadComponent: () => import('./features/citizen/intake/case-intake.component').then(m => m.CaseIntakeComponent)},
       {path: 'casos/confirmacion', title: 'Caso radicado · PLUS', loadComponent: () => import('./features/citizen/intake/confirmation/case-confirmation.component').then(m => m.CaseConfirmationComponent)},
       {path: 'casos/:radicado', title: 'Detalle de mi caso · PLUS', loadComponent: () => import('./features/citizen/cases/citizen-case-detail.component').then(m => m.CitizenCaseDetailComponent)},
@@ -95,7 +96,7 @@ export const routes: Routes = [
       {path: 'boletin/baja', data:{action:'unsubscribe'}, title: 'Baja del boletín · PLUS', loadComponent: () => import('./features/news/newsletter-action.component').then(m => m.NewsletterActionComponent)},
       {path: 'iniciativas', title: 'Iniciativas comunitarias · PLUS', loadComponent: () => import('./features/initiatives/initiatives-page.component').then(m => m.InitiativesPageComponent)},
       {path: 'nosotros', title: 'Nosotros · PLUS', loadComponent: () => import('./features/institutional/about/about.component').then(m => m.AboutComponent)},
-      {path: 'casos/:radicado', title: 'Información del caso · PLUS', loadComponent: () => import('./features/cases/public-case.component').then(m => m.PublicCaseComponent)},
+      {path: 'casos/:radicado', title: 'Información del caso · PLUS', data: {caseContext: 'public'}, loadComponent: () => import('./features/cases/public-case.component').then(m => m.PublicCaseComponent)},
     ],
   },
   {

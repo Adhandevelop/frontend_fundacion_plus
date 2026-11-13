@@ -195,3 +195,4 @@ await import('./homepage-integration.spec');
 await import('./news-integration.spec');
 await import('./initiatives-integration.spec');
 await import('./proposals-integration.spec');
+await import('./map-integration.spec');

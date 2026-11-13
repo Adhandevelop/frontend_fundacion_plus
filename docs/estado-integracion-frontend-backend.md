@@ -39,7 +39,7 @@ Este es el registro consolidado del frontend Angular. “Integrado” significa 
 ### Portada institucional
 
 - La página principal consulta `/api/v1/public/home/`.
-- Fotografía, nombre institucional, representante, misión y métricas verificadas proceden del backend cuando la consulta está disponible.
+- Fotografía, nombre institucional, representante, misión y métricas verificadas proceden del backend cuando la consulta está disponible. El frontend aplica normalización institucional y respaldo seguro al nombre oficial "JUAN DAVID MARTINEZ BOLAÑO".
 - Las cifras ficticias del diseño fueron retiradas: ante un error se muestran guiones, no valores inventados.
 - `/admin/portada` permite consultar y reemplazar la imagen mediante `multipart/form-data`.
 - El frontend valida JPG/PNG/WEBP, límite de 5 MB y texto alternativo; el backend conserva la validación definitiva, versiona el recurso y audita la escritura.
@@ -141,12 +141,12 @@ No hay problemas técnicos activos demostrados en [problemas-integracion.md](pro
 
 La administración también puede registrar expedientes desde el botón amarillo “Añadir caso” del dashboard. El formulario `/admin/casos/nuevo` usa catálogos oficiales y `POST /api/v1/admin/cases/`, sin entrar al módulo ciudadano.
 
-El módulo `/admin/casos-asignados` muestra los expedientes asignados al usuario administrativo autenticado mediante los filtros P09 del backend. Está separado del listado general. El módulo solicitado “Mis casos” —casos creados o seguidos por el administrador— queda pendiente de contrato específico.
+El módulo `/admin/casos-asignados` muestra los expedientes asignados al usuario administrativo autenticado mediante los filtros P09 del backend. Está separado del listado general. `/admin/mis-casos` ya utiliza el contrato específico del backend y separa los casos creados por la cuenta administrativa de los casos públicos que decidió seguir.
 
 ## 5. Próximo trabajo recomendado
 
-1. Integrar completamente el mapa con GeoJSON, filtros, marcadores y navegación a los casos reales.
-2. Conectar la ficha pública real de cada caso y la acción de seguirlo.
+1. Probar en el servidor el mapa, cuyo encuadre ya se ajusta a los resultados filtrados, y el expediente público conectado.
+2. Verificar con una cuenta ciudadana el seguimiento por UUID y el envío de comentarios a moderación desde la ficha pública.
 3. Probar formularios de extremo a extremo en un entorno controlado y corregir diferencias observadas.
 4. Completar los controles avanzados de validación del constructor.
 5. Aprobar y cargar el contenido editorial inicial.
@@ -173,7 +173,7 @@ El módulo `/admin/casos-asignados` muestra los expedientes asignados al usuario
 - Portada institucional: lectura y administración conectadas; prueba real de archivo pendiente.
 - Noticias: lecturas públicas, ciclo del boletín, administración REST y medios binarios conectados; carga editorial inicial y pruebas reales pendientes.
 - Iniciativas: catálogo, detalle, postulación pública, CRUD textual, ediciones, medios, indicadores, cobertura, vínculos con casos, actividades con comunidad/responsable/GeoPoint y revisión administrativa de postulaciones conectados; carga editorial inicial y pruebas reales siguen pendientes.
-- Mapa: base real corregida localmente; falta desplegar/verificar el arreglo y siguen pendientes los datos georreferenciados.
+- Mapa: base real corregida, capa `GeoJSON`, portada, búsqueda, lista y filtros oficiales por UUID integrados; falta desplegar y verificar con datos georreferenciados del servidor.
 
 Las cifras son orientativas. El estado local no implica que los cambios estén publicados en `fundacionplus.site`.
 

@@ -1,78 +1,84 @@
-<div class="public-case-page">@if(isDemoCase()) {
-<p class="max-w-7xl mx-auto px-margin md:px-margin-desktop py-3 text-body-sm" role="note">Caso de demostración. Los textos, fotografías, comentarios e indicadores son ejemplos del diseño y no corresponden a un expediente real verificado.</p>
-<section class="case-bg-18181b border-b case-border-333338 py-space-sm">
-<div class="w-full max-w-7xl mx-auto px-margin md:px-margin-desktop flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
-<div class="flex flex-wrap items-center gap-space-sm text-body-sm font-body-sm case-text-a1a1aa">
-<a class="inline-flex items-center gap-1 font-semibold case-text-fafafa hover:text-primary-container transition-colors py-1 px-2 rounded-md case-hoverbg-242428" routerLink="/mapa">
-<span class="material-symbols-outlined text-[18px]">arrow_back</span>
-          Volver al mapa
-        </a>
-<span class="case-text-52525b">/</span>
-<a class="case-hovertext-fafafa transition-colors" routerLink="/">Inicio</a>
-<span class="case-text-52525b">/</span>
-<a class="case-hovertext-fafafa transition-colors" routerLink="/mapa">Mapa de casos</a>
-<span class="case-text-52525b">/</span>
-<span class="case-text-fafafa font-medium truncate max-w-[220px] sm:max-w-none">Caso Radicado #PLUS-2025-084</span>
+<div class="public-case-page min-h-[60vh]">
+  @if(loading()) {
+    <section class="max-w-7xl mx-auto p-8" role="status">Consultando expediente público…</section>
+  } @else if(caseData()) {
+    @if(caseData(); as caso) {
+    <section class="max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-lg space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <a routerLink="/mapa" class="underline text-body-sm">Volver al mapa</a>
+        <button type="button" class="rounded-lg border px-3 py-2 text-body-sm" (click)="copyLink()">Compartir enlace</button>
+      </div>
+      @if(shareMessage()){<p role="status" class="text-body-sm">{{shareMessage()}}</p>}
+
+      <header class="space-y-3 border-b border-slate-400/30 pb-5">
+        <p class="text-body-sm">Caso verificado y aprobado · {{caso.codigo}}</p>
+        <h1 class="text-headline-lg">{{caso.titulo}}</h1>
+        <p class="text-body-sm">{{caso.comunidad_nombre}} · {{caso.municipio_nombre}}, {{caso.departamento_nombre}}</p>
+        <p class="text-body-sm">{{caso.tipo_nombre}} · {{caso.estado_nombre}} · Prioridad {{caso.prioridad}}</p>
+      </header>
+
+      <article class="rounded-xl border border-slate-400/30 p-5 space-y-3">
+        <h2 class="text-title-md font-bold">Descripción del caso</h2>
+        <p class="whitespace-pre-line">{{caso.descripcion}}</p>
+      </article>
+      @if(caso.resultado_resumen){
+        <article class="rounded-xl border border-slate-400/30 p-5 space-y-3">
+          <h2 class="text-title-md font-bold">Resultado</h2><p class="whitespace-pre-line">{{caso.resultado_resumen}}</p>
+        </article>
+      }
+
+      @if(relatedLoading()){<p role="status">Cargando historial, evidencias y comentarios…</p>}
+      @if(relatedMessage()){<p role="status">{{relatedMessage()}}</p>}
+      <section class="grid gap-5 lg:grid-cols-2">
+        <article class="rounded-xl border border-slate-400/30 p-5">
+          <h2 class="text-title-md font-bold">Historial público</h2>
+          <div class="mt-4 space-y-4">
+            @for(item of updates();track item.id_seguimiento){
+              <div class="border-l-4 border-yellow-400 pl-4"><p class="font-semibold">{{item.titulo||'Actualización del caso'}}</p><p class="text-body-sm whitespace-pre-line">{{item.descripcion}}</p><time class="text-label-sm">{{item.fecha_seguimiento|date:'dd/MM/yyyy, h:mm a':'-0500'}}</time></div>
+            }
+            @for(item of statusHistory();track item.id_historial){
+              <div class="border-l-4 border-slate-400 pl-4"><p class="font-semibold">Estado: {{item.estado_nuevo_nombre}}</p>@if(item.motivo){<p class="text-body-sm">{{item.motivo}}</p>}<time class="text-label-sm">{{item.fecha_cambio|date:'dd/MM/yyyy, h:mm a':'-0500'}}</time></div>
+            }
+            @if(!updates().length&&!statusHistory().length&&!relatedLoading()){<p class="text-body-sm">No hay eventos públicos registrados.</p>}
+          </div>
+        </article>
+
+        <article class="rounded-xl border border-slate-400/30 p-5">
+          <h2 class="text-title-md font-bold">Evidencias públicas</h2>
+          <div class="mt-4 space-y-3">
+            @for(item of evidence();track item.id_evidencia){
+              <div class="rounded-lg border border-slate-400/30 p-3"><p class="font-semibold">{{item.nombre_original||item.descripcion||'Evidencia del caso'}}</p>@if(item.descripcion&&item.nombre_original){<p class="text-body-sm">{{item.descripcion}}</p>}<p class="text-label-sm">{{item.tipo_archivo}} · {{item.fecha_subida|date:'dd/MM/yyyy':'-0500'}}</p>@if(item.download_url){<a [href]="item.download_url" target="_blank" rel="noopener noreferrer" class="underline text-body-sm">Abrir evidencia</a>}</div>
+            } @empty {<p class="text-body-sm">No hay evidencias públicas aprobadas.</p>}
+          </div>
+        </article>
+      </section>
+
+      <article class="rounded-xl border border-slate-400/30 p-5">
+        <h2 class="text-title-md font-bold">Comentarios aprobados</h2>
+        <div class="mt-4 space-y-3">
+          @for(item of comments();track item.id_comentario){<blockquote class="rounded-lg border border-slate-400/30 p-4"><p>{{item.contenido}}</p><footer class="mt-2 text-label-sm">{{item.autor_nombre}} · {{item.fecha_creacion|date:'dd/MM/yyyy':'-0500'}}</footer></blockquote>}
+          @empty {<p class="text-body-sm">Todavía no hay comentarios públicos aprobados.</p>}
+        </div>
+        @if(canFollow()){
+          <form [formGroup]="commentForm" (ngSubmit)="submitComment()" class="mt-5 border-t border-slate-400/30 pt-5 space-y-3">
+            <label for="public-case-comment" class="block font-semibold">Enviar un comentario</label>
+            <textarea id="public-case-comment" formControlName="contenido" rows="4" maxlength="2000" class="w-full rounded-lg border border-slate-400/50 bg-transparent p-3" placeholder="Comparte información verificable o una actualización de la comunidad"></textarea>
+            <p class="text-label-sm">Entre 20 y 2000 caracteres. El comentario será revisado antes de publicarse.</p>
+            <button type="submit" class="rounded-lg bg-primary-container px-4 py-2 font-semibold text-black" [disabled]="commentBusy()">{{commentBusy()?'Enviando…':'Enviar a moderación'}}</button>
+            @if(commentMessage()){<p role="status" class="text-body-sm">{{commentMessage()}}</p>}
+          </form>
+        }
+      </article>
+
+      @if(canFollow()){
+        <button type="button" class="rounded-lg bg-primary-container px-4 py-2 font-semibold text-black" [disabled]="followLoading()||followBusy()" (click)="toggleFollow()">{{followLoading()?'Consultando seguimiento…':followBusy()?'Guardando…':following()?'Dejar de seguir':'Seguir caso'}}</button>
+      } @else if(!auth.hasSession()) {
+        <a [routerLink]="['/login']" [queryParams]="{returnUrl:'/casos/'+caso.codigo}" class="underline">Inicia sesión para seguir este caso</a>
+      }
+      @if(followMessage()){<p role="status">{{followMessage()}}</p>}
+    </section>
+    }
+  } @else {
+    <section class="max-w-7xl mx-auto p-8" role="alert"><h1 class="text-headline-md">No se pudo consultar el caso</h1><p class="my-4">{{error()}}</p><a routerLink="/mapa" class="inline-flex rounded-lg bg-primary-container text-black px-4 py-2">Volver al mapa</a></section>
+  }
 </div>
-<div class="flex items-center flex-wrap gap-space-sm">
-<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-label-sm font-label-sm case-bg-242428 case-text-d4d4d8 font-medium border case-border-3f3f46">
-<span class="material-symbols-outlined text-[14px] text-primary-container" style="font-variation-settings: 'FILL' 1;">verified</span>
-          Caso Verificado y Aprobado · Ley 850 de 2003 de Veedurías Ciudadanas
-        </span>
-<div class="flex items-center gap-1.5">
-<button disabled title="No hay informe disponible para este caso de ejemplo" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border case-border-3f3f46 case-bg-1f1f23 text-label-md font-label-md case-text-fafafa case-hoverbg-2a2a2e transition-colors shadow-2xs" type="button">
-<span class="material-symbols-outlined text-[16px] text-primary-container">picture_as_pdf</span>
-            Descargar Informe Técnico (PDF)
-          </button>
-<button aria-label="Copiar enlace del caso" (click)="copyLink()" class="p-1.5 rounded-lg border case-border-3f3f46 case-bg-1f1f23 case-text-a1a1aa case-hovertext-fafafa case-hoverbg-2a2a2e transition-colors" type="button">
-<span class="material-symbols-outlined text-[18px]">share</span>
-</button>
-</div>
-</div>
-</div>
-<p class="max-w-7xl mx-auto px-margin md:px-margin-desktop text-body-sm" role="status">{{ shareMessage() }}</p></section>
-<div class="w-full max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-lg flex-1">
-<header class="mb-space-lg pb-space-md border-b case-border-333338">
-<div class="flex flex-wrap items-center gap-2 mb-3">
-<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-label-md font-label-md bg-primary-container text-black font-bold tracking-wide">
-<span class="w-2 h-2 rounded-full bg-black animate-pulse"></span>
-          En Gestión Activa
-        </span>
-<span class="px-2.5 py-0.5 rounded-full text-label-sm font-label-sm font-semibold case-bg-242428 case-text-fafafa border case-border-3f3f46">
-          Radicado: #PLUS-2025-084
-        </span>
-<span class="px-2.5 py-0.5 rounded-full text-label-sm font-label-sm case-bg-242428 case-text-a1a1aa border case-border-3f3f46">
-          Problemática comunitaria
-        </span>
-<span class="px-2.5 py-0.5 rounded-full text-label-sm font-label-sm case-bg-242428 case-text-a1a1aa border case-border-3f3f46">
-          Infraestructura Vial y Puentes
-        </span>
-<span class="px-2.5 py-0.5 rounded-full text-label-sm font-label-sm case-bg-242428 case-text-a1a1aa border case-border-3f3f46">
-          Subregión Darién - Subcuenca Cacarica y Jiguamiandó
-        </span>
-</div>
-<h1 class="text-headline-lg font-headline-lg case-text-fafafa tracking-tight mb-2">
-        Rehabilitación de vía terciaria vereda El Porvenir
-      </h1>
-<div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-body-sm font-body-sm case-text-a1a1aa">
-<span class="inline-flex items-center gap-1 case-text-fafafa font-medium">
-<span class="material-symbols-outlined text-[17px] text-primary-container">location_on</span>
-          Municipio de Riosucio, Chocó · Vereda El Porvenir
-        </span>
-<span class="inline-flex items-center gap-1">
-<span class="material-symbols-outlined text-[16px]">schedule</span>
-          Última actualización: 03 de Febrero, 2025
-        </span>
-</div>
-</header>
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
-<div class="lg:col-span-8 flex flex-col gap-space-lg">
-<plus-case-description/>
-<plus-case-evidence/>
-<plus-case-timeline id="seguimiento"/>
-<plus-case-results/>
-<plus-case-participation/>
-</div>
-<aside class="lg:col-span-4 lg:sticky lg:top-24"><plus-case-sidebar/></aside>
-</div>
-</div>} @else {<section class="max-w-7xl mx-auto p-8 min-h-[50vh]"><h1 class="text-headline-md">Caso no disponible en la demostración</h1><p class="my-4">Por ahora solo está disponible el caso de ejemplo PLUS-2025-084. La consulta de casos reales se conectará con la API.</p><a routerLink="/mapa" class="inline-flex rounded-lg bg-primary-container text-black px-4 py-2">Volver al mapa</a></section>}</div>

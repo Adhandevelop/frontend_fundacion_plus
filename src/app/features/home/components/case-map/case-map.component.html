@@ -8,6 +8,7 @@
       </div>
       <div class="flex flex-wrap gap-3"><a routerLink="/mapa" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-on-surface dark:bg-surface-container-lowest text-surface dark:text-on-surface font-semibold"><span class="material-symbols-outlined text-[18px]">open_in_full</span>Abrir mapa completo</a><a routerLink="/registro" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary-container text-black font-semibold"><span class="material-symbols-outlined text-[18px]">add_circle</span>Registrar un caso</a></div>
     </div>
-    <plus-map-canvas></plus-map-canvas>
+    @if(mapUnavailable()){<p class="rounded-lg border border-amber-500/50 p-4 text-body-sm" role="status">La cartografía está disponible, pero no fue posible consultar las ubicaciones públicas en este momento.</p>}
+    <plus-map-canvas [features]="features()"></plus-map-canvas>
   </div>
 </section>

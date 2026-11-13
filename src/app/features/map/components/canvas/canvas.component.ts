@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
-import type { LatLngExpression, Map as LeafletMap } from 'leaflet';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
+import type { LatLngExpression, LayerGroup, Map as LeafletMap } from 'leaflet';
+import {PublicCaseMapFeature} from '../../map-cases.models';
 
 const VILLAVICENCIO: LatLngExpression = [4.142, -73.6266];
 
@@ -9,12 +10,22 @@ const VILLAVICENCIO: LatLngExpression = [4.142, -73.6266];
   templateUrl: './canvas.component.html',
   styleUrls: ['./canvas.component.css']
 })
-export class MapCanvasComponent implements AfterViewInit, OnDestroy {
+export class MapCanvasComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() mapHeight?: string;
+  @Input() features: PublicCaseMapFeature[] = [];
+  @Input() selectedCaseId = '';
+  @Output() caseSelected = new EventEmitter<PublicCaseMapFeature>();
   @ViewChild('map', { static: true }) private readonly mapElement!: ElementRef<HTMLDivElement>;
   private map?: LeafletMap;
+  private leaflet?: typeof import('leaflet');
+  private caseLayer?: LayerGroup;
+  private featureRevision = '';
   private resizeObserver?: ResizeObserver;
   status = 'Cargando cartografía de OpenStreetMap…';
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['features'] || changes['selectedCaseId']) this.renderCases(!!changes['features']);
+  }
 
   async ngAfterViewInit(): Promise<void> {
     try {
@@ -32,6 +43,7 @@ export class MapCanvasComponent implements AfterViewInit, OnDestroy {
         attributionControl: true
       });
       this.map = map;
+      this.leaflet = L;
       const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors',
@@ -39,9 +51,8 @@ export class MapCanvasComponent implements AfterViewInit, OnDestroy {
       tiles.on('load', () => this.status = 'Mapa centrado en Villavicencio, Meta.');
       tiles.on('tileerror', () => this.status = 'No fue posible cargar una parte del mapa. Comprueba la conexión e inténtalo nuevamente.');
       tiles.addTo(map);
-      L.circleMarker(VILLAVICENCIO, { radius: 9, color: '#0f172a', weight: 3, fillColor: '#facc15', fillOpacity: 1 })
-        .addTo(map)
-        .bindTooltip('Villavicencio · Meta', { permanent: true, direction: 'top', offset: [0, -8], className: 'plus-map-label' });
+      this.caseLayer = L.layerGroup().addTo(map);
+      this.renderCases(true);
 
       map.whenReady(() => {
         setTimeout(() => map.invalidateSize(), 0);
@@ -59,6 +70,46 @@ export class MapCanvasComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  private renderCases(fitResults = false): void {
+    const L = this.leaflet;
+    const map = this.map;
+    const layer = this.caseLayer;
+    if (!L || !map || !layer) return;
+    layer.clearLayers();
+    for (const feature of this.features) {
+      const [longitude, latitude] = feature.geometry.coordinates;
+      const selected = feature.properties.id_caso === this.selectedCaseId;
+      const marker = L.circleMarker([latitude, longitude], {
+        radius: selected ? 11 : 8,
+        color: '#0f172a',
+        weight: selected ? 4 : 2,
+        fillColor: this.markerColor(feature.properties.estado),
+        fillOpacity: 1,
+      }).addTo(layer);
+      marker.bindTooltip(feature.properties.codigo || feature.properties.radicado_code, {
+        direction: 'top', offset: [0, -7], className: 'plus-map-label',
+      });
+      marker.on('click', () => this.caseSelected.emit(feature));
+    }
+    const revision=this.features.map(item=>item.properties.id_caso).join('|');
+    if(fitResults&&revision!==this.featureRevision&&this.features.length){
+      this.featureRevision=revision;
+      const points=this.features.map(item=>[item.geometry.coordinates[1],item.geometry.coordinates[0]] as [number,number]);
+      if(points.length===1)map.setView(points[0],13,{animate:true});
+      else map.fitBounds(points,{padding:[36,36],maxZoom:15,animate:true});
+    }
+    this.status = this.features.length
+      ? `${this.features.length} ${this.features.length === 1 ? 'caso público ubicado' : 'casos públicos ubicados'} en el mapa.`
+      : 'No hay casos públicos con ubicación para los filtros seleccionados.';
+  }
+
+  private markerColor(state: string): string {
+    const normalized = state.toLowerCase();
+    if (normalized.includes('resuelto') || normalized.includes('cerrado')) return '#22c55e';
+    if (normalized.includes('proceso') || normalized.includes('gestion')) return '#facc15';
+    return '#e2e8f0';
+  }
+
   showVillavicencio(): void {
     this.map?.setView(VILLAVICENCIO, 13, { animate: true });
     this.status = 'Mapa centrado en Villavicencio, Meta.';
@@ -71,6 +122,7 @@ export class MapCanvasComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.resizeObserver?.disconnect();
+    this.caseLayer?.clearLayers();
     this.map?.remove();
     this.map = undefined;
   }

@@ -20,7 +20,7 @@
 
 <div class="relative w-full sm:w-72">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 mp-text-secondary text-[20px]">search</span>
-<input aria-label="Buscar en la lista de casos" [value]="search()" (input)="search.set($any($event.target).value)" class="w-full pl-10 pr-3 py-2 text-body-sm font-body-sm mp-bg-surface-container border mp-border-outline-variant-70 mp-text-on-surface mp-placeholder-text-neutral-500 rounded-lg focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary-container/40 transition-all" placeholder="Buscar caso, radicado o municipio..." type="text">
+<input aria-label="Buscar en la lista de casos" [value]="search()" (input)="search.set($any($event.target).value)" (keyup.enter)="loadCases()" class="w-full pl-10 pr-3 py-2 text-body-sm font-body-sm mp-bg-surface-container border mp-border-outline-variant-70 mp-text-on-surface mp-placeholder-text-neutral-500 rounded-lg focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary-container/40 transition-all" placeholder="Buscar caso, radicado o municipio..." type="search">
 </div>
 
 <div class="inline-flex rounded-lg mp-bg-surface-container-low p-1 border mp-border-outline-variant-60" role="group">
@@ -40,7 +40,12 @@
 </div>
 </div>
 </section>
-<div class="max-w-7xl mx-auto px-margin md:px-margin-desktop text-body-sm py-3" role="note">Cartografía real de OpenStreetMap centrada en Villavicencio y disponible para explorar el Meta. Los casos y filtros se conectarán con la API; no se muestran ubicaciones ficticias.</div><div class="w-full max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-md grid grid-cols-12 gap-space-md"><aside class="col-span-12 lg:col-span-4 map-filter-shell p-space-md rounded-xl border"><plus-map-filters/></aside><div class="col-span-12 lg:col-span-8 min-w-0">@if(view() === 'map') {<plus-map-canvas/>} @else {<section aria-label="Lista de casos" class="map-list min-h-[500px] rounded-xl border p-6"><h2 class="text-title-md font-bold">Casos publicados</h2><p class="mt-3 text-body-sm" role="status">Todavía no hay casos georreferenciados cargados desde el backend. La búsqueda y los filtros estarán disponibles cuando la API entregue ubicaciones autorizadas para publicación.</p></section>}</div></div>
+<div class="max-w-7xl mx-auto px-margin md:px-margin-desktop text-body-sm py-3" role="note">Cartografía de OpenStreetMap con ubicaciones públicas generalizadas por el backend para proteger datos sensibles.</div><div class="w-full max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-md grid grid-cols-12 gap-space-md"><aside class="col-span-12 lg:col-span-4 map-filter-shell p-space-md rounded-xl border"><plus-map-filters (filtersApplied)="applyFilters($event)"/></aside><div class="col-span-12 lg:col-span-8 min-w-0 space-y-4">
+@if(loading()){<p class="map-list rounded-xl border p-4" role="status">Consultando casos públicos…</p>}
+@if(error()){<div class="map-list rounded-xl border p-4 space-y-2" role="alert"><p>No fue posible cargar los casos. {{error()}}</p><button type="button" class="underline font-semibold" (click)="loadCases()">Reintentar</button></div>}
+@if(view() === 'map') {<plus-map-canvas [features]="features()" [selectedCaseId]="selected()?.properties?.id_caso ?? ''" (caseSelected)="selectCase($event)"/>} @else {<section aria-label="Lista de casos" class="map-list min-h-[500px] rounded-xl border p-6"><div class="flex items-center justify-between gap-3"><h2 class="text-title-md font-bold">Casos publicados</h2><span class="text-body-sm">{{features().length}} resultados</span></div><div class="mt-4 space-y-3">@for(feature of features();track feature.properties.id_caso){<article class="rounded-lg border mp-border-outline-variant-50 p-4"><p class="text-label-sm mp-text-secondary">{{feature.properties.codigo}}</p><h3 class="font-bold">{{feature.properties.titulo}}</h3><p class="text-body-sm mt-1">{{feature.properties.municipio}}, {{feature.properties.departamento}} · {{feature.properties.estado}}</p><button type="button" class="underline font-semibold text-body-sm mt-2" (click)="selectCase(feature);view.set('map')">Ver ubicación</button></article>}@empty{<p role="status">No hay casos públicos con ubicación para esta búsqueda.</p>}</div></section>}
+@if(selected();as feature){<article class="map-list rounded-xl border p-5"><div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3"><div><p class="text-label-sm mp-text-secondary">{{feature.properties.codigo}}</p><h2 class="text-title-md font-bold">{{feature.properties.titulo}}</h2><p class="text-body-sm mt-1">{{feature.properties.comunidad}} · {{feature.properties.municipio}}, {{feature.properties.departamento}}</p><p class="text-body-sm mt-1">{{feature.properties.tipo}} · {{feature.properties.estado}}</p></div>@if(caseRoute(feature);as route){<a [routerLink]="route" class="inline-flex justify-center rounded-lg mp-bg-primary-container text-black font-bold px-4 py-2">Ver expediente</a>}@else{<p class="text-body-sm max-w-xs">Puedes seguir este caso desde el portal ciudadano cuando abras su expediente público.</p>}</div></article>}
+</div></div>
 <section class="border-t mp-border-outline-variant-40 mp-bg-surface-container-low py-6">
 <div class="w-full max-w-7xl mx-auto px-margin md:px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-4">
 
@@ -71,8 +76,8 @@
 <div class="p-4 rounded-xl border mp-border-outline-variant-60 mp-bg-surface-container flex items-center gap-4 shadow-sm">
 <div class="w-1.5 h-10 mp-bg-primary-container rounded-full"></div>
 <div>
-<span class="text-headline-sm font-headline-sm mp-text-on-surface font-bold">Sin datos ficticios</span>
-<p class="text-body-sm font-body-sm mp-text-secondary">Casos pendientes de la API</p>
+<span class="text-headline-sm font-headline-sm mp-text-on-surface font-bold">{{features().length}} casos</span>
+<p class="text-body-sm font-body-sm mp-text-secondary">Ubicaciones públicas recibidas</p>
 </div>
 </div>
 </div>
