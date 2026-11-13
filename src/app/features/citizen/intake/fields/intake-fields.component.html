@@ -17,8 +17,7 @@
       <label class="cit-field">Municipio *<select formControlName="municipality" (change)="municipalityChanged.emit()"><option value="">Selecciona un municipio</option>@for(item of municipalities();track item.id_municipio){<option [value]="item.id_municipio">{{item.nombre}}</option>}</select></label>
       <label class="cit-field">Comunidad o vereda *<select formControlName="community"><option value="">Selecciona una comunidad</option>@for(item of communities();track item.id_comunidad){<option [value]="item.id_comunidad">{{item.nombre}}</option>}</select></label>
       @if(form().controls.municipality.value && !communities().length){<p class="text-body-sm">No hay comunidades cargadas para el municipio seleccionado o todavía se están consultando.</p>}
-      <div class="grid sm:grid-cols-2 gap-4"><label class="cit-field">Latitud (opcional)<input type="number" formControlName="latitude" min="-90" max="90" step="any"></label><label class="cit-field">Longitud (opcional)<input type="number" formControlName="longitude" min="-180" max="180" step="any"></label></div>
-      <p class="text-body-sm">Si conoces las coordenadas, completa ambos campos. No se solicita acceso a la ubicación del dispositivo.</p>
+      <plus-intake-location-picker [latitude]="form().controls.latitude.value" [longitude]="form().controls.longitude.value" (locationSelected)="setLocation($event)"/>
     }
     @case(4){
       <h3 class="text-title-md">Evidencias y anexos</h3>

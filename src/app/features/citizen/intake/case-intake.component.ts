@@ -87,7 +87,7 @@ export class CaseIntakeComponent {
   next(){
     const controls=(this.groups[this.step()-1] ?? []).map(key=>this.form.controls[key]);controls.forEach(control=>control.markAsTouched());
     if(controls.some(control=>control.invalid)){this.message.set('Revisa los campos obligatorios y las cantidades de este paso.');return;}
-    if(this.step()===3 && !this.validTerritory()){this.message.set('Selecciona un territorio del catálogo y completa ambas coordenadas o deja ambas vacías.');return;}
+    if(this.step()===3 && !this.validTerritory()){this.message.set('Selecciona un territorio del catálogo y marca una ubicación en el mapa o déjala sin seleccionar.');return;}
     this.goTo(this.step()+1);
   }
   saveDraft(){if(this.pending() || this.completed())return;this.drafts.save(this.form.getRawValue(),this.files());this.draftMessage.set('Borrador temporal guardado');this.message.set('El borrador está en memoria de esta sesión. Se pierde al recargar; todavía no se ha radicado.');}
@@ -100,7 +100,7 @@ export class CaseIntakeComponent {
     if(this.pending() || this.uncertain() || this.completed())return;
     this.form.markAllAsTouched();
     if(this.form.invalid){const index=this.groups.findIndex(keys=>keys.some(key=>this.form.controls[key].invalid));this.step.set(index+1);this.message.set('Corrige los campos señalados antes de radicar.');return;}
-    if(!this.validTerritory() || !this.availableTypes().some(item=>item.id_tipo_caso===this.form.controls.category.value)){this.step.set(3);this.message.set('Revisa el tipo de caso, el territorio y las coordenadas seleccionadas.');return;}
+    if(!this.validTerritory() || !this.availableTypes().some(item=>item.id_tipo_caso===this.form.controls.category.value)){this.step.set(3);this.message.set('Revisa el tipo de caso, el territorio y la ubicación seleccionada en el mapa.');return;}
     if(!this.truth() || !this.consent()){this.message.set('Debes confirmar la información y autorizar el tratamiento de datos para radicar.');return;}
     const value=this.form.getRawValue();
     this.pending.set(true);this.message.set('Enviando el caso y sus anexos…');

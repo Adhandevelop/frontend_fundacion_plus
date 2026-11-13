@@ -3,9 +3,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { IntakeForm } from '../intake-view.model';
 import { CaseType } from '../../services/citizen-cases.models';
 import { Community, Department, Municipality } from '../../../../core/api/account-api.service';
+import { LocationPickerComponent } from '../location-picker/location-picker.component';
 
 @Component({
-  selector: 'plus-intake-fields', standalone: true, imports: [ReactiveFormsModule],
+  selector: 'plus-intake-fields', standalone: true, imports: [ReactiveFormsModule,LocationPickerComponent],
   templateUrl: './intake-fields.component.html',
 })
 export class IntakeFieldsComponent {
@@ -38,4 +39,5 @@ export class IntakeFieldsComponent {
     input.value = '';
   }
   remove(index: number) {this.filesChanged.emit(this.files().filter((_, i) => i !== index));}
+  setLocation(value:{latitude:number;longitude:number}|null){this.form().patchValue({latitude:value?.latitude??null,longitude:value?.longitude??null});}
 }

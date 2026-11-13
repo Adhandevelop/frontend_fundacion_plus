@@ -1,0 +1,1 @@
+:host{display:block;width:100%}.intake-location-map{width:100%;height:390px;min-height:320px;border:1px solid rgb(148 163 184 / .45);border-radius:.75rem;overflow:hidden;background:#e2e8f0;z-index:0}:host-context(.dark) .intake-location-map{background:#1e293b}@media(max-width:640px){.intake-location-map{height:330px;min-height:280px}}
