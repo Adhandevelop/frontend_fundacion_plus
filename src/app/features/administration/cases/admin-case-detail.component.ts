@@ -22,17 +22,18 @@ export class AdminCaseDetailComponent {
   readonly tab=signal('overview');readonly review=signal<ActionReview|null>(null);
   readonly candidates=signal<CandidatePage>({count:0,next:null,previous:null,results:[]});readonly candidatePage=signal(1);readonly candidateQuery=signal('');readonly candidateLoading=signal(false);readonly candidateError=signal('');
   readonly evidenceId=signal('');readonly selectedEvidenceFile=signal<File|null>(null);readonly label=caseStateLabel;
+  readonly progressFiles=signal<File[]>([]);
   readonly tabs=[{id:'overview',label:'Resumen'},{id:'history',label:'Seguimiento'},{id:'evidence',label:'Evidencias'},{id:'management',label:'Gestión del caso'}];
   private readonly requiredText=[Validators.required,Validators.pattern(/\S/),Validators.maxLength(2000)];
   readonly moderation=this.builder.group({publication:['pendiente',Validators.required],priority:['media',Validators.required],reason:['',this.requiredText]});
   readonly correction=this.builder.group({reason:['',this.requiredText]});
   readonly assignment=this.builder.group({responsible:['',Validators.required],reason:['',this.requiredText]});
-  readonly progress=this.builder.group({title:['',[Validators.required,Validators.maxLength(200),Validators.pattern(/\S/)]],description:['',this.requiredText],audience:['interno',Validators.required],state:['']});
+  readonly progress=this.builder.group({title:['',[Validators.required,Validators.maxLength(200),Validators.pattern(/\S/)]],description:['',this.requiredText],audience:['interno',Validators.required],state:[''],evidenceDescription:['',Validators.maxLength(2000)]});
   readonly resolution=this.builder.group({state:['resuelto',Validators.required],reason:['',this.requiredText],result:['',[Validators.required,Validators.pattern(/\S/),Validators.maxLength(5000)]]});
   readonly evidence=this.builder.group({description:['',Validators.maxLength(2000)],audience:['ciudadano',Validators.required],review:['pendiente',Validators.required]});
   readonly evidenceUpload=this.builder.group({name:['',[Validators.required,Validators.pattern(/\S/),Validators.maxLength(180)]],description:['',Validators.maxLength(2000)]});
   constructor(){inject(ActivatedRoute).paramMap.pipe(takeUntilDestroyed(this.destroy)).subscribe(params=>{
-    this.reference=params.get('radicado') ?? '';this.data.set(null);this.tab.set('overview');this.status.set('');this.pending.set(false);this.review.set(null);this.evidenceId.set('');this.selectedEvidenceFile.set(null);this.candidatePage.set(1);this.candidateQuery.set('');this.resetForms();this.load();
+    this.reference=params.get('radicado') ?? '';this.data.set(null);this.tab.set('overview');this.status.set('');this.pending.set(false);this.review.set(null);this.evidenceId.set('');this.selectedEvidenceFile.set(null);this.progressFiles.set([]);this.candidatePage.set(1);this.candidateQuery.set('');this.resetForms();this.load();
   });}
   load(){
     const revision=++this.revision;this.request?.unsubscribe();this.candidateRequest?.unsubscribe();this.loading.set(true);this.error.set('');this.review.set(null);
@@ -70,7 +71,7 @@ export class AdminCaseDetailComponent {
       action={kind:'assignments',payload:{id_responsable:candidate.id_usuario,motivo:value.reason.trim()}};permission='assign';title='Asignar responsable';summary=`${candidate.nombres} ${candidate.apellidos}. Motivo: ${value.reason.trim()}`;
     }else if(kind==='progress'){
       this.progress.markAllAsTouched();if(this.progress.invalid)return;const value=this.progress.getRawValue();
-      action={kind:'progress',payload:{titulo:value.title.trim(),descripcion:value.description.trim(),audiencia:value.audience,visible_publicamente:value.audience==='publico',...(value.state?{estado:value.state}:{})}};permission='progress';title='Registrar seguimiento';summary=`${value.title.trim()}\nAudiencia: ${this.audienceLabel(value.audience)}${value.state?'\nEstado operativo: '+this.label(value.state):''}\n${value.description.trim()}`;
+      action={kind:'progress',payload:{titulo:value.title.trim(),descripcion:value.description.trim(),audiencia:value.audience,visible_publicamente:value.audience==='publico',...(value.state?{estado:value.state}:{})},files:this.progressFiles(),evidenceDescription:value.evidenceDescription};permission='progress';title='Registrar seguimiento';summary=`${value.title.trim()}\nAudiencia: ${this.audienceLabel(value.audience)}${value.state?'\nEstado operativo: '+this.label(value.state):''}\nDocumentos: ${this.progressFiles().length}\n${value.description.trim()}`;
     }else if(kind==='resolution'){
       this.resolution.markAllAsTouched();if(this.resolution.invalid)return;const value=this.resolution.getRawValue();
       action={kind:'resolution',payload:{estado:value.state,motivo:value.reason.trim(),resultado_resumen:value.result.trim()}};permission='resolve';title='Resolver o cerrar caso';summary=`Estado: ${this.label(value.state)}\nMotivo: ${value.reason.trim()}\nResultado: ${value.result.trim()}`;
@@ -86,7 +87,7 @@ export class AdminCaseDetailComponent {
     const review=this.review();if(!review || this.pending() || this.data()?.id_caso!==review.caseId || !this.can(review.permission))return;
     const revision=this.revision;this.pending.set(true);this.status.set('');
     this.api.action(review.caseId,review.action).pipe(takeUntilDestroyed(this.destroy),finalize(()=>{if(revision===this.revision)this.pending.set(false);})).subscribe({next:()=>{
-      if(revision!==this.revision)return;this.pending.set(false);this.review.set(null);this.resetForms();this.evidenceId.set('');this.status.set('Acción confirmada por el servidor.');this.load();
+      if(revision!==this.revision)return;this.pending.set(false);this.review.set(null);this.progressFiles.set([]);this.resetForms();this.evidenceId.set('');this.status.set('Acción confirmada por el servidor.');this.load();
     },error:error=>{
       if(revision!==this.revision)return;this.review.set(null);
       if(!(error instanceof HttpErrorResponse) || error.status===0 || error.status>=500){this.uncertain.set(true);this.status.set('No se pudo confirmar el resultado. Actualiza el expediente y revisa el historial antes de repetir la acción.');}
@@ -94,6 +95,7 @@ export class AdminCaseDetailComponent {
     }});
   }
   editEvidence(item:CaseEvidence){if(!this.can('manage_evidence') || this.pending())return;this.evidenceId.set(item.id_evidencia);this.evidence.reset({description:item.descripcion ?? '',audience:item.audiencia,review:item.estado_revision});}
+  selectProgressFiles(event:Event){const input=event.target as HTMLInputElement,files=Array.from(input.files??[]);input.value='';const accepted=files.filter(file=>['jpg','jpeg','png','webp','gif','mp4','mov','webm','pdf'].includes(file.name.split('.').pop()?.toLowerCase()??'')&&file.size<=15728640),rejected=files.filter(file=>!accepted.includes(file));this.progressFiles.set(accepted);this.status.set(rejected.length?'Algunos archivos no se aceptaron. Usa formatos permitidos de hasta 15 MB por archivo.':accepted.length?`${accepted.length} documento(s) listos para adjuntar al seguimiento.`:'');}
   selectEvidenceFile(event:Event){const input=event.target as HTMLInputElement,file=input.files?.[0]??null;input.value='';if(!file)return;if(!['jpg','jpeg','png','webp','pdf'].includes(file.name.split('.').pop()?.toLowerCase()??'')||file.size>15728640){this.status.set('Selecciona JPG, PNG, WEBP o PDF de hasta 15 MB.');return;}this.selectedEvidenceFile.set(file);this.evidenceUpload.controls.name.setValue(file.name.replace(/\.[^.]+$/,''));this.status.set('Archivo seleccionado. Asigna el nombre que tendrá dentro del expediente.');}
   uploadEvidence(){const caso=this.data(),file=this.selectedEvidenceFile();if(!caso||!file||this.pending()||!this.can('manage_evidence'))return;this.evidenceUpload.markAllAsTouched();if(this.evidenceUpload.invalid)return;const value=this.evidenceUpload.getRawValue(),extension=file.name.match(/\.[A-Za-z0-9]+$/)?.[0]??'',safeName=value.name.trim().replace(/[\\/:*?"<>|]+/g,'-').replace(/\s+/g,' ').slice(0,180),namedFile=new File([file],`${safeName}${extension}`,{type:file.type,lastModified:file.lastModified}),revision=this.revision;this.pending.set(true);this.status.set('');this.api.uploadEvidence(caso.id_caso,namedFile,value.description).pipe(takeUntilDestroyed(this.destroy),finalize(()=>{if(revision===this.revision)this.pending.set(false);})).subscribe({next:()=>{if(revision!==this.revision)return;this.selectedEvidenceFile.set(null);this.evidenceUpload.reset();this.status.set('Documento administrativo añadido al expediente. Revisa su audiencia antes de compartirlo.');this.load();},error:error=>{if(revision===this.revision)this.status.set(apiErrorMessage(error)+' Revisa las evidencias antes de volver a enviarlo.');}});}
   download(item:CaseEvidence){

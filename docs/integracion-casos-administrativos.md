@@ -9,9 +9,10 @@ Fecha: 9 de noviembre de 2026. Continúa la integración REST manteniendo los po
 - Expediente administrativo por UUID o código, independiente del componente ciudadano. Incluye solicitante, resultado, seguimientos internos/autorizados, historial, correcciones, aportes y evidencias.
 - Publicación/prioridad, solicitud de corrección, asignación de responsable, seguimiento por audiencia y resolución/cierre narrativo.
 - Revisión de evidencia: descripción, audiencia y estado de revisión; descarga binaria autenticada desde la ruta administrativa.
+- Los seguimientos y respuestas admiten varios documentos multipart en la misma operación. Cada archivo queda relacionado por `id_seguimiento` y se presenta dentro del avance correspondiente.
 - Cada escritura necesita validación y revisión de un resumen antes de Confirmar y guardar. Los botones de gestión dependen de `allowed_actions` del expediente; el backend sigue autorizando la operación.
 
-No están conectados en esta entrega el chat administrativo, la subida de evidencias del equipo, la radicación institucional, alertas tempranas y contenidos administrativos. No se muestran como si sus servicios de demostración editaran los casos reales. Informes y auditoría paginada se conectaron posteriormente: ver [alcance y límites](integracion-informes-auditoria.md). También se integraron el [directorio de comunidades](integracion-territorios.md), la [moderación de comentarios](integracion-moderacion-comentarios.md) y [usuarios y roles](integracion-usuarios.md).
+La subida de evidencias del equipo ya está conectada tanto de forma independiente como asociada a una respuesta. No están conectados en esta entrega la radicación institucional, alertas tempranas y contenidos administrativos que carezcan de contrato específico. Informes y auditoría paginada se conectaron posteriormente: ver [alcance y límites](integracion-informes-auditoria.md).
 
 ## Arquitectura y contratos
 

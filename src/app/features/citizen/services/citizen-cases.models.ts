@@ -6,7 +6,7 @@ export interface CaseEvidence {
   tamano_bytes: number | null; mime_type: string | null; audiencia: string; estado_revision: string; fecha_subida: string;
 }
 export interface CaseCorrection {id_solicitud: string; motivo: string; estado: string; fecha_solicitud: string; respuesta: string | null}
-export interface CaseUpdate {id_seguimiento: string; titulo: string; descripcion: string; audiencia: string; fecha_seguimiento: string}
+export interface CaseUpdate {id_seguimiento: string; titulo: string; descripcion: string; audiencia: string; fecha_seguimiento: string; evidencias?:CaseEvidence[]}
 export interface CaseContribution {id_aporte: string; contenido: string; fecha_creacion: string; evidencias: CaseEvidence[]}
 export interface CaseHistory {
   id_caso: string; codigo: string;

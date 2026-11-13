@@ -32,5 +32,5 @@ export type AdminAction =
   | {kind:'moderation';payload:{estado_publicacion:string;motivo:string;prioridad:string}}
   | {kind:'correction-requests';payload:{motivo:string}}
   | {kind:'assignments';payload:{id_responsable:string;motivo:string}}
-  | {kind:'progress';payload:{titulo:string;descripcion:string;audiencia:string;visible_publicamente:boolean;estado?:string}}
+  | {kind:'progress';payload:{titulo:string;descripcion:string;audiencia:string;visible_publicamente:boolean;estado?:string};files?:File[];evidenceDescription?:string}
   | {kind:'resolution';payload:{estado:string;motivo:string;resultado_resumen:string}};
