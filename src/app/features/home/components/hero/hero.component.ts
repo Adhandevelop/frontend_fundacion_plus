@@ -9,7 +9,6 @@ export class HeroComponent {
   private readonly destroy=inject(DestroyRef);
   readonly home=signal<PublicHomepage|null>(null);
   readonly loaded=signal(false);
-  readonly fallbackImage='https://lh3.googleusercontent.com/aida-public/AB6AXuAeivQ1NOrLY1wXuIV65Yxnu3W0viToVqFKH2WYC1NkQgAA0JWB3XDzIlfgvqi48CISlKVKrhbcA6T1A05vyW4ngwN1yRC-lAqU6y5Z4mFV2678EvPA_7LIANeeL9H6UoUfIQScaibQsqDqdgrEwpt6MNTSRPPO8GWmF6mRgdOjkmvrTbHMG767bZJzvaYI1LASc4V0R0CK3C6zZVUbBUPVbXV89JG6vbhlgF7l3Xhu54e5syfkD0lQGQ';
 
   constructor(){
     this.api.publicHome().pipe(takeUntilDestroyed(this.destroy)).subscribe({
@@ -18,7 +17,7 @@ export class HeroComponent {
     });
   }
 
-  image(){return homepageImageUrl(this.home()?.institution)||this.fallbackImage;}
+  image(){return homepageImageUrl(this.home()?.institution);}
   alt(){return this.home()?.institution?.alt_text||'Fotografía ilustrativa de la Corporación PLUS';}
   representativeName(){
     const name=this.home()?.institution?.representative_name;

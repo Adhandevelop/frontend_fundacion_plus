@@ -106,10 +106,10 @@ No se envían contraseñas por correo. El backend genera un enlace de un solo us
 
 ### Contenido editorial pendiente
 
-- Bloques secundarios de la página principal y nosotros.
+- Bloques institucionales de “Nosotros” y canales sociales oficiales.
 - Inventario inicial reproducible de contenido e imágenes.
 
-Estas pantallas todavía usan contenido de diseño. Falta aprobación institucional, carga inicial en la base de datos y conexión REST. No conviene conectar una colección vacía porque degradaría el sitio publicado.
+La portada ya consulta noticias e iniciativas publicadas y enlaza sus fichas por `slug`; muestra estados vacíos cuando no hay contenido. Los bloques institucionales restantes requieren aprobación y fuente REST antes de retirar su contenido de diseño.
 
 ### Otros límites
 

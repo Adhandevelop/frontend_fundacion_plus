@@ -14,12 +14,22 @@
                 </span>
 </div>
 <div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden border border-outline-variant/30 bg-surface-container-high dark:bg-surface-container-highest">
+@if(!loaded()){
+<div class="absolute inset-0 animate-pulse bg-surface-container-high dark:bg-surface-container-highest" role="status" aria-label="Cargando fotografía principal"></div>
+}@else if(image()){
 <img class="w-full h-full object-cover object-top" [alt]="alt()" [src]="image()"/>
+}@else{
+<div class="absolute inset-0 grid place-items-center p-6 text-center text-secondary dark:text-secondary-fixed">
+<div><span class="material-symbols-outlined text-5xl" aria-hidden="true">image</span><p class="text-body-sm mt-2">Fotografía institucional no disponible</p></div>
+</div>
+}
+@if(image()){
 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
 <div class="absolute bottom-3 left-3 right-3 text-white">
 <p class="text-label-sm font-label-sm tracking-wider uppercase opacity-90">Liderazgo Comunitario</p>
 <p class="text-title-md font-title-md font-bold text-white leading-tight">Certificación Nacional</p>
 </div>
+}
 </div>
 <div class="pt-space-md text-center lg:text-left">
 <h3 class="text-headline-sm font-headline-sm text-on-surface dark:text-inverse-on-surface tracking-tight">

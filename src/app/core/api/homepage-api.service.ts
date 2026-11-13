@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { API_BASE_URL } from './api.config';
+import {publicMediaUrl} from '../../shared/public-media-url';
 
 export interface HomepageInstitution {
   corporation_name:string;
@@ -44,12 +45,7 @@ export interface HomepageHero {
 
 export function homepageImageUrl(value:Pick<HomepageInstitution,'api_media_url'|'relative_url'|'image_url'|'url'>|null|undefined):string {
   const preferred=value?.api_media_url||value?.relative_url||value?.image_url||value?.url||'';
-  if(!preferred)return '';
-  try {
-    const parsed=new URL(preferred,typeof location==='undefined'?'https://fundacionplus.site':location.origin);
-    const path=`${parsed.pathname}${parsed.search}`;
-    return path.startsWith('/media/')?`/api/v1/public/media/${path.slice('/media/'.length)}`:path;
-  } catch {return preferred;}
+  return publicMediaUrl(preferred);
 }
 
 @Injectable({providedIn:'root'})
