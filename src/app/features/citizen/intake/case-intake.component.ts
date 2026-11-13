@@ -12,7 +12,7 @@ import { EMPTY_INTAKE, IntakeForm, IntakeViewValue } from './intake-view.model';
 import { CaseDraftService } from '../services/case-draft.service';
 import { CaseSubmissionService } from '../services/case-submission.service';
 import { CitizenCasesApiService } from '../services/citizen-cases-api.service';
-import { CaseType, caseStateLabel } from '../services/citizen-cases.models';
+import { CaseType } from '../services/citizen-cases.models';
 import { AccountApiService, Department, Municipality, Community } from '../../../core/api/account-api.service';
 import { apiErrorMessage } from '../../../core/api/api-error';
 
@@ -53,7 +53,7 @@ export class CaseIntakeComponent {
     department:[this.initial.department,Validators.required],municipality:[this.initial.municipality,Validators.required],community:[this.initial.community,Validators.required],
     latitude:[this.initial.latitude,[Validators.min(-90),Validators.max(90)]],longitude:[this.initial.longitude,[Validators.min(-180),Validators.max(180)]],
   });
-  private readonly groups:(keyof IntakeViewValue)[][]=[['kind','priority'],['title','category','description','families','months'],['department','municipality','community','latitude','longitude'],[]];
+  private readonly groups:(keyof IntakeViewValue)[][]=[['kind'],['title','category','description','families','months'],['department','municipality','community','latitude','longitude'],[]];
   constructor(){
     this.submission.clear();
     this.loadCatalogs();
@@ -80,7 +80,7 @@ export class CaseIntakeComponent {
   availableTypes(){return this.types().filter(type=>type.naturaleza===this.form.controls.kind.value);}
   summaryValue():IntakeViewValue{
     const value=this.form.getRawValue();
-    return {...value,kind:({'problematica':'Problemática comunitaria','proyecto_iniciativa':'Proyecto / Iniciativa','otro':'Otro'} as Record<string,string>)[value.kind] ?? value.kind,priority:caseStateLabel(value.priority),category:this.types().find(item=>item.id_tipo_caso===value.category)?.nombre ?? 'Sin seleccionar',department:this.departments().find(item=>item.id_departamento===value.department)?.nombre ?? 'Sin seleccionar',municipality:this.municipalities().find(item=>item.id_municipio===value.municipality)?.nombre ?? 'Sin seleccionar',community:this.communities().find(item=>item.id_comunidad===value.community)?.nombre ?? 'Sin seleccionar'};
+    return {...value,kind:({'problematica':'Problemática comunitaria','proyecto_iniciativa':'Proyecto / Iniciativa','otro':'Otro'} as Record<string,string>)[value.kind] ?? value.kind,category:this.types().find(item=>item.id_tipo_caso===value.category)?.nombre ?? 'Sin seleccionar',department:this.departments().find(item=>item.id_departamento===value.department)?.nombre ?? 'Sin seleccionar',municipality:this.municipalities().find(item=>item.id_municipio===value.municipality)?.nombre ?? 'Sin seleccionar',community:this.communities().find(item=>item.id_comunidad===value.community)?.nombre ?? 'Sin seleccionar'};
   }
   goTo(step:number){if(this.pending())return;this.step.set(Math.min(5,Math.max(1,step)));this.message.set('');}
   previous(){this.goTo(this.step()-1);}

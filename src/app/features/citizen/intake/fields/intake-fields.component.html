@@ -3,7 +3,7 @@
   @switch(step()) {
     @case(1){
       <label class="cit-field">Naturaleza del caso<select formControlName="kind" (change)="kindChanged.emit()"><option value="problematica">Problemática comunitaria</option><option value="proyecto_iniciativa">Proyecto / Iniciativa</option><option value="otro">Otro</option></select></label>
-      <label class="cit-field">Prioridad<select formControlName="priority"><option value="baja">Baja</option><option value="media">Media</option><option value="alta">Alta</option><option value="critica">Crítica</option></select></label>
+      <p class="text-body-sm rounded-lg border border-slate-400/30 bg-slate-400/10 p-4">El equipo de PLUS evaluará y asignará la prioridad durante la revisión del caso.</p>
     }
     @case(2){
       <label class="cit-field">Título del caso *<input formControlName="title" maxlength="200" required></label>
