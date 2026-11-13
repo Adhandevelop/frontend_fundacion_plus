@@ -49,11 +49,12 @@ Este es el registro consolidado del frontend Angular. “Integrado” significa 
 
 - `/noticias` consulta `/api/v1/public/news/` y las categorías activas.
 - La apertura de una publicación consulta su detalle completo y medios por `slug`.
+- Cada publicación puede abrirse directamente en `/noticias/:slug`; abrir y cerrar la ficha mantiene sincronizada la URL.
 - Búsqueda, categoría, orden y paginación visual operan sobre la colección recibida.
 - Si no existen noticias publicadas o falla la consulta, se conservan los mockups como respaldo marcado explícitamente; no se presentan como información oficial.
 - La suscripción al boletín consume `/api/v1/public/newsletter/subscribe/`, envía consentimiento y comunica que debe confirmarse por correo.
 - `/boletin/confirmar?token=...` confirma mediante `POST /api/v1/public/newsletter-subscriptions/confirm/`; `/boletin/baja?token=...&correo=...` solicita el correo y ejecuta la baja mediante el contrato documentado.
-- No se implementaron todavía las rutas de confirmación/baja. Los endpoints existen, pero la documentación disponible no fija el nombre/transporte del token ni el DTO de resultado; se evita inventar ese contrato.
+- Las rutas `/boletin/confirmar` y `/boletin/baja` consumen los contratos documentados por token y muestran el resultado devuelto por el backend.
 - La administración editorial consulta listado, categorías y detalle reales.
 - Creación y edición escriben título, categoría, extracto, contenido y destacado.
 - La revisión aplica estados `borrador`, `en_revision`, `publicada` y `archivada`, con confirmación antes de cambiar visibilidad.
@@ -64,6 +65,7 @@ Este es el registro consolidado del frontend Angular. “Integrado” significa 
 ### Iniciativas públicas y postulaciones
 
 - `/iniciativas` consulta `/api/v1/public/initiatives/` y `/categories/`.
+- Cada programa publicado puede abrirse directamente en `/iniciativas/:slug`, conservando catálogo, ficha, ediciones y galería en una URL compartible.
 - Búsqueda, categoría y edición filtran la colección recibida; al abrir un programa se consulta el detalle por `slug` y se muestran descripción, portada y galería pública.
 - Si la colección está vacía o la consulta falla, los cuatro mockups se conservan como respaldo marcado como contenido de diseño.
 - El formulario comunitario dejó de ser una simulación y envía a `/api/v1/public/initiatives/proposals/` el contacto, territorio declarado, iniciativa opcional, título, descripción y autorización.
@@ -124,7 +126,7 @@ Estas pantallas todavía usan contenido de diseño. Falta aprobación institucio
 - Sin marcadores ni coordenadas inventadas.
 - Corregida la interoperabilidad del import dinámico de Leaflet en producción: se admite la API como exportación directa o dentro de `default`. El fallo anterior generaba `TypeError: map is not a function` y dejaba el lienzo vacío.
 
-Falta que el backend entregue coordenadas o GeoJSON verificable, visibilidad pública explícita y filtros. No se geocodifican descripciones textuales de casos.
+El backend entrega GeoJSON con coordenadas públicas generalizadas, visibilidad aprobada y filtros de servidor. Angular no geocodifica descripciones textuales ni usa ubicaciones privadas.
 
 ## 4. Limitaciones encontradas durante esta integración
 

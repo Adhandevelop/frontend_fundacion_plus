@@ -39,6 +39,6 @@ export class PublicMapComponent {
   const code=feature.properties.codigo||feature.properties.radicado_code;
   if(this.context==='admin')return ['/admin/casos',code];
   if(this.context==='public')return ['/casos',code];
-  return null;
+  return ['/ciudadano/casos-publicos',code];
  }
 }

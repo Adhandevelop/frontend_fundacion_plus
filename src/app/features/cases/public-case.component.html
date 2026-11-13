@@ -5,7 +5,7 @@
     @if(caseData(); as caso) {
     <section class="max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-lg space-y-6">
       <div class="flex flex-wrap items-center justify-between gap-3">
-        <a routerLink="/mapa" class="underline text-body-sm">Volver al mapa</a>
+        <a [routerLink]="mapRoute" class="underline text-body-sm">Volver al mapa</a>
         <button type="button" class="rounded-lg border px-3 py-2 text-body-sm" (click)="copyLink()">Compartir enlace</button>
       </div>
       @if(shareMessage()){<p role="status" class="text-body-sm">{{shareMessage()}}</p>}
@@ -73,12 +73,12 @@
       @if(canFollow()){
         <button type="button" class="rounded-lg bg-primary-container px-4 py-2 font-semibold text-black" [disabled]="followLoading()||followBusy()" (click)="toggleFollow()">{{followLoading()?'Consultando seguimiento…':followBusy()?'Guardando…':following()?'Dejar de seguir':'Seguir caso'}}</button>
       } @else if(!auth.hasSession()) {
-        <a [routerLink]="['/login']" [queryParams]="{returnUrl:'/casos/'+caso.codigo}" class="underline">Inicia sesión para seguir este caso</a>
+        <a [routerLink]="['/login']" [queryParams]="{returnUrl:loginReturn()}" class="underline">Inicia sesión para seguir este caso</a>
       }
       @if(followMessage()){<p role="status">{{followMessage()}}</p>}
     </section>
     }
   } @else {
-    <section class="max-w-7xl mx-auto p-8" role="alert"><h1 class="text-headline-md">No se pudo consultar el caso</h1><p class="my-4">{{error()}}</p><a routerLink="/mapa" class="inline-flex rounded-lg bg-primary-container text-black px-4 py-2">Volver al mapa</a></section>
+    <section class="max-w-7xl mx-auto p-8" role="alert"><h1 class="text-headline-md">No se pudo consultar el caso</h1><p class="my-4">{{error()}}</p><a [routerLink]="mapRoute" class="inline-flex rounded-lg bg-primary-container text-black px-4 py-2">Volver al mapa</a></section>
   }
 </div>

@@ -20,7 +20,7 @@
 
 > **Usuarios, roles y ámbitos conectados:** directorio paginado, ficha, catálogo de roles, creación y edición de contacto; acciones separadas de rol único y estado con revisión. `/admin/ambitos-responsables` lista, crea y activa/desactiva ámbitos por comunidad y tipo de caso. Falta prueba real autorizada. Ver [integracion-usuarios.md](integracion-usuarios.md).
 
-> **Moderación de comentarios conectada:** cola paginada y filtros reales, ficha, aprobación/rechazo/ocultamiento/retorno a pendiente con confirmación y motivo interno por defecto. El formulario público sigue pendiente; no hay historial específico de decisiones en el contrato actual. Ver [integracion-moderacion-comentarios.md](integracion-moderacion-comentarios.md).
+> **Moderación de comentarios conectada:** cola paginada y filtros reales, ficha, aprobación/rechazo/ocultamiento/retorno a pendiente con confirmación y motivo interno por defecto. La ficha pública permite enviar comentarios ciudadanos a moderación; no hay historial específico de decisiones en el contrato actual. Ver [integracion-moderacion-comentarios.md](integracion-moderacion-comentarios.md).
 
 > **Comunicación ciudadana conectada:** mensajes y notificaciones ya consultan REST, con estados de lectura, paginación de avisos y contadores por cuenta. Ver [integracion-mensajes-notificaciones.md](integracion-mensajes-notificaciones.md).
 
@@ -34,7 +34,7 @@ Revisión consolidada el 11 de noviembre de 2026. Basada en `app.routes.ts`, com
 
 | Área | Disponible como demostración | Límites actuales |
 |---|---|---|
-| Portal | Inicio, mapa, Nosotros, noticias, iniciativas y caso público. | Noticias e iniciativas consultan catálogo y detalle REST; no tienen todavía URL individual propia. El mapa espera datos territoriales y el caso público conserva límites de contrato. |
+| Portal | Inicio, mapa, Nosotros, noticias, iniciativas y caso público. | Noticias e iniciativas consultan catálogo y detalle REST y tienen URL individual por `slug`. El mapa y el expediente público consumen datos reales. |
 | Acceso | Login, registro, recuperación, restablecimiento y escenarios de enlace inválido/vencido, sesión vencida, acceso denegado y 404. | Sin cuentas, tokens, correo ni guard de autorización real. |
 | Ciudadano | Mis casos, radicación de cinco pasos, confirmación local, expediente, seguimiento, evidencias, aportes, mensajes, notificaciones y perfil. | Estado temporal, sin envío/subida real. Perfil/contratos necesitan las ampliaciones solicitadas al backend. |
 | Administración de casos | Dashboard, listado y expediente con moderación, asignación, avances, evidencias, mensajes y cierre simulados. | Estados y responsables locales; faltan flujos específicos de radicado institucional y alerta temprana. |
@@ -54,7 +54,7 @@ Revisión consolidada el 11 de noviembre de 2026. Basada en `app.routes.ts`, com
 | 2 | Ámbitos de responsables: listado/formulario por comunidad y tipo de caso. | Integrado. | Falta prueba autenticada; no son la asignación efectiva del caso. |
 | 3 | Noticia pública completa con URL propia y estado no disponible. | Estructura sí; solo mostrar contenido de ejemplo existente o claramente ficticio, sin inventar comunicados oficiales. | Contrato/noticia completa autorizada. |
 | 3 | Convertir el detalle desplegable de iniciativa en URL propia si se requiere compartir/enlazar directamente. | Ediciones, indicadores, cobertura, actividades, casos aprobados y galería ya están conectados. | Verificar la proyección desplegada con contenido real y decidir si el detalle expandido es suficiente. |
-| 3 | Casos seguidos: listado personal y estado de suscripción por caso. | Listado y baja integrados en `/ciudadano/casos-seguidos`. | Falta conectar el botón seguir al detalle público real y probar avisos. |
+| 3 | Casos seguidos: listado personal y estado de suscripción por caso. | Listado, alta y baja integrados; el detalle público se abre dentro del layout ciudadano. | Falta prueba funcional con avisos reales. |
 | 3 | Resultados de alta/confirmación/baja del boletín y verificación de correo. | Integrado con token en query string. | Probar enlaces reales, expiración y reutilización en el entorno desplegado. |
 | 4 | Radicado institucional desde dashboard. | Estructura reutilizable de radicación, una vez fijados remitente/representación. | Reglas de actuación institucional, propietario y aceptación; el botón sigue deshabilitado. |
 | 4 | Emisión y consulta de alertas tempranas. | Estructura visual tras definir destinatarios/canales/flujo. | Alcance funcional y AMP-16; no confundir con notificación de caso. |
@@ -65,7 +65,7 @@ La prioridad organiza implementación de interfaces, no autoriza envíos, public
 
 ## 3. Comportamientos incompletos que no son vistas nuevas
 
-- Mapa interactivo real, capas/marcadores, geolocalización opcional y consulta de filtros: la vista existe; falta implementación/integración cartográfica completa.
+- Mapa interactivo real: OpenStreetMap, GeoJSON público, marcadores, encuadre, búsqueda y filtros de servidor están integrados. Queda pendiente verificarlo con datos desplegados y decidir si se habilita geolocalización opcional del dispositivo.
 - Persistencia de casos, mensajes, perfil y borradores; archivos privados/públicos; sesiones, permisos, contadores y notificaciones reales.
 - Formulario de postulación: envío REST y consentimiento ya conectados; falta prueba real controlada y confirmar el versionado/retención legal en backend.
 - Formularios de usuario y registro: nombres/apellidos, límites, rol único y estados reales. Multirrol sigue pendiente de decisión AMP-14.

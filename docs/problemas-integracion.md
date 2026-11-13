@@ -26,7 +26,7 @@ Prioridad actual del frontend: verificar con datos desplegados el mapa y el expe
 - Probar P19 con contenido publicado; la colección pública estaba vacía durante la última verificación.
 - Probar con enlaces reales de Resend las nuevas páginas de confirmación y baja del boletín, incluyendo token inválido, vencido y reutilizado.
 - Probar con cuentas institucionales reales el selector de responsables y una actividad con/sin coordenadas.
-- El listado y la baja de casos seguidos ya están conectados. Falta exponer la acción de seguir desde un detalle público real; la ficha `/casos/:radicado` todavía conserva el caso demostrativo y no debe enviar su código ficticio al backend.
+- El listado, alta y baja de casos seguidos están conectados con UUID reales. La ficha pública ya no contiene un expediente demostrativo y también puede abrirse en `/ciudadano/casos-publicos/:radicado`, conservando la sesión y el layout ciudadano.
 
 ### “Mis casos” para cuentas administrativas
 
