@@ -1,6 +1,10 @@
 :host {
   display: block;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  contain: layout paint;
 }
 
 .plus-leaflet-map {
@@ -9,6 +13,9 @@
   min-height: 400px;
   background: #e2e8f0;
   z-index: 0;
+  max-width: 100%;
+  overflow: hidden;
+  contain: layout paint;
 }
 
 @media (max-width: 640px) {

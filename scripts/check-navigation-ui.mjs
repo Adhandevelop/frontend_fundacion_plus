@@ -17,6 +17,7 @@ let socket,cdp,nextId=0,role='administrador',withCatalogs=false;const pending=ne
 browser.on('error',error=>failures.push(error.message));
 const account=()=>({id_usuario:'local-ui-user',nombres:'Cuenta',apellidos:'de prueba',full_name:'Cuenta de prueba',correo:'ui@example.invalid',telefono:null,estado:'activo',primary_role:role,rol_nombre:role,permissions:role==='ciudadano'?{}:{all:['*'],can_manage_forms:role==='administrador',can_manage_homepage:role==='administrador'},can_manage_forms:role==='administrador',can_manage_homepage:role==='administrador',perfil:null,preferencias:{notificar_novedades_casos:true,notificar_mensajes:true,suscrito_boletin:false}});
 const page={count:0,next:null,previous:null,results:[]};
+const mapFeatures=Array.from({length:5},(_,index)=>({type:'Feature',id:`map-case-${index+1}`,geometry:{type:'Point',srid:4326,coordinates:[-73.6266+(index*.002),4.142+(index*.002)]},properties:{id_caso:`map-case-${index+1}`,codigo:`PLUS-LOCAL-0000${index+1}`,radicado_code:`PLUS-LOCAL-0000${index+1}`,titulo:`Caso cartográfico ${index+1}`,prioridad:'media',id_estado:'status-local',estado:'pendiente',id_tipo_caso:'type-local',tipo:'Ambiente y Riesgo',categoria:'ambiente',naturaleza:'problematica',id_comunidad:'community-local',comunidad:'Comunidad local',id_municipio:'municipality-local',municipio:'Villavicencio',id_departamento:'department-local',departamento:'Meta',longitud:-73.6266+(index*.002),latitud:4.142+(index*.002),fecha_creacion:'2026-11-14T12:00:00Z'}}));
 function response(pathname){
   if(pathname==='/api/v1/me/')return account();
   if(pathname==='/api/v1/me/dashboard/')return {cases:{total:0,by_estado:{},by_estado_publicacion:{}},notifications:{unread:0},messages:{unread:0}};
@@ -31,6 +32,9 @@ function response(pathname){
     ['institucion.nombre','Corporación Pluralismo Social'],['institucion.sigla','PLUS'],['institucion.representante_nombre','Juan David Martinez Bolaño'],['institucion.representante_cargo','CEO'],['institucion.mision','Misión institucional de prueba local.'],
   ].map(([clave,valor],index)=>({id:`setting-${index}`,id_configuracion:`setting-${index}`,clave,valor,fecha_actualizacion:'2026-11-13T12:00:00Z'}))};
   if(pathname==='/api/v1/public/site/')return {institucion:{},configuracion:{},documentos_legales:[{id:'legal-local',id_documento:'legal-local',tipo:'tratamiento_datos',version:'1.0',titulo:'Política local de tratamiento de datos',contenido:'Contenido legal sintético para la prueba local.',vigente:true,fecha_vigencia:'2026-11-13T00:00:00Z'}]};
+  if(pathname==='/api/v1/public/home/')return {institution:{corporation_name:'Corporación Pluralismo Social',acronym:'PLUS',representative_name:'Juan David Martinez Bolaño',representative_role:'CEO',mission:'Misión institucional local.'},verified_indicators:{published_cases_count:5,registered_municipalities_count:1,published_initiatives_count:0},hero:null};
+  if(pathname==='/api/v1/public/cases/geojson/')return {type:'FeatureCollection',srid:4326,count:mapFeatures.length,features:mapFeatures};
+  if(pathname==='/api/v1/public/news/'||pathname==='/api/v1/public/initiatives/')return page;
   if(pathname==='/api/v1/me/conversations/')return [];
   return page;
 }
@@ -68,6 +72,16 @@ try{
   async function viewport(width){await cdp('Emulation.setDeviceMetricsOverride',{width,height:850,deviceScaleFactor:1,mobile:false});await pause(100);}
   async function snapshot(name){const shot=await cdp('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});await writeFile(path.join(output,name+'.png'),Buffer.from(shot.data,'base64'));}
   async function widthFits(){const fits=await evaluate('document.documentElement.scrollWidth<=innerWidth');if(!fits){await snapshot('overflow-debug');console.log(await evaluate(`Array.from(document.querySelectorAll('body *')).filter(element=>element.getBoundingClientRect().right>innerWidth+1).slice(0,12).map(element=>({tag:element.tagName,id:element.id,classes:element.className,width:element.getBoundingClientRect().width}))`));}assert.ok(fits,`Unexpected page overflow at ${await evaluate('location.pathname')}`);}
+  await viewport(800);await visit('/');assert.equal(await evaluate(`document.body.getBoundingClientRect().width<=innerWidth`),true);
+  await until(()=>evaluate(`document.querySelectorAll('section[aria-labelledby="home-map-cases-title"] div[role="list"] > button').length===5`),'home map cards');
+  assert.equal(await evaluate(`(()=>{const list=document.querySelector('section[aria-labelledby="home-map-cases-title"] div[role="list"]'),bounds=list.getBoundingClientRect();return Array.from(list.children).filter(card=>{const rect=card.getBoundingClientRect();return rect.left>=bounds.left-1&&rect.right<=bounds.right+1}).length})()`),3,'The tablet carousel must show three complete cards.');
+  await evaluate(`document.querySelector('button[aria-label="Ver casos siguientes"]').click()`);await pause(400);
+  assert.equal(await evaluate(`document.querySelector('section[aria-labelledby="home-map-cases-title"] div[role="list"]').scrollLeft>0`),true);
+  await snapshot('home-map-carousel-tablet');
+  await viewport(360);await visit('/');assert.equal(await evaluate(`document.body.getBoundingClientRect().width<=innerWidth`),true);
+  await until(()=>evaluate(`document.querySelectorAll('section[aria-labelledby="home-map-cases-title"] div[role="list"] > button').length===5`),'mobile home map cards');
+  assert.equal(await evaluate(`(()=>{const list=document.querySelector('section[aria-labelledby="home-map-cases-title"] div[role="list"]'),bounds=list.getBoundingClientRect();return Array.from(list.children).filter(card=>{const rect=card.getBoundingClientRect();return rect.left>=bounds.left-1&&rect.right<=bounds.right+1}).length})()`),1,'The mobile carousel must show one complete card.');
+  await snapshot('home-map-carousel-mobile');
   await viewport(360);await visit('/admin/usuarios/nuevo');await widthFits();
   assert.equal(await evaluate(`document.querySelector('main').getBoundingClientRect().width>0`),true);
   await evaluate(`document.querySelector('[aria-controls="admin-navigation"]').focus();document.querySelector('[aria-controls="admin-navigation"]').click()`);await pause(150);

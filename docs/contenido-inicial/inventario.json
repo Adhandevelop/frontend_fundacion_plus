@@ -631,7 +631,7 @@
     },
     {
       "source": "src/app/features/home/components/initiatives/initiatives.component.html",
-      "sha256": "d51a38d1a5da49db71dee6e680c29a90521d9f85c4dd80c7e2aee5de21667f0a",
+      "sha256": "90f28a927f83b1d68aa90779911a57b776c206544c522c316ecd52c0fe961e68",
       "static_text_fragments": [
         "Presencia territorial",
         "Iniciativas comunitarias publicadas",

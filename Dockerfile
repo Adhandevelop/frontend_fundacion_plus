@@ -5,6 +5,7 @@ RUN apk upgrade --no-cache
 
 WORKDIR /app
 ENV NG_CLI_ANALYTICS=false
+ENV NODE_OPTIONS="--max-old-space-size=1536"
 
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
@@ -12,7 +13,8 @@ RUN npm ci --no-audit --no-fund
 COPY angular.json tsconfig.json tsconfig.app.json tailwind.config.cjs ./
 COPY src ./src
 COPY public ./public
-RUN npm run build -- --configuration production
+# Reduce the build process priority so production services retain CPU time.
+RUN nice -n 15 npm run build -- --configuration production
 
 FROM nginx:stable-alpine AS runtime
 
