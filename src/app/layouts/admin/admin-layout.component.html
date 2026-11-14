@@ -7,7 +7,7 @@
       <h2 class="text-label-sm uppercase tracking-wider mt-5 mb-3">Administración general</h2>
       <nav aria-label="Navegación administrativa" class="grid gap-2" (click)="menu.set(false)">
         @for(item of navigation();track item.path){
-          <a [routerLink]="item.path" ariaCurrentWhenActive="page" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" [routerLinkActiveOptions]="{exact:item.exact}" class="rounded-lg px-3 py-3 flex gap-3 items-center"><plus-navigation-icon [name]="item.icon"/>{{item.label}}</a>
+          <a [routerLink]="item.path" ariaCurrentWhenActive="page" routerLinkActive="bg-primary-container/15 border-l-4 border-yellow-400" [routerLinkActiveOptions]="{exact:item.exact}" class="rounded-lg px-3 py-3 flex gap-3 items-center" [class.bg-yellow-400]="item.primary" [class.text-black]="item.primary" [class.font-semibold]="item.primary"><plus-navigation-icon [name]="item.icon"/>{{item.label}}</a>
         }
       </nav>
     </div>
