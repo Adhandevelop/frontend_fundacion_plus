@@ -56,7 +56,7 @@ Este es el registro consolidado del frontend Angular. “Integrado” significa 
 - La apertura de una publicación consulta su detalle completo y medios por `slug`.
 - Cada publicación puede abrirse directamente en `/noticias/:slug`; abrir y cerrar la ficha mantiene sincronizada la URL.
 - Búsqueda, categoría, orden y paginación visual operan sobre la colección recibida.
-- Si no existen noticias publicadas o falla la consulta, se conservan los mockups como respaldo marcado explícitamente; no se presentan como información oficial.
+- Si no existen noticias publicadas se muestra un estado vacío real; si falla la consulta se comunica el error. Los mockups ya no se usan como respaldo público.
 - La suscripción al boletín consume `/api/v1/public/newsletter/subscribe/`, envía consentimiento y comunica que debe confirmarse por correo.
 - `/boletin/confirmar?token=...` confirma mediante `POST /api/v1/public/newsletter-subscriptions/confirm/`; `/boletin/baja?token=...&correo=...` solicita el correo y ejecuta la baja mediante el contrato documentado.
 - Las rutas `/boletin/confirmar` y `/boletin/baja` consumen los contratos documentados por token y muestran el resultado devuelto por el backend.
@@ -72,7 +72,7 @@ Este es el registro consolidado del frontend Angular. “Integrado” significa 
 - `/iniciativas` consulta `/api/v1/public/initiatives/` y `/categories/`.
 - Cada programa publicado puede abrirse directamente en `/iniciativas/:slug`, conservando catálogo, ficha, ediciones y galería en una URL compartible.
 - Búsqueda, categoría y edición filtran la colección recibida; al abrir un programa se consulta el detalle por `slug` y se muestran descripción, portada y galería pública.
-- Si la colección está vacía o la consulta falla, los cuatro mockups se conservan como respaldo marcado como contenido de diseño.
+- Si la colección está vacía se muestra un estado vacío real; si falla la consulta se comunica el error. Los cuatro mockups ya no se usan como respaldo público.
 - El formulario comunitario dejó de ser una simulación y envía a `/api/v1/public/initiatives/proposals/` el contacto, territorio declarado, iniciativa opcional, título, descripción y autorización.
 - La ficha pública interpreta la proyección depurada de ediciones: indicadores, comunidades de cobertura, actividades y casos aprobados relacionados. Cada edición se presenta de forma desplegable y muestra un estado vacío explícito cuando no tiene resultados asociados.
 - Los adaptadores públicos aceptan `metrics` resumido o estructurado, priorizan `url`/`url_archivo` para medios y no exponen identificadores de responsables ni coordenadas internas.
@@ -164,7 +164,9 @@ El módulo `/admin/casos-asignados` muestra los expedientes asignados al usuario
 ## 6. Verificación local actual
 
 - `npm run build`: correcto el 13 de noviembre de 2026 después de integrar la pantalla administrativa de información institucional y reutilizar sus datos en “Nosotros”.
-- `npm run test:api`: trece suites correctas; iniciativas incluye la proyección pública y el contrato P22 de filtro, respuesta enriquecida, búsqueda y paginación de candidatos.
+- `npm run test:api`: quince bloques de integración correctos; incluyen sesión, casos, comunicaciones, administración, permisos, formularios, portada, noticias, iniciativas, propuestas y mapa.
+- `npm run content:check`: correcto después de actualizar el inventario para excluir tarjetas del inicio cuyos títulos ya llegan dinámicamente desde la API. Permanecen 7 noticias y 4 iniciativas antiguas únicamente como material editorial pendiente, con publicación bloqueada.
+- `npm run test:ui`: correcto en Chrome local con API sintética y sin escrituras. Comprueba navegación por teclado, foco, 360 px, tema oscuro, separación de roles, formularios REST, configuración institucional y documento legal vigente.
 - La suite de formularios comprueba listado administrativo, siete tipos de pregunta, validación local, payload público, `Idempotency-Key`, activación/reenvío, historial ciudadano, ciclo de publicación y rutas de exportación.
 - La suite de portada comprueba la lectura pública, las métricas verificadas, la consulta administrativa y el reemplazo multipart protegido.
 - La suite editorial comprueba catálogo/detalle público, boletín, listado y categorías administrativas, creación y transiciones editoriales.
@@ -200,4 +202,4 @@ Las cifras son orientativas. El estado local no implica que los cambios estén p
 - Los selectores consultan usuarios activos, comunidades activas y el catálogo oficial de tipos de caso. La pantalla también está enlazada desde Usuarios y desde la navegación administrativa.
 - Queda pendiente la prueba autenticada contra producción y confirmar si el backend desea impedir explícitamente el ámbito completamente global; el frontend exige actualmente al menos comunidad o tipo para evitar asignaciones accidentales demasiado amplias.
 
-El portal ciudadano incluye `/ciudadano/casos-seguidos`, consulta `GET /api/v1/me/followed-cases/` y permite dejar de seguir con `DELETE`. El servicio también implementa `PUT` para activar seguimiento; el botón público se incorporará cuando el detalle público deje de ser la demostración estática y entregue un UUID real.
+El portal ciudadano incluye `/ciudadano/casos-seguidos`, consulta `GET /api/v1/me/followed-cases/` y permite abrir el expediente dentro del layout ciudadano, ubicarlo en el mapa o dejar de seguir con `DELETE`. La ficha consulta el estado individual, normaliza las respuestas `following` y `activo`, muestra “Ya sigues este caso” y ofrece por separado dejar de seguir; `PUT` activa el seguimiento cuando todavía no existe.

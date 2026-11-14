@@ -6,6 +6,7 @@
     "start": "ng serve --host 127.0.0.1",
     "build": "ng build",
     "test:api": "node scripts/test-api.mjs",
+    "test:ui": "node --experimental-websocket scripts/check-navigation-ui.mjs",
     "content:inventory": "node scripts/export-public-content.mjs",
     "content:check": "node scripts/export-public-content.mjs --check",
     "watch": "ng build --watch --configuration development"

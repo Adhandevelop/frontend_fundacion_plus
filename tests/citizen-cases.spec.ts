@@ -35,6 +35,7 @@ const history=firstValueFrom(api.history(caso.id_caso));backend.expectOne(`/api/
 const stats=firstValueFrom(api.dashboard());backend.expectOne('/api/v1/me/dashboard/').flush({total_cases:0,pendientes_publicacion:0,en_gestion:0,resueltos_o_cerrados:0});assert.equal((await stats).total_cases,0);
 const followedRow={id:'follow-uuid',id_seguimiento_usuario:'follow-uuid',id_caso:caso.id_caso,codigo:caso.codigo,titulo:caso.titulo,activo:true,fecha_creacion:'2026-11-12T10:00:00Z',fecha_baja:null};
 const followed=firstValueFrom(api.followedCases());backend.expectOne('/api/v1/me/followed-cases/').flush([followedRow]);assert.equal((await followed)[0].codigo,caso.codigo);
+  const followingStatus=firstValueFrom(api.following(caso.id_caso));backend.expectOne(`/api/v1/me/followed-cases/${caso.id_caso}/`).flush(followedRow);assert.equal((await followingStatus).following,true);
 const follow=firstValueFrom(api.follow(caso.id_caso));const followRequest=backend.expectOne(`/api/v1/me/followed-cases/${caso.id_caso}/`);assert.equal(followRequest.request.method,'PUT');assert.deepEqual(followRequest.request.body,{});followRequest.flush(followedRow);await follow;
 const unfollow=firstValueFrom(api.unfollow(caso.id_caso));const unfollowRequest=backend.expectOne(`/api/v1/me/followed-cases/${caso.id_caso}/`);assert.equal(unfollowRequest.request.method,'DELETE');unfollowRequest.flush(null,{status:204,statusText:'No Content'});await unfollow;
 const contribution=firstValueFrom(api.contribute(caso.id_caso,'Información de prueba','correction-uuid'));

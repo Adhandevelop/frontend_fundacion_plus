@@ -15,7 +15,7 @@ const browser=spawn(process.env.PLUS_CHROME_PATH ?? 'C:\\Program Files\\Google\\
 ],{windowsHide:true,stdio:'ignore'});
 let socket,cdp,nextId=0,role='administrador',withCatalogs=false;const pending=new Map(),failures=[],apiCalls=[];
 browser.on('error',error=>failures.push(error.message));
-const account=()=>({id_usuario:'local-ui-user',nombres:'Cuenta',apellidos:'de prueba',full_name:'Cuenta de prueba',correo:'ui@example.invalid',telefono:null,estado:'activo',primary_role:role,rol_nombre:role,permissions:role==='ciudadano'?{}:{all:['*']},perfil:null,preferencias:{notificar_novedades_casos:true,notificar_mensajes:true,suscrito_boletin:false}});
+const account=()=>({id_usuario:'local-ui-user',nombres:'Cuenta',apellidos:'de prueba',full_name:'Cuenta de prueba',correo:'ui@example.invalid',telefono:null,estado:'activo',primary_role:role,rol_nombre:role,permissions:role==='ciudadano'?{}:{all:['*'],can_manage_forms:role==='administrador',can_manage_homepage:role==='administrador'},can_manage_forms:role==='administrador',can_manage_homepage:role==='administrador',perfil:null,preferencias:{notificar_novedades_casos:true,notificar_mensajes:true,suscrito_boletin:false}});
 const page={count:0,next:null,previous:null,results:[]};
 function response(pathname){
   if(pathname==='/api/v1/me/')return account();
@@ -26,6 +26,11 @@ function response(pathname){
   if(pathname==='/api/v1/admin/roles/')return {count:1,results:[{id_rol:'local-role',nombre:'ciudadano',descripcion:'Rol de prueba local',assignable:true}]};
   if(pathname==='/api/v1/admin/reports/cases/')return {...page,page:1,page_size:10,totals:{total_cases:0,by_estado:{},by_estado_publicacion:{},by_prioridad:{},by_categoria:{},by_municipio:{}}};
   if(pathname==='/api/v1/admin/audit-events/')return {...page,kpis:{total_events:0}};
+  if(pathname==='/api/v1/admin/forms/')return {count:1,next:null,previous:null,results:[{id:'form-local',slug:'encuesta-local',titulo:'Encuesta local',estado:'borrador',numero_version_publicada:0,revision_edicion:1,total_versiones:0,total_envios:0,permite_multiples_envios:false,requiere_documento:false,fecha_creacion:'2026-11-13T12:00:00Z',fecha_actualizacion:'2026-11-13T12:00:00Z'}]};
+  if(pathname==='/api/v1/admin/settings/')return {count:5,next:null,previous:null,results:[
+    ['institucion.nombre','Corporación Pluralismo Social'],['institucion.sigla','PLUS'],['institucion.representante_nombre','Juan David Martinez Bolaño'],['institucion.representante_cargo','CEO'],['institucion.mision','Misión institucional de prueba local.'],
+  ].map(([clave,valor],index)=>({id:`setting-${index}`,id_configuracion:`setting-${index}`,clave,valor,fecha_actualizacion:'2026-11-13T12:00:00Z'}))};
+  if(pathname==='/api/v1/public/site/')return {institucion:{},configuracion:{},documentos_legales:[{id:'legal-local',id_documento:'legal-local',tipo:'tratamiento_datos',version:'1.0',titulo:'Política local de tratamiento de datos',contenido:'Contenido legal sintético para la prueba local.',vigente:true,fecha_vigencia:'2026-11-13T00:00:00Z'}]};
   if(pathname==='/api/v1/me/conversations/')return [];
   return page;
 }
@@ -147,38 +152,22 @@ try{
     }
   }
   await visit('/admin/formularios');await widthFits();
-  assert.equal(await evaluate(`document.querySelectorAll('plus-admin-forms article').length`),3);
+  assert.equal(await evaluate(`document.querySelectorAll('plus-admin-forms article').length`),1);
   await visit('/admin/formularios/nuevo');await widthFits();
-  await evaluate(`{const title=document.querySelector('#builder-title');title.value='Encuesta local';title.dispatchEvent(new Event('input',{bubbles:true}));Array.from(document.querySelectorAll('button')).find(button=>button.textContent==='Añadir pregunta').click();}`);await pause(80);
-  await evaluate(`{const inputs=document.querySelectorAll('article label.admin-field input');inputs[1].value='Elige tus intereses';inputs[1].dispatchEvent(new Event('input',{bubbles:true}));const type=document.querySelectorAll('article select')[1];type.value='multiple';type.dispatchEvent(new Event('change',{bubbles:true}));}`);await pause(80);
-  assert.equal(await evaluate(`document.querySelector('article textarea').value.includes(String.fromCharCode(10))`),true);
+  const callsBeforeInvalidForm=apiCalls.length;
   await evaluate(`document.querySelector('button[type="submit"]').click()`);
-  await until(()=>evaluate(`location.pathname.endsWith('/vista-previa') && !!document.querySelector('plus-form-runner')`),'saved form preview');
-  await widthFits();await snapshot('form-builder-preview-mobile');
-  await evaluate(`document.querySelector('plus-form-runner button[type="submit"]').click()`);await pause(100);
-  assert.equal(await evaluate(`document.activeElement.id`),'dynamic-form-errors');
-  await evaluate(`document.querySelector('a[href="/admin/formularios"]').click()`);await until(()=>evaluate(`!!document.querySelector('plus-admin-forms')`),'form list');
-  await evaluate(`document.querySelector('plus-admin-forms article button.admin-primary').click()`);await pause(50);
-  await evaluate(`Array.from(document.querySelectorAll('button')).find(button=>button.textContent==='Confirmar simulación').click()`);await pause(60);
-  await evaluate(`Array.from(document.querySelectorAll('plus-admin-forms article')).find(article=>article.querySelector('h2').textContent==='Encuesta local').querySelector('a[href^="/formularios/"]').click()`);
-  await until(()=>evaluate(`!!document.querySelector('plus-public-form plus-form-runner')`),'public form');await widthFits();
-  async function fillDemoForm(){
-    await evaluate(`{const values={names:'Persona',surnames:'Prueba',document:'00000000',email:'persona@example.invalid',phone:'0000000000'};for(const [name,value] of Object.entries(values)){const field=document.querySelector('#answer-'+name);if(field){field.value=value;field.dispatchEvent(new Event('input',{bubbles:true}));}}for(const text of document.querySelectorAll('plus-form-runner textarea')){text.value='Solicitud ficticia de prueba';text.dispatchEvent(new Event('input',{bubbles:true}));}const radio=document.querySelector('plus-form-runner input[type="radio"]');if(radio)radio.click();for(const checkbox of document.querySelectorAll('plus-form-runner input[type="checkbox"]')){if(!checkbox.checked)checkbox.click();}document.querySelector('plus-form-runner button[type="submit"]').click();}`);
-    await until(()=>evaluate(`!!document.querySelector('#demo-form-receipt')`),'local form receipt');
-  }
-  await fillDemoForm();assert.equal(await evaluate(`document.querySelector('#demo-form-receipt').textContent.includes('No se ha creado una cuenta')`),true);
-  await visit('/formularios/cerrado-demo');assert.equal(await evaluate(`document.querySelector('plus-form-runner')`),null);
-  await visit('/formularios/borrador-demo');assert.equal(await evaluate(`document.querySelector('plus-form-runner')`),null);
+  await pause(100);assert.equal(apiCalls.length,callsBeforeInvalidForm,'An invalid form draft must not call the API.');
+  assert.equal(await evaluate(`location.pathname`),'/admin/formularios/nuevo');
+  await snapshot('form-builder-validation-mobile');
   await visit('/ciudadano/formularios','ciudadano');await widthFits();
-  await evaluate(`document.querySelector('a[href="/formularios/solicitud-comunitaria-demo"]').click()`);await until(()=>evaluate(`!!document.querySelector('plus-public-form plus-form-runner')`),'citizen public form');
-  await fillDemoForm();await evaluate(`document.querySelector('#demo-form-receipt a').click()`);await until(()=>evaluate(`!!document.querySelector('plus-citizen-forms')`),'citizen submissions');
-  assert.equal(await evaluate(`document.querySelectorAll('plus-citizen-forms article').length`),2);
-  await evaluate(`Array.from(document.querySelectorAll('plus-citizen-forms article a')).at(-1).click()`);await until(()=>evaluate(`!!document.querySelector('plus-answer-detail')`),'submission detail');await widthFits();
-  await evaluate(`document.querySelector('[aria-label="Cambiar tema de color"]').click()`);await snapshot('form-citizen-answer-dark-mobile');
-  assert.equal(apiCalls.some(call=>call.path.includes('/forms/') || call.path.includes('/formularios/')),false);
+  assert.equal(await evaluate(`!!document.querySelector('plus-citizen-forms')`),true);
+  await visit('/admin/configuracion-institucional','administrador');await widthFits();
+  assert.equal(await evaluate(`document.querySelectorAll('plus-institution-settings input, plus-institution-settings textarea').length`),5);
+  await visit('/legal/tratamiento_datos');await widthFits();
+  assert.equal(await evaluate(`document.querySelector('main h1').textContent.trim()`),'Política local de tratamiento de datos');
   for(const [currentRole,allowed] of [
-    ['moderador',['/admin','/admin/casos','/admin/mapa','/admin/informes','/admin/noticias','/admin/iniciativas','/admin/postulaciones','/admin/comentarios']],
-    ['representante',['/admin','/admin/casos','/admin/mapa','/admin/informes']],
+    ['moderador',['/admin','/admin/casos','/admin/casos-asignados','/admin/mis-casos','/admin/mapa','/admin/informes','/admin/noticias','/admin/iniciativas','/admin/postulaciones','/admin/comentarios']],
+    ['representante',['/admin','/admin/casos','/admin/casos-asignados','/admin/mis-casos','/admin/mapa','/admin/informes']],
   ]){
     await visit('/admin/casos',currentRole);
     assert.deepEqual(await evaluate(`Array.from(document.querySelectorAll('nav[aria-label="Navegación administrativa"] a')).map(link=>link.getAttribute('href'))`),allowed);
@@ -188,7 +177,7 @@ try{
   for(const [currentRole,route,endpoint] of [
     ['moderador','/admin/usuarios/person/editar','/api/v1/admin/users/'],
     ['moderador','/admin/comunidades/nueva','/api/v1/admin/communities/'],
-    ['moderador','/admin/formularios','/api/v1/forms/'],
+    ['moderador','/admin/formularios','/api/v1/admin/forms/'],
     ['representante','/admin/comentarios','/api/v1/admin/comments/'],
     ['representante','/admin/auditoria','/api/v1/admin/audit-events/'],
     ['ciudadano','/admin/casos','/api/v1/admin/cases/'],

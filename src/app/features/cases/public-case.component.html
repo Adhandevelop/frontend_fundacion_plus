@@ -71,7 +71,16 @@
       </article>
 
       @if(canFollow()){
-        <button type="button" class="rounded-lg bg-primary-container px-4 py-2 font-semibold text-black" [disabled]="followLoading()||followBusy()" (click)="toggleFollow()">{{followLoading()?'Consultando seguimiento…':followBusy()?'Guardando…':following()?'Dejar de seguir':'Seguir caso'}}</button>
+        <div class="flex flex-wrap items-center gap-3">
+          @if(followLoading()){
+            <button type="button" class="rounded-lg bg-primary-container px-4 py-2 font-semibold text-black" disabled>Consultando seguimiento…</button>
+          } @else if(following()) {
+            <span class="inline-flex rounded-lg bg-primary-container px-4 py-2 font-semibold text-black" role="status">Ya sigues este caso</span>
+            <button type="button" class="rounded-lg border border-slate-400/60 px-4 py-2 font-semibold" [disabled]="followBusy()" (click)="toggleFollow()">{{followBusy()?'Guardando…':'Dejar de seguir'}}</button>
+          } @else {
+            <button type="button" class="rounded-lg bg-primary-container px-4 py-2 font-semibold text-black" [disabled]="followBusy()" (click)="toggleFollow()">{{followBusy()?'Guardando…':'Seguir caso'}}</button>
+          }
+        </div>
       } @else if(!auth.hasSession()) {
         <a [routerLink]="['/login']" [queryParams]="{returnUrl:loginReturn()}" class="underline">Inicia sesión para seguir este caso</a>
       }

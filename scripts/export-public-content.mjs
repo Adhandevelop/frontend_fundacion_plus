@@ -69,19 +69,17 @@ for(const filename of files){
   sourceSnapshots.push({source,sha256:sourceHash(html),static_text_fragments:fragments,images});
   if(source==='src/app/features/home/components/news/news.component.html'){
     const cards=collect(parsed.nodes,node=>node.name==='article');
-    cards.forEach((node,index)=>homeNews.push({review_key:`home-news:${index}`,source,...blocked,
-      title:text(collect([node],item=>item.name==='h4')[0]??{}),
+    cards.forEach((node,index)=>{const title=text(collect([node],item=>item.name==='h4')[0]??{});if(!title)return;homeNews.push({review_key:`home-news:${index}`,source,...blocked,title,
       summary:text(collect([node],item=>item.name==='p')[0]??{}),
       source_text:text(node),images:collect([node],item=>item.name==='img' && attr(item,'src')).map(item=>({url:attr(item,'src'),alt:attr(item,'alt')??null})),
       merge_into:null,
-    }));
+    });});
   }
   if(source==='src/app/features/home/components/initiatives/initiatives.component.html'){
     const panels=collect(parsed.nodes,node=>/^initiative-panel-\d+$/.test(attr(node,'id')??''));
-    panels.forEach(node=>homeInitiatives.push({review_key:'home-'+attr(node,'id'),source,...blocked,
-      title:text(collect([node],item=>item.name==='h3')[0]??{}),source_text:text(node),
+    panels.forEach(node=>{const title=text(collect([node],item=>item.name==='h3')[0]??{});if(!title)return;homeInitiatives.push({review_key:'home-'+attr(node,'id'),source,...blocked,title,source_text:text(node),
       images:collect([node],item=>item.name==='img' && attr(item,'src')).map(item=>({url:attr(item,'src'),alt:attr(item,'alt')??null})),merge_into:null,
-    }));
+    });});
   }
 }
 const records=[...news,...initiatives,...homeNews,...homeInitiatives];
