@@ -1,0 +1,22 @@
+section[aria-labelledby='home-map-cases-title'] div[role='list'] > button {
+  flex: 0 0 100%;
+  width: auto !important;
+}
+
+@media (min-width: 640px) {
+  section[aria-labelledby='home-map-cases-title'] div[role='list'] > button {
+    flex-basis: calc((100% - 0.75rem) / 2);
+  }
+}
+
+@media (min-width: 768px) {
+  section[aria-labelledby='home-map-cases-title'] div[role='list'] > button {
+    flex-basis: calc((100% - 1.5rem) / 3);
+  }
+}
+
+@media (min-width: 1280px) {
+  section[aria-labelledby='home-map-cases-title'] div[role='list'] > button {
+    flex-basis: calc((100% - 2.25rem) / 4);
+  }
+}

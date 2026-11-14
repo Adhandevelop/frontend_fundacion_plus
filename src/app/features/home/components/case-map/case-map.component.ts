@@ -5,7 +5,7 @@ import { MapCanvasComponent } from '../../../map/components/canvas/canvas.compon
 import {MapCasesApiService} from '../../../map/map-cases-api.service';
 import {PublicCaseMapFeature} from '../../../map/map-cases.models';
 
-@Component({selector:'plus-case-map', standalone:true, imports:[RouterLink,MapCanvasComponent], templateUrl:'./case-map.component.html'})
+@Component({selector:'plus-case-map', standalone:true, imports:[RouterLink,MapCanvasComponent], templateUrl:'./case-map.component.html',styleUrl:'./case-map.component.css'})
 export class CaseMapComponent {
  @ViewChild('caseCards') private readonly caseCards?:ElementRef<HTMLDivElement>;
  private readonly api=inject(MapCasesApiService);private readonly destroy=inject(DestroyRef);
