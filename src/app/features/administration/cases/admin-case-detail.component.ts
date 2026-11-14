@@ -16,8 +16,8 @@ export function adminCaseCoordinates(caso:AdminCase):{latitude:number;longitude:
   const raw=caso.ubicacion??caso.public_location;let location=typeof raw==='object'&&raw?raw:undefined;
   if(typeof raw==='string'){try{const parsed=JSON.parse(raw);if(parsed&&typeof parsed==='object')location=parsed;}catch{const point=raw.match(/POINT\s*\(\s*(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)\s*\)/i);if(point){const longitude=Number(point[1]),latitude=Number(point[2]);if(Number.isFinite(latitude)&&Number.isFinite(longitude))return{latitude,longitude};}}}
   const coordinates=location?.coordinates;
-  const latitude=Number(caso.latitud??caso.latitude??location?.latitud??location?.latitude??location?.lat??coordinates?.[1]);
-  const longitude=Number(caso.longitud??caso.longitude??location?.longitud??location?.longitude??location?.lng??coordinates?.[0]);
+  const latitude=Number(caso.latitud??caso.latitude??caso.exact_latitude??location?.latitud??location?.latitude??location?.lat??coordinates?.[1]);
+  const longitude=Number(caso.longitud??caso.longitude??caso.exact_longitude??location?.longitud??location?.longitude??location?.lng??coordinates?.[0]);
   return Number.isFinite(latitude)&&Number.isFinite(longitude)&&latitude>=-90&&latitude<=90&&longitude>=-180&&longitude<=180?{latitude,longitude}:null;
 }
 @Component({selector:'plus-admin-case-detail',standalone:true,imports:[DatePipe,RouterLink,ReactiveFormsModule,LocationPickerComponent],templateUrl:'./admin-case-detail.component.html'})

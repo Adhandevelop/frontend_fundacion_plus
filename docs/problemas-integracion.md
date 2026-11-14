@@ -2,7 +2,7 @@
 
 Actualizado: 13 de noviembre de 2026.
 
-Este documento contiene únicamente problemas técnicos abiertos y comprobados. P25 fue cerrado por el backend en `d7c8693` y P26 fue habilitado en `6e2d254`. En este momento no hay incidencias técnicas activas demostradas.
+Este documento contiene únicamente problemas técnicos abiertos y comprobados. P25 y P26 quedaron cerrados y verificados en producción con el backend `621aa08`. En este momento no hay incidencias técnicas activas demostradas.
 
 Los puntos P01–P23 se conservan en [correcciones-backend-historico.md](correcciones-backend-historico.md). Las funcionalidades que esperan adaptación o pruebas del frontend se registran en [estado-integracion-frontend-backend.md](estado-integracion-frontend-backend.md) y no deben presentarse como errores del backend.
 
@@ -10,13 +10,13 @@ Los puntos P01–P23 se conservan en [correcciones-backend-historico.md](correcc
 
 | Prioridad | Punto | Problema | Acción requerida |
 |---|---|---|---|
-| — | — | No hay incidencias técnicas activas demostradas. | Continuar las pruebas funcionales contra el servidor desplegado. |
+| — | — | No hay incidencias técnicas activas demostradas. | Continuar las pruebas funcionales y de aceptación. |
 
-> Verificación pendiente de P26: el `PATCH` guarda el punto y el caso aparece en el GeoJSON, pero una prueba desplegada mostró que la ficha administrativa seguía indicando que no había ubicación. Angular admite coordenadas GeoJSON, campos superiores y objetos `{latitud,longitud}`. Si el aviso continúa tras desplegar este adaptador, `GET /api/v1/admin/cases/{id}/` está omitiendo la ubicación y el backend debe incluirla en el serializador de detalle.
+> P26 quedó cerrado y verificado en producción con `621aa08`: el detalle expone las coordenadas y la reparación geográfica utiliza el endpoint auditado `PATCH /api/v1/admin/cases/{id}/location/`.
 
-## P25 — Error 5xx al listar respuestas de formularios — Cerrado
+## P25 — Error 5xx al listar respuestas de formularios — Cerrado y verificado
 
-El backend corrigió en `d7c8693` el manejo de teléfonos nulos, la resolución por UUID o slug y la paginación estándar de respuestas. La suite backend informó 42/42 pruebas correctas.
+El backend corrigió el manejo de teléfonos nulos, la resolución por UUID o slug, los consentimientos legales y la paginación estándar. En `621aa08` se verificaron en producción tanto el listado como el detalle de cada respuesta.
 
 El contrato usado por Angular se mantiene en `count`, `next`, `previous` y `results`; un formulario sin envíos responde `200` con `results: []`.
 
@@ -24,7 +24,7 @@ Angular conserva la acción segura de reintento ante fallos de red.
 
 ## P26 — Reparación administrativa de coordenadas — Integrado
 
-El backend habilitó en `6e2d254` `PATCH /api/v1/admin/cases/{id}/` con `latitud` y `longitud` o un GeoJSON `Point`, validación SRID 4326 y auditoría. Angular incorporó en “Gestión del caso” un editor cartográfico que restaura el punto actual, permite usar la geolocalización o ajustar manualmente, solicita confirmación y recarga el expediente después de guardar.
+El backend consolidó en `621aa08` `PATCH /api/v1/admin/cases/{id}/location/` con validación geográfica y auditoría, además de exponer las coordenadas guardadas en el detalle. Angular incorporó en “Gestión del caso” un editor cartográfico que restaura el punto actual, permite usar la geolocalización o ajustar manualmente, solicita confirmación y recarga el expediente después de guardar.
 
 ## P24 — Documentos asociados a respuestas y seguimientos — Resuelto
 
@@ -48,7 +48,7 @@ Prioridad actual del frontend: verificar con datos desplegados el mapa y el expe
 - Probar con enlaces reales de Resend las nuevas páginas de confirmación y baja del boletín, incluyendo token inválido, vencido y reutilizado.
 - Probar con cuentas institucionales reales el selector de responsables y una actividad con/sin coordenadas.
 - El listado, alta y baja de casos seguidos están conectados con UUID reales. La ficha pública ya no contiene un expediente demostrativo y también puede abrirse en `/ciudadano/casos-publicos/:radicado`, conservando la sesión y el layout ciudadano.
-- El mapa público solo puede incluir expedientes aprobados con geometría `Point`. El 13 de noviembre se observaron seis casos aprobados en administración, pero el GeoJSON devolvió únicamente dos; los cuatro restantes no tienen un punto utilizable. Angular ahora exige seleccionar ubicación al crear nuevos casos administrativos. Para reparar expedientes existentes, el backend debe documentar o incorporar una acción administrativa segura que permita actualizar `ubicacion`/`latitud`/`longitud`, con validación geográfica y auditoría. No se inventarán coordenadas desde el nombre del barrio.
+- El mapa público solo incluye expedientes aprobados con geometría `Point`. Angular exige seleccionar ubicación al crear nuevos casos administrativos y permite reparar expedientes existentes mediante el endpoint auditado de P26. No se inventan coordenadas desde el nombre del barrio.
 
 ### “Mis casos” para cuentas administrativas
 
