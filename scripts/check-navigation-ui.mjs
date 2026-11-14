@@ -166,8 +166,8 @@ try{
   await visit('/legal/tratamiento_datos');await widthFits();
   assert.equal(await evaluate(`document.querySelector('main h1').textContent.trim()`),'Política local de tratamiento de datos');
   for(const [currentRole,allowed] of [
-    ['moderador',['/admin','/admin/casos','/admin/casos/nuevo','/admin/casos-asignados','/admin/mis-casos','/admin/mapa','/admin/informes','/admin/noticias','/admin/iniciativas','/admin/postulaciones','/admin/comentarios']],
-    ['representante',['/admin','/admin/casos','/admin/casos/nuevo','/admin/casos-asignados','/admin/mis-casos','/admin/mapa','/admin/informes']],
+    ['moderador',['/admin','/admin/casos','/admin/casos-asignados','/admin/mis-casos','/admin/mapa','/admin/informes','/admin/noticias','/admin/iniciativas','/admin/postulaciones','/admin/comentarios']],
+    ['representante',['/admin','/admin/casos','/admin/casos-asignados','/admin/mis-casos','/admin/mapa','/admin/informes']],
   ]){
     await visit('/admin/casos',currentRole);
     assert.deepEqual(await evaluate(`Array.from(document.querySelectorAll('nav[aria-label="Navegación administrativa"] a')).map(link=>link.getAttribute('href'))`),allowed);

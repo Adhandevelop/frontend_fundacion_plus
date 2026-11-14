@@ -4,7 +4,6 @@ const PATHS:Record<string,string>={
   description:'M5 3h10l4 4v14H5z M15 3v5h4 M8 12h8 M8 16h8',
   dashboard:'M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z',
   folder_shared:'M3 6h7l2 2h9v12H3z M3 6V4h7l2 2 M9 13h6 M9 16h6',
-  add_circle:'M12 3a9 9 0 1 1 0 18 9 9 0 0 1 0-18 M12 8v8 M8 12h8',
   map:'M3 5l6-2 6 2 6-2v16l-6 2-6-2-6 2z M9 3v16 M15 5v16',
   bar_chart:'M4 20V11h4v9 M10 20V4h4v16 M16 20V8h4v12',
   history:'M4 5v5h5 M4 10a8 8 0 1 1 1 7 M12 7v5l3 2',

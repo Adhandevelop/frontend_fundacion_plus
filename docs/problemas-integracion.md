@@ -2,7 +2,7 @@
 
 Actualizado: 13 de noviembre de 2026.
 
-Este documento contiene únicamente problemas técnicos abiertos y comprobados. P23 fue cerrado por el backend en `ee000bc` y adaptado en Angular. El 13 de noviembre se confirmó una nueva respuesta 5xx al consultar envíos de un formulario real.
+Este documento contiene únicamente problemas técnicos abiertos y comprobados. P25 fue cerrado por el backend en `d7c8693` y P26 fue habilitado en `6e2d254`. En este momento no hay incidencias técnicas activas demostradas.
 
 Los puntos P01–P23 se conservan en [correcciones-backend-historico.md](correcciones-backend-historico.md). Las funcionalidades que esperan adaptación o pruebas del frontend se registran en [estado-integracion-frontend-backend.md](estado-integracion-frontend-backend.md) y no deben presentarse como errores del backend.
 
@@ -10,15 +10,19 @@ Los puntos P01–P23 se conservan en [correcciones-backend-historico.md](correcc
 
 | Prioridad | Punto | Problema | Acción requerida |
 |---|---|---|---|
-| Alta | P25 | `GET /api/v1/admin/forms/{id}/submissions/?page=1&page_size=20` responde 5xx para el formulario “arreglo vial”. | Revisar traceback de Django y devolver página vacía o paginada válida, nunca 500. |
+| — | — | No hay incidencias técnicas activas demostradas. | Continuar las pruebas funcionales contra el servidor desplegado. |
 
-## P25 — Error 5xx al listar respuestas de formularios — Abierto
+## P25 — Error 5xx al listar respuestas de formularios — Cerrado
 
-La ficha administrativa del formulario carga correctamente, por lo que autenticación, identificador y acceso a `/admin/forms/{id}/` funcionan. La siguiente solicitud del frontend, `GET /api/v1/admin/forms/{id}/submissions/?page=1&page_size=20`, recibe una respuesta 5xx y Angular muestra el mensaje de indisponibilidad.
+El backend corrigió en `d7c8693` el manejo de teléfonos nulos, la resolución por UUID o slug y la paginación estándar de respuestas. La suite backend informó 42/42 pruebas correctas.
 
-El contrato usado por Angular coincide con el acordado: `count`, `next`, `previous` y `results`. Si todavía no existen envíos, la respuesta esperada es `200` con `results: []`. Para cerrar P25 el backend debe entregar el traceback del contenedor, corregir la excepción y probar al menos formularios con cero envíos, con un envío anónimo pendiente de activación y con un envío vinculado.
+El contrato usado por Angular se mantiene en `count`, `next`, `previous` y `results`; un formulario sin envíos responde `200` con `results: []`.
 
-Angular añadió una acción segura de reintento y conserva la vista sin modificar datos, pero no puede corregir una excepción 5xx del servidor.
+Angular conserva la acción segura de reintento ante fallos de red.
+
+## P26 — Reparación administrativa de coordenadas — Integrado
+
+El backend habilitó en `6e2d254` `PATCH /api/v1/admin/cases/{id}/` con `latitud` y `longitud` o un GeoJSON `Point`, validación SRID 4326 y auditoría. Angular incorporó en “Gestión del caso” un editor cartográfico que restaura el punto actual, permite usar la geolocalización o ajustar manualmente, solicita confirmación y recarga el expediente después de guardar.
 
 ## P24 — Documentos asociados a respuestas y seguimientos — Resuelto
 

@@ -6,11 +6,10 @@ import { ResponsiveNavigationDirective } from '../../shared/navigation/responsiv
 import { NavigationIconComponent } from '../../shared/navigation/navigation-icon.component';
 import { AdminSection, canAccessAdminSection } from '../../core/auth/admin-access.policy';
 
-interface AdminNavigationItem {path:string;label:string;icon:string;section:AdminSection|null;exact:boolean;primary?:boolean}
+interface AdminNavigationItem {path:string;label:string;icon:string;section:AdminSection|null;exact:boolean}
 const NAVIGATION:AdminNavigationItem[]=[
   {path:'/admin',label:'Dashboard general',icon:'dashboard',section:'dashboard',exact:true},
   {path:'/admin/casos',label:'Gestión de casos',icon:'folder_shared',section:'cases',exact:false},
-  {path:'/admin/casos/nuevo',label:'Añadir caso',icon:'add_circle',section:'cases',exact:true,primary:true},
   {path:'/admin/casos-asignados',label:'Casos asignados',icon:'assignment_ind',section:'cases',exact:false},
   {path:'/admin/mis-casos',label:'Mis casos',icon:'bookmark',section:'cases',exact:false},
   {path:'/admin/mapa',label:'Mapa de casos',icon:'map',section:'map',exact:false},

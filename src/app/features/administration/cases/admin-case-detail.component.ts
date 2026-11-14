@@ -9,9 +9,10 @@ import { AdminCasesApiService } from './admin-cases-api.service';
 import { AdminAction, AdminCase, CandidatePage } from './admin-cases.models';
 import { CaseEvidence, caseStateLabel } from '../../citizen/services/citizen-cases.models';
 import { apiErrorMessage } from '../../../core/api/api-error';
+import { LocationPickerComponent } from '../../citizen/intake/location-picker/location-picker.component';
 
 interface ActionReview {caseId:string;action:AdminAction;permission:string;title:string;summary:string}
-@Component({selector:'plus-admin-case-detail',standalone:true,imports:[DatePipe,RouterLink,ReactiveFormsModule],templateUrl:'./admin-case-detail.component.html'})
+@Component({selector:'plus-admin-case-detail',standalone:true,imports:[DatePipe,RouterLink,ReactiveFormsModule,LocationPickerComponent],templateUrl:'./admin-case-detail.component.html'})
 export class AdminCaseDetailComponent {
   private readonly api=inject(AdminCasesApiService);
   private readonly destroy=inject(DestroyRef);
@@ -23,6 +24,7 @@ export class AdminCaseDetailComponent {
   readonly candidates=signal<CandidatePage>({count:0,next:null,previous:null,results:[]});readonly candidatePage=signal(1);readonly candidateQuery=signal('');readonly candidateLoading=signal(false);readonly candidateError=signal('');
   readonly evidenceId=signal('');readonly selectedEvidenceFile=signal<File|null>(null);readonly label=caseStateLabel;
   readonly progressFiles=signal<File[]>([]);
+  readonly editingLocation=signal(false);readonly locationReview=signal(false);readonly locationLatitude=signal<number|null>(null);readonly locationLongitude=signal<number|null>(null);
   readonly tabs=[{id:'overview',label:'Resumen'},{id:'history',label:'Seguimiento'},{id:'evidence',label:'Evidencias'},{id:'management',label:'Gestión del caso'}];
   private readonly requiredText=[Validators.required,Validators.pattern(/\S/),Validators.maxLength(2000)];
   readonly moderation=this.builder.group({publication:['pendiente',Validators.required],priority:['media',Validators.required],reason:['',this.requiredText]});
@@ -38,12 +40,18 @@ export class AdminCaseDetailComponent {
   load(){
     const revision=++this.revision;this.request?.unsubscribe();this.candidateRequest?.unsubscribe();this.loading.set(true);this.error.set('');this.review.set(null);
     this.request=this.api.detail(this.reference).pipe(takeUntilDestroyed(this.destroy),finalize(()=>{if(revision===this.revision)this.loading.set(false);})).subscribe({next:value=>{
-      if(revision!==this.revision)return;this.data.set(value);this.uncertain.set(false);this.moderation.patchValue({publication:value.estado_publicacion,priority:value.prioridad});
+      if(revision!==this.revision)return;this.data.set(value);this.uncertain.set(false);this.restoreLocation(value);this.moderation.patchValue({publication:value.estado_publicacion,priority:value.prioridad});
       if(this.can('assign'))this.loadCandidates();else this.candidates.set({count:0,next:null,previous:null,results:[]});
     },error:error=>{if(revision===this.revision)this.error.set(apiErrorMessage(error));}});
   }
   can(action:string){return this.data()?.allowed_actions.includes(action) ?? false;}
   selectTab(value:string){if(this.pending() || this.review())return;this.tab.set(value);}
+  private restoreLocation(caso:AdminCase){const coordinates=caso.ubicacion?.coordinates,latitude=Number(caso.latitud??coordinates?.[1]),longitude=Number(caso.longitud??coordinates?.[0]);this.locationLatitude.set(Number.isFinite(latitude)?latitude:null);this.locationLongitude.set(Number.isFinite(longitude)?longitude:null);this.editingLocation.set(false);this.locationReview.set(false);}
+  startLocationEdit(){if(!this.can('moderate')||this.pending())return;this.editingLocation.set(true);this.locationReview.set(false);this.status.set('Selecciona el punto correcto y revísalo antes de guardar.');}
+  setLocation(value:{latitude:number;longitude:number}|null){this.locationLatitude.set(value?.latitude??null);this.locationLongitude.set(value?.longitude??null);this.locationReview.set(false);}
+  reviewLocation(){if(this.locationLatitude()===null||this.locationLongitude()===null){this.status.set('Selecciona un punto en el mapa antes de continuar.');return;}this.locationReview.set(true);this.status.set('Confirma la nueva ubicación del expediente.');}
+  cancelLocation(){const caso=this.data();if(caso)this.restoreLocation(caso);this.status.set('Edición de ubicación cancelada.');}
+  saveLocation(){const caso=this.data(),latitude=this.locationLatitude(),longitude=this.locationLongitude();if(!caso||latitude===null||longitude===null||!this.locationReview()||this.pending()||!this.can('moderate'))return;const revision=this.revision;this.pending.set(true);this.status.set('');this.api.updateLocation(caso.id_caso,latitude,longitude).pipe(takeUntilDestroyed(this.destroy),finalize(()=>{if(revision===this.revision)this.pending.set(false);})).subscribe({next:()=>{if(revision!==this.revision)return;this.status.set('Ubicación actualizada. Si el caso está aprobado, ya puede incorporarse al mapa público.');this.load();},error:error=>{if(revision===this.revision){this.locationReview.set(false);this.status.set(apiErrorMessage(error));}}});}
   private resetForms(){this.moderation.reset();this.correction.reset();this.assignment.reset();this.progress.reset();this.resolution.reset();this.evidence.reset();this.evidenceUpload.reset();}
   loadCandidates(){
     const caso=this.data();if(!caso || !this.can('assign'))return;

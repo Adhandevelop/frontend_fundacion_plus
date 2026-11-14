@@ -5,6 +5,7 @@ export interface AdminCase {
   tipo_nombre:string;tipo_categoria:string;tipo_naturaleza:string;comunidad_nombre:string;municipio_nombre:string;departamento_nombre:string;
   estado_nombre:string;estado_publicacion:string;prioridad:string;fecha_creacion:string;fecha_actualizacion:string;
   familias_afectadas:number;meses_afectacion:number;resultado_resumen:string|null;
+  ubicacion?:{type:'Point';srid?:4326;coordinates:[number,number]}|null;latitud?:number|null;longitud?:number|null;
   creado_por?:string;creado_por_nombre?:string;creado_por_correo?:string;
   active_assignment:{responsable_nombre:string;responsable:string}|null;
   active_correction_request:CaseCorrection|null;solicitudes_correccion:CaseCorrection[];
