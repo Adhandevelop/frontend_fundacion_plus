@@ -23,6 +23,7 @@ const NAVIGATION:AdminNavigationItem[]=[
   {path:'/admin/postulaciones',label:'Postulaciones',icon:'inbox',section:'proposals',exact:false},
   {path:'/admin/comentarios',label:'Moderación de comentarios',icon:'forum',section:'comments',exact:false},
   {path:'/admin/formularios',label:'Formularios',icon:'description',section:'forms',exact:false},
+  {path:'/admin/configuracion-institucional',label:'Información institucional',icon:'corporate_fare',section:'homepage',exact:false},
   {path:'/admin/portada',label:'Fotografía de portada',icon:'image',section:'homepage',exact:false},
 ];
 

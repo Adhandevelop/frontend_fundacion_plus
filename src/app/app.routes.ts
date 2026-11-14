@@ -11,6 +11,7 @@ export const routes: Routes = [
     data: {requiresAdmin: true},
     loadComponent: () => import('./layouts/admin/admin-layout.component').then(m => m.AdminLayoutComponent),
     children: [
+      {path:'configuracion-institucional',data:{adminSection:'homepage'},title:'Información institucional · PLUS',loadComponent:()=>import('./features/administration/homepage/institution-settings.component').then(m=>m.InstitutionSettingsComponent)},
       {path:'portada',data:{adminSection:'homepage'},title:'Fotografía principal · PLUS',loadComponent:()=>import('./features/administration/homepage/homepage-hero.component').then(m=>m.HomepageHeroComponent)},
       {path: 'mapa', title: 'Mapa de casos administrativo · PLUS', data: {adminSection: 'map', mapContext: 'admin'}, loadComponent: () => import('./features/map/public-map.component').then(m => m.PublicMapComponent)},
       {path:'formularios/nuevo',data:{adminSection:'forms'},title:'Crear formulario · PLUS',loadComponent:()=>import('./features/administration/forms/form-editor.component').then(m=>m.FormEditorComponent)},
@@ -98,6 +99,7 @@ export const routes: Routes = [
       {path: 'iniciativas', title: 'Iniciativas comunitarias · PLUS', loadComponent: () => import('./features/initiatives/initiatives-page.component').then(m => m.InitiativesPageComponent)},
       {path: 'iniciativas/:slug', title: 'Iniciativa comunitaria · PLUS', loadComponent: () => import('./features/initiatives/initiatives-page.component').then(m => m.InitiativesPageComponent)},
       {path: 'nosotros', title: 'Nosotros · PLUS', loadComponent: () => import('./features/institutional/about/about.component').then(m => m.AboutComponent)},
+      {path: 'legal/:tipo', title: 'Documento legal · PLUS', loadComponent: () => import('./features/institutional/legal/legal-document.component').then(m => m.LegalDocumentComponent)},
       {path: 'casos/:radicado', title: 'Información del caso · PLUS', data: {caseContext: 'public'}, loadComponent: () => import('./features/cases/public-case.component').then(m => m.PublicCaseComponent)},
     ],
   },

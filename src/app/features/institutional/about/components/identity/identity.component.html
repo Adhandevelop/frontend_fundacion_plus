@@ -2,16 +2,16 @@
 <div class="w-full max-w-7xl mx-auto px-margin md:px-margin-desktop">
 <div class="max-w-3xl mb-space-lg">
 <span class="text-label-md font-label-md ed-about-text-primary tracking-wider uppercase font-semibold">Naturaleza Jurídica y Social</span>
-<h2 class="font-headline-lg text-headline-lg ed-about-text-on-surface mt-1">¿Quiénes Somos en la Corporación Pluralismo Social?</h2>
+<h2 class="font-headline-lg text-headline-lg ed-about-text-on-surface mt-1">¿Quiénes somos en {{institution()?.corporation_name || 'Corporación Pluralismo Social'}}?</h2>
 <div class="h-1 w-16 ed-about-bg-primary-container mt-3"></div>
 </div>
 <div class="grid grid-cols-1 md:grid-cols-12 gap-space-lg items-center">
 <div class="md:col-span-7 space-y-space-md text-body-lg font-body-lg ed-about-text-secondary leading-relaxed">
 <p>
-              La <strong class="ed-about-text-on-surface font-semibold">Corporación Pluralismo Social (PLUS)</strong> es una entidad civil, democrática y sin ánimo de lucro constituida al amparo de la legislación colombiana y la Ley 850 de 2003 sobre Veedurías Ciudadanas.
+              <strong class="ed-about-text-on-surface font-semibold">{{institution()?.corporation_name || 'Corporación Pluralismo Social'}} ({{institution()?.acronym || 'PLUS'}})</strong> es una entidad civil, democrática y sin ánimo de lucro constituida al amparo de la legislación colombiana y la Ley 850 de 2003 sobre Veedurías Ciudadanas.
             </p>
 <p>
-              Nuestra misión medular consiste en ejercer la vigilancia técnica, imparcial y preventiva sobre la gestión pública y la contratación estatal en las subregiones de Colombia, con especial énfasis en comunidades campesinas, cuencas fluviales y territorios históricamente vulnerados.
+              {{institution()?.mission || 'Nuestra misión consiste en fortalecer la participación ciudadana, la veeduría social y el acompañamiento territorial de las comunidades mediante una gestión transparente e iniciativas de impacto.'}}
             </p>
 <p class="text-body-md font-body-md">
               Actuamos como un canal articulador entre las comunidades de base y las entidades del Estado, promoviendo que la inversión pública se ejecute con estándares de transparencia, oportunidad técnica y respeto irrestricto por el medio ambiente y los derechos humanos colectivos.
@@ -60,7 +60,7 @@
 </div>
 <h3 class="font-headline-sm text-headline-sm ed-about-text-on-surface">Misión Institucional</h3>
 <p class="mt-space-md font-body-md text-body-md ed-about-text-secondary leading-relaxed">
-                Ejercer el control social, la veeduría comunitaria y la articulación técnica interinstitucional con rigor ético e imparcialidad legal, velando por la adecuada inversión pública y la vigencia efectiva de los derechos humanos y colectivos en el territorio.
+                {{institution()?.mission || 'Fortalecer la participación ciudadana, la veeduría social y el acompañamiento territorial de las comunidades mediante gestión transparente e iniciativas de impacto.'}}
               </p>
 </div>
 <div class="mt-space-lg pt-space-sm border-t ed-about-border-outline-variant-20 flex items-center gap-1.5 text-label-sm font-label-sm ed-about-text-primary font-semibold">

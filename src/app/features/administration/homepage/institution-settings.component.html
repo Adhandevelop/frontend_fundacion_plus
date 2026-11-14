@@ -1,0 +1,47 @@
+<div class="p-4 sm:p-6 max-w-5xl mx-auto space-y-6">
+  <header>
+    <p class="text-label-sm uppercase tracking-wider">Configuración de la página</p>
+    <h1 class="text-headline-md">Información institucional</h1>
+    <p class="text-body-sm mt-2 max-w-3xl">Administra los datos oficiales que se muestran en la portada y que podrán reutilizarse en las demás secciones públicas.</p>
+  </header>
+
+  @if (loading()) {
+    <p class="admin-panel p-5" role="status">Consultando la información institucional…</p>
+  } @else if (error() && !model.corporationName) {
+    <p class="plus-form-errors" role="alert">{{error()}}</p>
+  } @else {
+    <form class="admin-panel p-5 sm:p-6 space-y-6" (ngSubmit)="save()">
+      <div class="grid md:grid-cols-[1fr_12rem] gap-5">
+        <label class="admin-field">Nombre oficial de la organización
+          <input name="corporationName" maxlength="160" required [(ngModel)]="model.corporationName">
+        </label>
+        <label class="admin-field">Sigla
+          <input name="acronym" maxlength="20" required [(ngModel)]="model.acronym">
+        </label>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-5">
+        <label class="admin-field">Nombre del representante
+          <input name="representativeName" maxlength="180" required [(ngModel)]="model.representativeName">
+        </label>
+        <label class="admin-field">Cargo del representante
+          <input name="representativeRole" maxlength="180" required [(ngModel)]="model.representativeRole">
+        </label>
+      </div>
+
+      <label class="admin-field">Misión institucional
+        <textarea name="mission" rows="6" maxlength="1200" required [(ngModel)]="model.mission"></textarea>
+        <span class="text-body-sm text-right">{{model.mission.length}} / 1200</span>
+      </label>
+
+      <aside class="rounded-xl border border-amber-500/40 bg-amber-400/10 p-4 text-body-sm">
+        Estos cambios se publican directamente. La fotografía principal se administra por separado en “Fotografía de portada”.
+      </aside>
+
+      @if (updatedAt()) {<p class="text-body-sm">Última actualización registrada: {{updatedAt()}}</p>}
+      @if (error()) {<p class="plus-form-errors" role="alert">{{error()}}</p>}
+      @if (status()) {<p class="border border-emerald-600 bg-emerald-500/10 rounded-lg p-3" role="status">{{status()}}</p>}
+      <button type="submit" class="admin-primary" [disabled]="saving()">{{saving() ? 'Guardando…' : 'Guardar información institucional'}}</button>
+    </form>
+  }
+</div>

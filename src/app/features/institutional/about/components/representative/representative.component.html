@@ -14,7 +14,7 @@
 <div class="lg:col-span-5 flex flex-col">
 <div class="ed-about-bg-surface-container-lowest border ed-about-border-outline-variant-40 rounded-xl p-space-md shadow-sm">
 <div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden ed-about-bg-surface-container border ed-about-border-outline-variant-30">
-<img class="w-full h-full object-cover object-top" alt="Fotografía de referencia de PLUS" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6RIaznBZGF8kV9cM40gRZBko0HxkeNI-7FfjLf7Xgeyn-jVLoyJ2GMhgLAve5PpKSvakbP897otyUZpdogpqq1Z5IhykKY--2SCLvnQVrPWk_oRZjra9nyBOdir0Aukq_otPiFDV34r4-Ozx3k_NWVIH-1mGp1aKS1O1-iq-8zPuhXYgMaj8wedXKP9tMk_LQsIAsIcoD96b1oxFoWOv2eb_tAoptsTCIObuZ2mCc"/>
+@if(image()){<img class="w-full h-full object-cover object-top" [alt]="institution()?.alt_text || 'Fotografía institucional del representante de PLUS'" loading="lazy" [src]="image()"/>}@else{<div class="w-full h-full grid place-items-center p-6 text-center ed-about-text-secondary">Cargando fotografía institucional…</div>}
 <div class="absolute top-3 left-3 ed-about-bg-surface-container-lowest-90 backdrop-blur-sm border ed-about-border-outline-variant-40 px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
 <span class="w-2 h-2 rounded-full ed-about-bg-primary-container"></span>
 <span class="text-label-sm font-label-sm ed-about-text-on-surface font-semibold">Representante Legal &amp; Vocero Oficial</span>
@@ -52,9 +52,9 @@
 <div class="lg:col-span-7 ed-about-bg-surface-container-lowest border ed-about-border-outline-variant-40 rounded-xl p-space-lg shadow-sm">
 <div class="border-b ed-about-border-outline-variant-30 pb-space-md mb-space-md">
 <span class="text-label-md font-label-md ed-about-text-secondary block uppercase tracking-wider font-semibold">Titular del Despacho</span>
-<h3 class="font-display-lg text-display-lg ed-about-text-on-surface tracking-tight mt-1">JUAN DAVID MARTÍNEZ BOLAÑO</h3>
+<h3 class="font-display-lg text-display-lg ed-about-text-on-surface tracking-tight mt-1">{{institution()?.representative_name || 'JUAN DAVID MARTINEZ BOLAÑO'}}</h3>
 <p class="text-title-md font-title-md ed-about-text-primary font-semibold mt-1">
-                Representante Legal, Coordinador General de Veedurías Ciudadanas y Defensor Social
+                {{institution()?.representative_role || 'CEO de la Corporación Pluralismo Social'}}
               </p>
 </div>
 <blockquote class="my-space-md pl-space-md border-l-4 ed-about-border-primary-container ed-about-bg-surface-container-low-60 py-3 rounded-r-lg">
@@ -62,7 +62,7 @@
                 «El control social no es un acto de confrontación, sino el puente democrático que garantiza que cada peso y cada obra pública se convierta en dignidad, agua potable y desarrollo para las comunidades ribereñas y rurales.»
               </p>
 <footer class="mt-2 text-label-sm font-label-sm font-semibold ed-about-text-secondary">
-                — Juan David Martínez Bolaño, Despacho de Representación Legal PLUS
+                — {{institution()?.representative_name || 'Juan David Martinez Bolaño'}}, {{institution()?.acronym || 'PLUS'}}
               </footer>
 </blockquote>
 <div class="space-y-space-md text-body-md font-body-md ed-about-text-on-surface-90 mt-space-md leading-relaxed">

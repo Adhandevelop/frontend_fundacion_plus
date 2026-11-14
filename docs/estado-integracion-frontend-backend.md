@@ -1,6 +1,6 @@
 # Estado de integración del frontend PLUS
 
-Actualizado: 11 de noviembre de 2026.
+Actualizado: 13 de noviembre de 2026.
 
 Este es el registro consolidado del frontend Angular. “Integrado” significa que existe un servicio HTTP, una vista conectada y pruebas aisladas del contrato; no significa que el cambio local ya esté desplegado en `fundacionplus.site`. Este repositorio no modifica Django ni la base de datos.
 
@@ -35,6 +35,7 @@ Este es el registro consolidado del frontend Angular. “Integrado” significa 
 - Informes de casos y exportación CSV.
 - Auditoría paginada con filtros server-side y detalle seguro de metadatos.
 - Gestión exclusiva de la fotografía principal para cuentas con `can_manage_homepage`.
+- Edición conjunta del nombre, sigla, representante, cargo y misión mediante las claves oficiales de `SiteSetting`.
 
 ### Portada institucional
 
@@ -44,6 +45,10 @@ Este es el registro consolidado del frontend Angular. “Integrado” significa 
 - `/admin/portada` permite consultar y reemplazar la imagen mediante `multipart/form-data`.
 - El frontend valida JPG/PNG/WEBP, límite de 5 MB y texto alternativo; el backend conserva la validación definitiva, versiona el recurso y audita la escritura.
 - Menú y ruta exigen administrador activo y capacidad `can_manage_homepage`.
+- `/admin/configuracion-institucional` consulta `/admin/settings/` y actualiza o crea exclusivamente `institucion.nombre`, `institucion.sigla`, `institucion.representante_nombre`, `institucion.representante_cargo` e `institucion.mision`.
+- “Nosotros” reutiliza desde `/public/home/` el nombre, sigla, misión, representante, cargo y fotografía institucional, sin mantener una segunda copia de esos datos en Angular.
+- `/legal/:tipo` consulta `/public/site/` y presenta la versión pública vigente de tratamiento de datos, términos de uso, consentimiento de radicación o boletín. El pie genera sus vínculos desde `documentos_legales` y dejó de enlazar destinos vacíos.
+- El pie retiró el correo, teléfono y dirección de demostración; mientras el backend no publique canales institucionales aprobados, ofrece únicamente accesos funcionales a registro, mapa e iniciativas.
 
 ### Noticias públicas y boletín
 
@@ -106,7 +111,7 @@ No se envían contraseñas por correo. El backend genera un enlace de un solo us
 
 ### Contenido editorial pendiente
 
-- Bloques institucionales de “Nosotros” y canales sociales oficiales.
+- Bloques secundarios de “Nosotros”, canales sociales, contacto, visión, acreditaciones y documentos oficiales.
 - Imágenes editoriales aprobadas para las noticias e iniciativas cargadas.
 
 La portada y los catálogos ya consultan noticias e iniciativas publicadas y enlazan sus fichas por `slug`. Los respaldos demostrativos fueron retirados: una colección vacía muestra un estado vacío real y un fallo de API muestra su error. Los bloques institucionales restantes requieren aprobación y fuente REST antes de retirar su contenido de diseño.
@@ -132,6 +137,7 @@ El backend entrega GeoJSON con coordenadas públicas generalizadas, visibilidad 
 
 ### Formularios
 
+- El 13 de noviembre se confirmó P25: la ficha del formulario “arreglo vial” carga, pero su listado de respuestas recibe 5xx desde `/admin/forms/{id}/submissions/`. El frontend usa la ruta y paginación acordadas y ahora permite reintentar; falta corregir el traceback en Django.
 - El detalle de versión histórica desplegado en `8dca085` ya está conectado a la vista previa administrativa.
 - El editor cubre los siete tipos y las validaciones frecuentes. La interfaz avanzada para `min_date`, `max_date`, expresión regular y mensaje de expresión regular aún no se expone, aunque el adaptador conserva `configuracion_validacion` recibida.
 - La disponibilidad real de correo, migraciones, documento legal y formulario semilla debe comprobarse en el entorno desplegado. Las pruebas locales no envían correos ni crean cuentas reales.
@@ -152,12 +158,12 @@ El módulo `/admin/casos-asignados` muestra los expedientes asignados al usuario
 3. Probar formularios de extremo a extremo con un buzón controlado y corregir diferencias observadas.
 4. Aprobar y cargar imágenes para el contenido editorial inicial ya publicado.
 6. Probar contra el servidor la carga multipart, responsables, actividades y enlaces del boletín.
-7. Probar el reemplazo real de portada con una cuenta superadministradora controlada.
+7. Probar el reemplazo real de portada y la edición institucional con una cuenta autorizada mediante `can_manage_homepage`.
 8. Repetir revisión responsive, accesibilidad, temas, Docker y Nginx con datos reales.
 
 ## 6. Verificación local actual
 
-- `npm run build`: correcto el 12 de noviembre de 2026 después de integrar indicadores, cobertura territorial, vínculos con casos, comunidad de actividades y detalle público por edición.
+- `npm run build`: correcto el 13 de noviembre de 2026 después de integrar la pantalla administrativa de información institucional y reutilizar sus datos en “Nosotros”.
 - `npm run test:api`: trece suites correctas; iniciativas incluye la proyección pública y el contrato P22 de filtro, respuesta enriquecida, búsqueda y paginación de candidatos.
 - La suite de formularios comprueba listado administrativo, siete tipos de pregunta, validación local, payload público, `Idempotency-Key`, activación/reenvío, historial ciudadano, ciclo de publicación y rutas de exportación.
 - La suite de portada comprueba la lectura pública, las métricas verificadas, la consulta administrativa y el reemplazo multipart protegido.

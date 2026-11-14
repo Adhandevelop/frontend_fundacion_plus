@@ -24,16 +24,16 @@
           </h4>
 <ul class="space-y-2 text-body-sm font-body-sm text-secondary dark:text-secondary-fixed">
 <li class="flex items-start gap-2">
-<span class="material-symbols-outlined text-[18px] text-on-surface dark:text-inverse-on-surface mt-0.5">mail</span>
-<span class="">atencionciudadana&#64;pluralismosocial.org</span>
+<span class="material-symbols-outlined text-[18px] text-on-surface dark:text-inverse-on-surface mt-0.5">description</span>
+<a routerLink="/registro" class="hover:text-on-surface dark:hover:text-inverse-on-surface underline underline-offset-4">Crear una cuenta para radicar y consultar casos</a>
 </li>
 <li class="flex items-start gap-2">
-<span class="material-symbols-outlined text-[18px] text-on-surface dark:text-inverse-on-surface mt-0.5">call</span>
-<span class="">Línea Nacional de Veeduría: (+57) 601 320 8900</span>
+<span class="material-symbols-outlined text-[18px] text-on-surface dark:text-inverse-on-surface mt-0.5">map</span>
+<a routerLink="/mapa" class="hover:text-on-surface dark:hover:text-inverse-on-surface underline underline-offset-4">Consultar el mapa público de casos</a>
 </li>
 <li class="flex items-start gap-2">
-<span class="material-symbols-outlined text-[18px] text-on-surface dark:text-inverse-on-surface mt-0.5">location_on</span>
-<span class="">Sede Institucional: Carrera 7 # 32-16, Bogotá D.C. / Seccionales en Chocó y Valle del Cauca</span>
+<span class="material-symbols-outlined text-[18px] text-on-surface dark:text-inverse-on-surface mt-0.5">volunteer_activism</span>
+<a routerLink="/iniciativas" class="hover:text-on-surface dark:hover:text-inverse-on-surface underline underline-offset-4">Conocer iniciativas y enviar una propuesta</a>
 </li>
 </ul>
 </div>
@@ -42,50 +42,21 @@
             Marco Normativo
           </h4>
 <ul class="space-y-1.5 text-label-md font-label-md">
-<li class="">
-<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors" href="#">
-                Transparencia y Rendición de Cuentas
-              </a>
-</li>
-<li class="">
-<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors" href="#">
-                Tratamiento de Datos Personales
-              </a>
-</li>
-<li class="">
-<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors" href="#">
-                Canales de Atención Ciudadana
-              </a>
-</li>
-<li class="">
-<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors" href="#">
-                Estatutos Institucionales
-              </a>
-</li>
-<li class="">
-<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors" href="#">
-                Términos y Condiciones
-              </a>
-</li>
+@for(document of legalDocuments();track document.id_documento){
+<li><a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors" [routerLink]="['/legal',document.tipo]">{{document.titulo}}</a></li>
+}@empty{<li class="text-secondary dark:text-secondary-fixed">Las políticas vigentes se publicarán en este espacio.</li>}
 </ul>
 </div>
 </div>
 <div class="border-t border-outline-variant/30 dark:border-outline/30 pt-space-md flex flex-col md:flex-row justify-between items-center gap-space-md">
 <p class="text-label-sm font-label-sm text-secondary dark:text-secondary-fixed text-center md:text-left">
-          © 2025 Corporación Pluralismo Social (PLUS) - Personería Jurídica y Veeduría Ciudadana. Todos los derechos reservados.
+          © 2026 Corporación Pluralismo Social (PLUS) - Personería Jurídica y Veeduría Ciudadana. Todos los derechos reservados.
         </p>
 <div class="flex flex-wrap items-center justify-center gap-space-md text-label-sm font-label-sm">
-<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors" href="#">
-            Transparencia y Rendición de Cuentas
-          </a>
-<span class="text-outline-variant/40">•</span>
-<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors" href="#">
-            Tratamiento de Datos Personales
-          </a>
-<span class="text-outline-variant/40">•</span>
-<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors" href="#">
-            Términos y Condiciones
-          </a>
+@for(document of legalDocuments();track document.id_documento;let last=$last){
+<a class="text-secondary dark:text-secondary-fixed hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors" [routerLink]="['/legal',document.tipo]">{{document.titulo}}</a>
+@if(!last){<span class="text-outline-variant/40">•</span>}
+}
 </div>
 </div>
 </div>

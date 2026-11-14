@@ -1,6 +1,6 @@
 # Catálogo de recursos y campos necesarios para PLUS
 
-Actualizado: 11 de noviembre de 2026.
+Actualizado: 13 de noviembre de 2026.
 
 Este documento sirve para recopilar el contenido que debe entregarse antes de poblar el sitio. Los nombres técnicos corresponden a modelos y serializers actuales del backend. Los campos generados por el servidor no deben diligenciarse manualmente. Las recomendaciones de dimensiones y calidad de imágenes son editoriales; todavía no sustituyen la validación binaria que debe implementar el backend para noticias e iniciativas.
 
@@ -19,7 +19,7 @@ El backend genera `image_url`, `relative_url`, `api_media_url`, `version` y `upd
 
 ## 2. Información institucional del inicio
 
-Actualmente se lee mediante `/api/v1/public/home/` y `SiteSetting`. El backend parametrizó nombre, sigla, representante, cargo y misión en `44e62a5`; la fotografía mantiene su editor especializado. Falta una interfaz administrativa amigable en Angular para editar conjuntamente los cinco textos institucionales.
+Actualmente se lee mediante `/api/v1/public/home/` y `SiteSetting`. El backend parametrizó nombre, sigla, representante, cargo y misión en `44e62a5`; la fotografía mantiene su editor especializado. Angular ya incorpora `/admin/configuracion-institucional` para consultar y editar conjuntamente los cinco textos mediante `/api/v1/admin/settings/`.
 
 | Campo esperado | Requerido | Observación |
 |---|---:|---|
@@ -36,7 +36,7 @@ Actualmente se lee mediante `/api/v1/public/home/` y `SiteSetting`. El backend p
 
 Los seis indicadores del inicio se calculan en el backend y **no se cargan como cifras manuales**: casos publicados, casos resueltos/cerrados, municipios, comunidades activas, iniciativas publicadas y actividades realizadas.
 
-Pendiente: contrato administrativo para editar los campos institucionales distintos de la fotografía.
+La edición de los cinco campos institucionales existentes ya está conectada. Siguen sin contrato público y administrativo `contact_email`, `contact_phone`, `address`, `service_area` y `social_links`; el frontend no debe inventarlos.
 
 ## 3. Página “Nosotros”
 

@@ -2,7 +2,7 @@
 
 Actualizado: 13 de noviembre de 2026.
 
-Este documento contiene únicamente problemas técnicos abiertos y comprobados. En este momento no hay incidencias activas demostradas; P23 fue cerrado por el backend en `ee000bc` y adaptado en Angular.
+Este documento contiene únicamente problemas técnicos abiertos y comprobados. P23 fue cerrado por el backend en `ee000bc` y adaptado en Angular. El 13 de noviembre se confirmó una nueva respuesta 5xx al consultar envíos de un formulario real.
 
 Los puntos P01–P23 se conservan en [correcciones-backend-historico.md](correcciones-backend-historico.md). Las funcionalidades que esperan adaptación o pruebas del frontend se registran en [estado-integracion-frontend-backend.md](estado-integracion-frontend-backend.md) y no deben presentarse como errores del backend.
 
@@ -10,7 +10,15 @@ Los puntos P01–P23 se conservan en [correcciones-backend-historico.md](correcc
 
 | Prioridad | Punto | Problema | Acción requerida |
 |---|---|---|---|
-| — | — | No hay incidencias activas demostradas. | Continuar las pruebas funcionales contra el servidor desplegado. |
+| Alta | P25 | `GET /api/v1/admin/forms/{id}/submissions/?page=1&page_size=20` responde 5xx para el formulario “arreglo vial”. | Revisar traceback de Django y devolver página vacía o paginada válida, nunca 500. |
+
+## P25 — Error 5xx al listar respuestas de formularios — Abierto
+
+La ficha administrativa del formulario carga correctamente, por lo que autenticación, identificador y acceso a `/admin/forms/{id}/` funcionan. La siguiente solicitud del frontend, `GET /api/v1/admin/forms/{id}/submissions/?page=1&page_size=20`, recibe una respuesta 5xx y Angular muestra el mensaje de indisponibilidad.
+
+El contrato usado por Angular coincide con el acordado: `count`, `next`, `previous` y `results`. Si todavía no existen envíos, la respuesta esperada es `200` con `results: []`. Para cerrar P25 el backend debe entregar el traceback del contenedor, corregir la excepción y probar al menos formularios con cero envíos, con un envío anónimo pendiente de activación y con un envío vinculado.
+
+Angular añadió una acción segura de reintento y conserva la vista sin modificar datos, pero no puede corregir una excepción 5xx del servidor.
 
 ## P24 — Documentos asociados a respuestas y seguimientos — Resuelto
 
@@ -30,6 +38,7 @@ Prioridad actual del frontend: verificar con datos desplegados el mapa y el expe
 - El historial de moderación de comentarios está conectado mediante `GET /admin/comments/{id}/history/`; el backend confirmó también el alias `/moderation-history/` y su DTO detallado.
 - Validar contra el servidor los ámbitos de responsables ya conectados y adaptar el dashboard por alcance cuando exista una representación diferenciada documentada.
 - Probar P19 con contenido publicado; la colección pública estaba vacía durante la última verificación.
+- Definir claves públicas y administrables para correo, teléfono, dirección/sede, horario, cobertura territorial y redes oficiales. `/public/site/` ya permite integrar documentos legales, pero esos canales institucionales todavía no forman parte de su contrato.
 - Probar con enlaces reales de Resend las nuevas páginas de confirmación y baja del boletín, incluyendo token inválido, vencido y reutilizado.
 - Probar con cuentas institucionales reales el selector de responsables y una actividad con/sin coordenadas.
 - El listado, alta y baja de casos seguidos están conectados con UUID reales. La ficha pública ya no contiene un expediente demostrativo y también puede abrirse en `/ciudadano/casos-publicos/:radicado`, conservando la sesión y el layout ciudadano.
