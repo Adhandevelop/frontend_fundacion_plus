@@ -87,7 +87,7 @@
 <label class="flex items-start gap-space-sm cursor-pointer select-none">
 <input formControlName="consent" class="mt-0.5 w-4 h-4 rounded auth-border-374151 auth-bg-121418 text-primary-container focus:ring-primary-container accent-primary-container" required="" type="checkbox" id="register-consent" [attr.aria-invalid]="!!fieldError('consent')" [attr.aria-describedby]="fieldError('consent')?'register-consent-error':null">
 <span class="text-body-sm font-body-sm auth-text-94a3b8">
-                Acepto los <a class="underline font-medium auth-text-f8fafc hover:text-primary-container transition-colors" href="#">Términos de Servicio</a> y autorizo el tratamiento de mis datos personales según la <span class="auth-text-f8fafc font-medium">Ley Estatutaria 1581 de 2012</span> y el marco institucional de PLUS.
+                Acepto los <a class="underline font-medium auth-text-f8fafc hover:text-primary-container transition-colors" routerLink="/legal/terminos_uso" target="_blank" rel="noopener">Términos de Servicio</a> y autorizo el tratamiento de mis datos personales según la <a class="underline font-medium auth-text-f8fafc hover:text-primary-container transition-colors" routerLink="/legal/tratamiento_datos" target="_blank" rel="noopener">política vigente</a> y la Ley Estatutaria 1581 de 2012.
               </span>
 </label>
 
@@ -112,15 +112,15 @@
 <p class="mt-3 text-body-sm" role="status">{{ message() }}</p></form>
 </section>
 <section class="lg:col-span-5 space-y-space-md">
-<p class="text-label-sm auth-text-94a3b8">Contenido e indicadores ilustrativos del diseño.</p>
+<p class="text-label-sm auth-text-94a3b8">Información institucional verificada.</p>
 <div class="auth-bg-1a1d24 rounded-xl border auth-border-2e3440 overflow-hidden shadow-xl">
 <div class="relative h-64 md:h-72 w-full auth-bg-161920">
-<img class="w-full h-full object-cover" alt="Encuentro comunitario de referencia de PLUS" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjOBr_bsEX-uQUvzO9iX-JAfmdaj4znrFrUKkSWy9JSbksOO5kF12zApygJih_VvxXJrDuHcvYqkTi11XkjcJ-be0X6XGvJK0PQdS6zteXVBpwtMbO7rhqKISKV5g8DNT3G75aUG0jCqpSYQlv3veAIdVM8QzbKYvrNbyAQeu6tC0fN8KJeEU3PXFI5hzBksA8zHt_eCkv_N3aMIxX6hwTGCDb4OL7w3_XCfXtMdcYx2HoHEFIYWwAvg">
+@if(institutionalImage()){<img class="w-full h-full object-cover object-top" [alt]="publicHome()?.institution?.alt_text || 'Fotografía institucional de PLUS'" [src]="institutionalImage()">}@else{<div class="w-full h-full bg-gradient-to-br from-[#262b36] via-[#1a1d24] to-[#0f1115]"></div>}
 <div class="absolute inset-0 bg-gradient-to-t from-[#0f1115] via-[#0f1115]/50 to-transparent flex items-end p-space-md">
 <div class="text-white">
 <span class="inline-flex items-center gap-1 bg-primary-container text-slate-950 font-medium text-label-sm font-label-sm px-2 py-0.5 rounded-full mb-1">
 <plus-auth-icon class=" text-xs" name="verified"/>
-                  Veeduría Activa 2025
+                  {{publicHome()?.institution?.acronym || 'PLUS'}} · Veeduría activa
                 </span>
 <p class="text-title-sm font-title-sm font-semibold text-white">Asambleas Territoriales y Control Social</p>
 </div>
@@ -138,25 +138,25 @@
 <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary-container"></div>
 <div>
 <span class="text-label-sm font-label-sm auth-text-94a3b8 block mb-1">Impacto</span>
-<span class="text-headline-md font-headline-md font-bold auth-text-f8fafc block">+140</span>
+<span class="text-headline-md font-headline-md font-bold auth-text-f8fafc block">{{publicHome()?.verified_indicators?.published_cases_count ?? '—'}}</span>
 </div>
-<p class="text-label-sm font-label-sm auth-text-94a3b8 mt-space-xs">Casos atendidos y fiscalizados</p>
+<p class="text-label-sm font-label-sm auth-text-94a3b8 mt-space-xs">Casos publicados</p>
 </div>
 <div class="auth-bg-1a1d24 p-space-md rounded-xl border auth-border-2e3440 relative overflow-hidden flex flex-col justify-between shadow-md">
 <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary-container"></div>
 <div>
 <span class="text-label-sm font-label-sm auth-text-94a3b8 block mb-1">Cobertura</span>
-<span class="text-headline-md font-headline-md font-bold auth-text-f8fafc block">48</span>
+<span class="text-headline-md font-headline-md font-bold auth-text-f8fafc block">{{publicHome()?.verified_indicators?.active_communities_count ?? '—'}}</span>
 </div>
-<p class="text-label-sm font-label-sm auth-text-94a3b8 mt-space-xs">Veredas articuladas en red</p>
+<p class="text-label-sm font-label-sm auth-text-94a3b8 mt-space-xs">Comunidades activas</p>
 </div>
 <div class="auth-bg-1a1d24 p-space-md rounded-xl border auth-border-2e3440 relative overflow-hidden flex flex-col justify-between shadow-md">
 <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary-container"></div>
 <div>
 <span class="text-label-sm font-label-sm auth-text-94a3b8 block mb-1">Acceso</span>
-<span class="text-headline-md font-headline-md font-bold auth-text-f8fafc block">100%</span>
+<span class="text-headline-md font-headline-md font-bold auth-text-f8fafc block">{{publicHome()?.verified_indicators?.active_municipalities_count ?? '—'}}</span>
 </div>
-<p class="text-label-sm font-label-sm auth-text-94a3b8 mt-space-xs">Gratuito y libre acceso civil</p>
+<p class="text-label-sm font-label-sm auth-text-94a3b8 mt-space-xs">Municipios registrados</p>
 </div>
 </div>
 <div class="auth-bg-161d2b rounded-xl p-space-md border auth-border-2e3440 flex items-start gap-space-md shadow-md">

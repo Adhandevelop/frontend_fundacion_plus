@@ -5,6 +5,12 @@ import {HttpTestingController, provideHttpClientTesting} from '@angular/common/h
 import {firstValueFrom} from 'rxjs';
 import {API_BASE_URL} from '../src/app/core/api/api.config';
 import {MapCasesApiService} from '../src/app/features/map/map-cases-api.service';
+import {caseMarkerPresentation} from '../src/app/features/map/components/canvas/canvas.component';
+
+assert.equal(caseMarkerPresentation({tipo:'Acueducto comunitario',categoria:'infraestructura',naturaleza:'problematica'}).icon,'water_drop');
+assert.equal(caseMarkerPresentation({tipo:'Mejoramiento vial',categoria:'infraestructura',naturaleza:'proyecto_iniciativa'}).icon,'construction');
+assert.equal(caseMarkerPresentation({tipo:'Brigada médica',categoria:'social',naturaleza:'proyecto_iniciativa'}).icon,'medical_services');
+assert.equal(caseMarkerPresentation({tipo:'Sin clasificar',categoria:'otro',naturaleza:'otro'}).icon,'location_on');
 
 const env=createEnvironmentInjector([{provide:PLATFORM_ID,useValue:'browser'},{provide:ɵINJECTOR_SCOPE,useValue:'root'},provideHttpClient(withNoXsrfProtection()),provideHttpClientTesting(),{provide:API_BASE_URL,useValue:'/api/v1'},MapCasesApiService],undefined as never);
 const api=env.get(MapCasesApiService),backend=env.get(HttpTestingController);

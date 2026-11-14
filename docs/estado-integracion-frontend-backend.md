@@ -14,6 +14,7 @@ Este es el registro consolidado del frontend Angular. “Integrado” significa 
 - Perfil, preferencias, foto por `multipart/form-data` y catálogos territoriales.
 - Separación estricta de portales: ciudadano no entra a administración y un rol interno no entra al portal ciudadano.
 - Guards en rutas padre e hijas y menú administrativo filtrado por rol/capacidades.
+- Login y registro reutilizan la fotografía institucional y los indicadores verificados de `/public/home/`; retiraron las fotografías externas y cifras ilustrativas. El consentimiento enlaza las versiones legales públicas vigentes.
 
 ### Portal ciudadano
 
@@ -129,6 +130,7 @@ La portada y los catálogos ya consultan noticias e iniciativas publicadas y enl
 - Rutas `/mapa`, `/ciudadano/mapa` y `/admin/mapa`, conservando el layout del portal.
 - Cartografía legible también en tema oscuro.
 - Sin marcadores ni coordenadas inventadas.
+- Marcadores diferenciados por `tipo`, `categoria` y `naturaleza`: agua, salud, educación, deporte, seguridad, infraestructura, ambiente, derechos humanos y social. Los tipos desconocidos usan un icono genérico; la selección conserva un aro amarillo y el mapa incluye una leyenda compacta.
 - Corregida la interoperabilidad del import dinámico de Leaflet en producción: se admite la API como exportación directa o dentro de `default`. El fallo anterior generaba `TypeError: map is not a function` y dejaba el lienzo vacío.
 
 El backend entrega GeoJSON con coordenadas públicas generalizadas, visibilidad aprobada y filtros de servidor. Angular no geocodifica descripciones textuales ni usa ubicaciones privadas.

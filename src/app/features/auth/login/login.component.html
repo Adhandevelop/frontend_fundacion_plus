@@ -81,13 +81,13 @@
 </div>
 <div class="pt-space-md max-w-xl mx-auto w-full">
 <p class="font-label-sm text-label-sm auth-text-71717a">
-          Acceso a tu cuenta PLUS. Los indicadores de esta ilustración son de ejemplo.
+          Acceso seguro a tu cuenta PLUS.
         </p>
 </div>
 </div>
 <div class="w-full lg:w-5/12 auth-bg-121214 border-t lg:border-t-0 lg:border-l auth-border-27272a flex flex-col justify-between p-margin md:p-margin-desktop relative overflow-hidden">
 <div class="relative w-full rounded-xl overflow-hidden border auth-border-3f3f46-60 shadow-lg flex-1 min-h-[420px] flex flex-col justify-end p-space-lg ring-1 ring-white/5">
-<img class="absolute inset-0 w-full h-full object-cover z-0" alt="Encuentro comunitario de referencia de PLUS" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtPIa14sDBkIU7_a4BwhVUlvliRndt-vYHZgtaEo0pLm6aqexpRw5zkK-jmiR5P3fTRyMjUu4reIYjektK0dGMar8xIJonOEFq01eKXM5xRFue8jEofjsZt1x7F1GvwPq0OHle3n_H8OWcimdGOCvdK-G6Q4d9DNgaXLK0WtRmh0kjNYryl3q96y66CBJVEUcwICfbagT4FG2Yfa1X8tJdbZ4QujDA3DqzwZnrnV9lXvUDFXNgGlX7fQ">
+@if(institutionalImage()){<img class="absolute inset-0 w-full h-full object-cover object-top z-0" [alt]="publicHome()?.institution?.alt_text || 'Fotografía institucional de PLUS'" [src]="institutionalImage()">}@else{<div class="absolute inset-0 z-0 bg-gradient-to-br from-[#27272a] via-[#18181b] to-[#121214]"></div>}
 <div class="absolute inset-0 bg-gradient-to-t from-[#121214] via-[#121214]/80 to-black/40 z-10"></div>
 <div class="relative z-20 space-y-space-md">
 <div class="flex flex-wrap gap-space-xs">
@@ -112,18 +112,18 @@
               </p>
 </div>
 <div class="flex items-center justify-between pt-space-xs border-t auth-border-27272a auth-text-a1a1aa">
-<span class="font-label-sm text-label-sm font-semibold auth-text-fafafa">Mesa Ciudadana Subregional</span>
-<span class="font-label-sm text-label-sm auth-text-a1a1aa">Antioquia &amp; Chocó, Colombia</span>
+<span class="font-label-sm text-label-sm font-semibold auth-text-fafafa">{{publicHome()?.institution?.corporation_name || 'Corporación Pluralismo Social'}}</span>
+<span class="font-label-sm text-label-sm auth-text-a1a1aa">Participación ciudadana</span>
 </div>
 </div>
 <div class="grid grid-cols-2 gap-space-sm pt-space-xs">
 <div class="auth-bg-1f1f23-90 backdrop-blur-md p-3 rounded-lg border-l-4 border-l-primary-container border border-white/10 shadow-sm">
-<div class="font-headline-sm text-headline-sm font-bold auth-text-fafafa leading-none mb-1">1,280+</div>
-<div class="font-label-sm text-label-sm auth-text-a1a1aa font-medium">Alertas resueltas</div>
+<div class="font-headline-sm text-headline-sm font-bold auth-text-fafafa leading-none mb-1">{{publicHome()?.verified_indicators?.published_cases_count ?? '—'}}</div>
+<div class="font-label-sm text-label-sm auth-text-a1a1aa font-medium">Casos publicados</div>
 </div>
 <div class="auth-bg-1f1f23-90 backdrop-blur-md p-3 rounded-lg border-l-4 border-l-primary-container border border-white/10 shadow-sm">
-<div class="font-headline-sm text-headline-sm font-bold auth-text-fafafa leading-none mb-1">32</div>
-<div class="font-label-sm text-label-sm auth-text-a1a1aa font-medium">Municipios vigilados</div>
+<div class="font-headline-sm text-headline-sm font-bold auth-text-fafafa leading-none mb-1">{{publicHome()?.verified_indicators?.resolved_cases_count ?? '—'}}</div>
+<div class="font-label-sm text-label-sm auth-text-a1a1aa font-medium">Casos resueltos</div>
 </div>
 </div>
 </div>

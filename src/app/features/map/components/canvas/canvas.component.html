@@ -6,4 +6,7 @@
     <button type="button" class="rounded-lg border border-slate-300 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 px-3 py-2 text-sm font-semibold text-slate-900 dark:text-slate-100 shadow-md backdrop-blur hover:bg-yellow-300 dark:hover:bg-yellow-400 dark:hover:text-slate-900 transition-colors" (click)="showMeta()">Ver todo el Meta</button>
   </div>
   <p class="absolute bottom-7 left-3 z-[500] max-w-[calc(100%-1.5rem)] rounded-md bg-slate-950/85 px-3 py-2 text-xs text-white shadow" role="status" aria-live="polite">{{status}}</p>
+  <aside class="absolute bottom-7 right-3 z-[500] hidden max-w-[18rem] grid-cols-2 gap-x-3 gap-y-1 rounded-lg border border-slate-300 bg-white/95 p-2 text-[11px] font-semibold text-slate-800 shadow-md backdrop-blur md:grid dark:border-zinc-700 dark:bg-zinc-900/95 dark:text-zinc-100" aria-label="Convenciones de los marcadores">
+    @for(item of legend;track item.label){<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]" [style.color]="item.color" aria-hidden="true">{{item.icon}}</span>{{item.label}}</span>}
+  </aside>
 </section>

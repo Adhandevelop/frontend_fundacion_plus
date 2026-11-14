@@ -1,8 +1,23 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
 import type { LatLngExpression, LayerGroup, Map as LeafletMap } from 'leaflet';
-import {PublicCaseMapFeature} from '../../map-cases.models';
+import {PublicCaseMapFeature, PublicCaseMapProperties} from '../../map-cases.models';
 
 const VILLAVICENCIO: LatLngExpression = [4.142, -73.6266];
+export interface CaseMarkerPresentation {icon:string;color:string;label:string}
+const normalize=(value:string)=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+export function caseMarkerPresentation(value:Pick<PublicCaseMapProperties,'tipo'|'categoria'|'naturaleza'>):CaseMarkerPresentation {
+  const text=normalize(`${value.tipo} ${value.categoria} ${value.naturaleza}`);
+  if(/agua|acueduct|saneamiento|alcantarill|hidric|rio|quebrada/.test(text))return{icon:'water_drop',color:'#0891b2',label:'Agua y saneamiento'};
+  if(/salud|medic|hospital|puesto de salud|nutric/.test(text))return{icon:'medical_services',color:'#dc2626',label:'Salud'};
+  if(/educa|escuela|colegio|formacion/.test(text))return{icon:'school',color:'#2563eb',label:'Educación'};
+  if(/deporte|parque|recrea/.test(text))return{icon:'sports_soccer',color:'#7c3aed',label:'Deporte y parques'};
+  if(/seguridad|violencia|proteccion|riesgo/.test(text))return{icon:'shield',color:'#be123c',label:'Seguridad y protección'};
+  if(/infraestructura|vial|puente|via|obra/.test(text))return{icon:'construction',color:'#d97706',label:'Infraestructura'};
+  if(/ambiental|ambiente|conservacion/.test(text))return{icon:'eco',color:'#059669',label:'Ambiente'};
+  if(/derechos humanos|derecho/.test(text))return{icon:'diversity_3',color:'#4f46e5',label:'Derechos humanos'};
+  if(/social|comunitari|familia|cultura/.test(text))return{icon:'groups',color:'#0f766e',label:'Social y comunitario'};
+  return{icon:'location_on',color:'#ca8a04',label:'Otro tipo de caso'};
+}
 
 @Component({
   selector: 'plus-map-canvas',
@@ -11,6 +26,14 @@ const VILLAVICENCIO: LatLngExpression = [4.142, -73.6266];
   styleUrls: ['./canvas.component.css']
 })
 export class MapCanvasComponent implements AfterViewInit, OnChanges, OnDestroy {
+  readonly legend:CaseMarkerPresentation[]=[
+    {icon:'construction',color:'#d97706',label:'Infraestructura'},
+    {icon:'eco',color:'#059669',label:'Ambiente'},
+    {icon:'groups',color:'#0f766e',label:'Social'},
+    {icon:'medical_services',color:'#dc2626',label:'Salud'},
+    {icon:'school',color:'#2563eb',label:'Educación'},
+    {icon:'location_on',color:'#ca8a04',label:'Otros'},
+  ];
   @Input() mapHeight?: string;
   @Input() features: PublicCaseMapFeature[] = [];
   @Input() selectedCaseId = '';
@@ -77,17 +100,16 @@ export class MapCanvasComponent implements AfterViewInit, OnChanges, OnDestroy {
     const layer = this.caseLayer;
     if (!L || !map || !layer) return;
     layer.clearLayers();
-    let selectedMarker:ReturnType<typeof L.circleMarker>|undefined;
+    let selectedMarker:ReturnType<typeof L.marker>|undefined;
     for (const feature of this.features) {
       const [longitude, latitude] = feature.geometry.coordinates;
       const selected = feature.properties.id_caso === this.selectedCaseId;
-      const marker = L.circleMarker([latitude, longitude], {
-        radius: selected ? 11 : 8,
-        color: '#0f172a',
-        weight: selected ? 4 : 2,
-        fillColor: this.markerColor(feature.properties.estado),
-        fillOpacity: 1,
-      }).addTo(layer);
+      const presentation=caseMarkerPresentation(feature.properties);
+      const marker = L.marker([latitude, longitude], {icon:L.divIcon({
+        className:'plus-case-marker',
+        html:`<span class="plus-case-marker__body${selected?' is-selected':''}" style="--case-marker-color:${presentation.color}" title="${presentation.label}"><span class="material-symbols-outlined" aria-hidden="true">${presentation.icon}</span></span>`,
+        iconSize:selected?[44,44]:[38,38],iconAnchor:selected?[22,22]:[19,19],popupAnchor:[0,-20],
+      })}).addTo(layer);
       marker.bindTooltip(feature.properties.codigo || feature.properties.radicado_code, {
         direction: 'top', offset: [0, -7], className: 'plus-map-label',
       });
@@ -109,13 +131,6 @@ export class MapCanvasComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   private popup(feature:PublicCaseMapFeature){const value=feature.properties,code=value.codigo||value.radicado_code,prefix=this.detailContext==='admin'?'/admin/casos/':this.detailContext==='citizen'?'/ciudadano/casos-publicos/':'/casos/',href=`${prefix}${encodeURIComponent(code)}`,escape=(text:string)=>String(text??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]!));return `<article class="plus-map-popup-card"><div class="plus-map-popup-status"><span>${escape(value.estado)}</span><strong>${escape(code)}</strong></div><p class="plus-map-popup-place">● ${escape(value.comunidad||value.municipio)}</p><h3>${escape(value.titulo)}</h3><p class="plus-map-popup-meta">${escape(value.tipo)} · ${escape(value.municipio)}, ${escape(value.departamento)}</p><a href="${href}">Ver expediente <span aria-hidden="true">→</span></a></article>`;}
-
-  private markerColor(state: string): string {
-    const normalized = state.toLowerCase();
-    if (normalized.includes('resuelto') || normalized.includes('cerrado')) return '#22c55e';
-    if (normalized.includes('proceso') || normalized.includes('gestion')) return '#facc15';
-    return '#e2e8f0';
-  }
 
   showVillavicencio(): void {
     this.map?.setView(VILLAVICENCIO, 13, { animate: true });

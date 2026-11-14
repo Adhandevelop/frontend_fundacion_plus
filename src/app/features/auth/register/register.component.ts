@@ -1,5 +1,6 @@
 ﻿import { AuthIconComponent } from '../shared/auth-icon.component';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -9,15 +10,21 @@ import { PasswordToggleComponent } from '../shared/password-toggle.component';
 import { AuthFieldErrorComponent } from '../shared/auth-field-error.component';
 import { authFieldError, authFormIssues } from '../shared/auth-form-feedback';
 import { FormErrorSummaryComponent, focusFormTarget } from '../../../shared/forms/form-error-summary.component';
+import { HomepageApiService, homepageImageUrl, PublicHomepage } from '../../../core/api/homepage-api.service';
 @Component({selector:'plus-register',standalone:true,imports:[RouterLink,ReactiveFormsModule,PasswordToggleComponent,AuthFieldErrorComponent,FormErrorSummaryComponent,AuthIconComponent],templateUrl:'./register.component.html'})
 export class RegisterComponent {
  private readonly builder=inject(FormBuilder).nonNullable;
  private readonly auth=inject(AuthService);
  private readonly router=inject(Router);
+ private readonly homepage=inject(HomepageApiService);
+ private readonly destroy=inject(DestroyRef);
  readonly form=this.builder.group({name:['',[Validators.required,Validators.maxLength(100),Validators.pattern(/\S/)]],surname:['',[Validators.required,Validators.maxLength(100),Validators.pattern(/\S/)]],phone:['',Validators.maxLength(20)],email:['',[Validators.required,Validators.email,Validators.maxLength(150)]],password:['',[Validators.required,Validators.minLength(8)]],confirmation:['',Validators.required],consent:[false,Validators.requiredTrue]},{validators:group=>group.get('password')?.value === group.get('confirmation')?.value ? null : {passwordMismatch:true}});
  readonly message=signal('');
  readonly pending=signal(false);
  readonly attempted=signal(false);
+ readonly publicHome=signal<PublicHomepage|null>(null);
+ readonly institutionalImage=computed(()=>homepageImageUrl(this.publicHome()?.institution));
+ constructor(){this.homepage.publicHome().pipe(takeUntilDestroyed(this.destroy)).subscribe({next:value=>this.publicHome.set(value)});}
  validationIssues(){return authFormIssues(this.form,[['name','Nombres'],['surname','Apellidos'],['phone','Teléfono'],['email','Correo electrónico'],['password','Contraseña'],['confirmation','Confirmación'],['consent','Tratamiento de datos']]);}
  fieldError(field:string){return authFieldError(this.form,field);}
  submit(){
