@@ -64,6 +64,8 @@ Se cerró la sesión al terminar. No se modificaron casos, asignaciones, publica
 
 El dashboard administrativo incorpora ahora “Añadir caso” junto a “Gestionar casos”. El mismo acceso amarillo está disponible de forma permanente en la navegación administrativa y en la cabecera de la bandeja general de casos. La ruta `/admin/casos/nuevo` permanece dentro del layout administrativo, carga tipos, estados y la jerarquía territorial, y crea mediante `POST /api/v1/admin/cases/`; al responder redirige al expediente generado. La prueba HTTP confirma el payload, pero aún no se ha ejecutado una creación real en producción.
 
+La creación administrativa exige seleccionar un punto en el mapa. Esto evita aprobar nuevos expedientes que después no puedan formar parte del GeoJSON público. Los expedientes anteriores sin geometría requieren una operación de actualización soportada por el backend; escoger una comunidad no genera por sí solo una coordenada exacta.
+
 “Casos asignados” está disponible en `/admin/casos-asignados`, en la navegación lateral y en el dashboard. Utiliza `scope=assigned` y `assigned_to_me=true` para que el filtro se aplique en el servidor. No debe confundirse con el futuro módulo “Mis casos”, que reunirá casos creados y seguidos por el administrador.
 
 Los cambios son locales y requieren subida y despliegue del frontend. Los módulos restantes pueden integrarse mientras el backend atiende los problemas documentados.

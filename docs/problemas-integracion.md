@@ -42,6 +42,7 @@ Prioridad actual del frontend: verificar con datos desplegados el mapa y el expe
 - Probar con enlaces reales de Resend las nuevas páginas de confirmación y baja del boletín, incluyendo token inválido, vencido y reutilizado.
 - Probar con cuentas institucionales reales el selector de responsables y una actividad con/sin coordenadas.
 - El listado, alta y baja de casos seguidos están conectados con UUID reales. La ficha pública ya no contiene un expediente demostrativo y también puede abrirse en `/ciudadano/casos-publicos/:radicado`, conservando la sesión y el layout ciudadano.
+- El mapa público solo puede incluir expedientes aprobados con geometría `Point`. El 13 de noviembre se observaron seis casos aprobados en administración, pero el GeoJSON devolvió únicamente dos; los cuatro restantes no tienen un punto utilizable. Angular ahora exige seleccionar ubicación al crear nuevos casos administrativos. Para reparar expedientes existentes, el backend debe documentar o incorporar una acción administrativa segura que permita actualizar `ubicacion`/`latitud`/`longitud`, con validación geográfica y auditoría. No se inventarán coordenadas desde el nombre del barrio.
 
 ### “Mis casos” para cuentas administrativas
 
