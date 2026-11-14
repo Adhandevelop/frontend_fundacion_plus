@@ -5,12 +5,13 @@ export interface AdminCase {
   tipo_nombre:string;tipo_categoria:string;tipo_naturaleza:string;comunidad_nombre:string;municipio_nombre:string;departamento_nombre:string;
   estado_nombre:string;estado_publicacion:string;prioridad:string;fecha_creacion:string;fecha_actualizacion:string;
   familias_afectadas:number;meses_afectacion:number;resultado_resumen:string|null;
-  ubicacion?:{type:'Point';srid?:4326;coordinates:[number,number]}|null;latitud?:number|null;longitud?:number|null;
+  ubicacion?:CaseLocation|string|null;public_location?:CaseLocation|string|null;latitud?:number|null;longitud?:number|null;latitude?:number|null;longitude?:number|null;
   creado_por?:string;creado_por_nombre?:string;creado_por_correo?:string;
   active_assignment:{responsable_nombre:string;responsable:string}|null;
   active_correction_request:CaseCorrection|null;solicitudes_correccion:CaseCorrection[];
   aportes:CaseContribution[];seguimientos:CaseUpdate[];historial_estados:CaseHistory['historial_estados'];evidencias:CaseEvidence[];allowed_actions:string[];
 }
+export interface CaseLocation {type?:'Point';srid?:4326;coordinates?:[number|string,number|string];latitud?:number|string|null;longitud?:number|string|null;latitude?:number|string|null;longitude?:number|string|null;lat?:number|string|null;lng?:number|string|null}
 export interface AdminCasePage {count:number;next:string|null;previous:string|null;results:AdminCase[]}
 export interface AdminCaseFilters {
   page:number;page_size:number;search:string;estado:string;prioridad:string;estado_publicacion:string;

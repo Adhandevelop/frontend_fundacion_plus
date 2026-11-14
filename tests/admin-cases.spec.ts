@@ -9,7 +9,7 @@ import { authInterceptor } from '../src/app/core/auth/auth.interceptor';
 import { API_BASE_URL } from '../src/app/core/api/api.config';
 import { AdminCasesApiService } from '../src/app/features/administration/cases/admin-cases-api.service';
 import { AdminSummaryComponent } from '../src/app/features/administration/cases/admin-summary.component';
-import { AdminCaseDetailComponent } from '../src/app/features/administration/cases/admin-case-detail.component';
+import { AdminCaseDetailComponent, adminCaseCoordinates } from '../src/app/features/administration/cases/admin-case-detail.component';
 import { AdminCaseTableComponent } from '../src/app/features/administration/shared/case-table/admin-case-table.component';
 
 const params=new BehaviorSubject(convertToParamMap({radicado:'case-a'}));
@@ -25,6 +25,8 @@ table.change('department','dept-a');backend.expectOne(request=>request.url==='/a
 
 const evidence={id_evidencia:'evidence-a',nombre_original:'prueba.pdf',descripcion:'',tamano_bytes:10,mime_type:'application/pdf',audiencia:'privado',estado_revision:'pendiente',fecha_subida:'2026-11-09T10:00:00Z'};
 const caso={id_caso:'case-a',codigo:'PLUS-TEST-A',titulo:'Expediente ficticio de prueba',descripcion:'Solo existe en HttpTestingController',usuario_nombre:'Persona',usuario_correo:'persona@example.invalid',usuario_telefono:null,tipo_nombre:'Tipo',tipo_categoria:'general',tipo_naturaleza:'problematica',comunidad_nombre:'Comunidad',municipio_nombre:'Municipio',departamento_nombre:'Departamento',estado_nombre:'pendiente',estado_publicacion:'pendiente',prioridad:'media',fecha_creacion:'2026-11-09T10:00:00Z',fecha_actualizacion:'2026-11-09T10:00:00Z',familias_afectadas:0,meses_afectacion:0,resultado_resumen:null,active_assignment:null,active_correction_request:null,solicitudes_correccion:[],aportes:[],seguimientos:[],historial_estados:[],evidencias:[evidence],allowed_actions:['view','moderate','request_correction','assign','progress','resolve','manage_evidence']};
+assert.deepEqual(adminCaseCoordinates({...caso,ubicacion:{type:'Point',coordinates:['-73.626456','4.142123']}}),{latitude:4.142123,longitude:-73.626456});
+assert.deepEqual(adminCaseCoordinates({...caso,ubicacion:{latitud:'4.15',longitud:'-73.64'}}),{latitude:4.15,longitude:-73.64});
 const createPayload={titulo:'Caso institucional',descripcion:'Registro administrativo de prueba',tipo_caso:'type-a',comunidad:'community-a',estado:'state-a',prioridad:'media',estado_publicacion:'pendiente',direccion_referencia:null,familias_afectadas:0,meses_afectacion:0};const created=firstValueFrom(api.create(createPayload));const createRequest=backend.expectOne('/api/v1/admin/cases/');assert.equal(createRequest.request.method,'POST');assert.deepEqual(createRequest.request.body,createPayload);createRequest.flush(caso,{status:201,statusText:'Created'});assert.equal((await created).id_caso,'case-a');
 const locationUpdate=firstValueFrom(api.updateLocation('case-a',4.142123,-73.626456));const locationRequest=backend.expectOne('/api/v1/admin/cases/case-a/');assert.equal(locationRequest.request.method,'PATCH');assert.deepEqual(locationRequest.request.body,{latitud:4.142123,longitud:-73.626456});locationRequest.flush({...caso,latitud:4.142123,longitud:-73.626456});assert.equal((await locationUpdate).latitud,4.142123);
 const person={id_usuario:'candidate-a',nombres:'Responsable',apellidos:'Prueba',estado:'activo',primary_role:'representante'};

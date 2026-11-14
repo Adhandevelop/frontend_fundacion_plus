@@ -12,6 +12,8 @@ Los puntos P01–P23 se conservan en [correcciones-backend-historico.md](correcc
 |---|---|---|---|
 | — | — | No hay incidencias técnicas activas demostradas. | Continuar las pruebas funcionales contra el servidor desplegado. |
 
+> Verificación pendiente de P26: el `PATCH` guarda el punto y el caso aparece en el GeoJSON, pero una prueba desplegada mostró que la ficha administrativa seguía indicando que no había ubicación. Angular admite coordenadas GeoJSON, campos superiores y objetos `{latitud,longitud}`. Si el aviso continúa tras desplegar este adaptador, `GET /api/v1/admin/cases/{id}/` está omitiendo la ubicación y el backend debe incluirla en el serializador de detalle.
+
 ## P25 — Error 5xx al listar respuestas de formularios — Cerrado
 
 El backend corrigió en `d7c8693` el manejo de teléfonos nulos, la resolución por UUID o slug y la paginación estándar de respuestas. La suite backend informó 42/42 pruebas correctas.

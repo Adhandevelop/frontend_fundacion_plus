@@ -12,6 +12,14 @@ import { apiErrorMessage } from '../../../core/api/api-error';
 import { LocationPickerComponent } from '../../citizen/intake/location-picker/location-picker.component';
 
 interface ActionReview {caseId:string;action:AdminAction;permission:string;title:string;summary:string}
+export function adminCaseCoordinates(caso:AdminCase):{latitude:number;longitude:number}|null {
+  const raw=caso.ubicacion??caso.public_location;let location=typeof raw==='object'&&raw?raw:undefined;
+  if(typeof raw==='string'){try{const parsed=JSON.parse(raw);if(parsed&&typeof parsed==='object')location=parsed;}catch{const point=raw.match(/POINT\s*\(\s*(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)\s*\)/i);if(point){const longitude=Number(point[1]),latitude=Number(point[2]);if(Number.isFinite(latitude)&&Number.isFinite(longitude))return{latitude,longitude};}}}
+  const coordinates=location?.coordinates;
+  const latitude=Number(caso.latitud??caso.latitude??location?.latitud??location?.latitude??location?.lat??coordinates?.[1]);
+  const longitude=Number(caso.longitud??caso.longitude??location?.longitud??location?.longitude??location?.lng??coordinates?.[0]);
+  return Number.isFinite(latitude)&&Number.isFinite(longitude)&&latitude>=-90&&latitude<=90&&longitude>=-180&&longitude<=180?{latitude,longitude}:null;
+}
 @Component({selector:'plus-admin-case-detail',standalone:true,imports:[DatePipe,RouterLink,ReactiveFormsModule,LocationPickerComponent],templateUrl:'./admin-case-detail.component.html'})
 export class AdminCaseDetailComponent {
   private readonly api=inject(AdminCasesApiService);
@@ -46,7 +54,7 @@ export class AdminCaseDetailComponent {
   }
   can(action:string){return this.data()?.allowed_actions.includes(action) ?? false;}
   selectTab(value:string){if(this.pending() || this.review())return;this.tab.set(value);}
-  private restoreLocation(caso:AdminCase){const coordinates=caso.ubicacion?.coordinates,latitude=Number(caso.latitud??coordinates?.[1]),longitude=Number(caso.longitud??coordinates?.[0]);this.locationLatitude.set(Number.isFinite(latitude)?latitude:null);this.locationLongitude.set(Number.isFinite(longitude)?longitude:null);this.editingLocation.set(false);this.locationReview.set(false);}
+  private restoreLocation(caso:AdminCase){const location=adminCaseCoordinates(caso);this.locationLatitude.set(location?.latitude??null);this.locationLongitude.set(location?.longitude??null);this.editingLocation.set(false);this.locationReview.set(false);}
   startLocationEdit(){if(!this.can('moderate')||this.pending())return;this.editingLocation.set(true);this.locationReview.set(false);this.status.set('Selecciona el punto correcto y revísalo antes de guardar.');}
   setLocation(value:{latitude:number;longitude:number}|null){this.locationLatitude.set(value?.latitude??null);this.locationLongitude.set(value?.longitude??null);this.locationReview.set(false);}
   reviewLocation(){if(this.locationLatitude()===null||this.locationLongitude()===null){this.status.set('Selecciona un punto en el mapa antes de continuar.');return;}this.locationReview.set(true);this.status.set('Confirma la nueva ubicación del expediente.');}
